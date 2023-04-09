@@ -14,22 +14,24 @@ class LocationAttendant: NSObject, ObservableObject {
     static let shared = LocationAttendant()
     
     private let locationManager = CLLocationManager()
-    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    var authorizationStatus: CLAuthorizationStatus = .notDetermined
     
-    var current: CLLocation?
-    var currentHeading: CLLocationDegrees = 0.0
+    @Published var current: CLLocation?
+    @Published var currentHeading: CLLocationDegrees = 0.0
     
-    var getFirst = true
+    private var getFirst = true
     
     override init() {
         super.init()
         self.locationManager.delegate = self
+//        self.locationManager.headingFilter = 2.0
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         self.authorizationStatus = self.locationManager.authorizationStatus
         self.startUpdating()
 
     #if targetEnvironment(simulator)
         self.current = CLLocation(latitude: 40.652005801809445, longitude: -73.94718932404285)
-        self.currentHeading = 6.162876129150391
+        self.currentHeading = -12.0 //6.162876129150391
         self.getDistances()
         self.getHeadings()
     #endif
@@ -56,7 +58,7 @@ class LocationAttendant: NSObject, ObservableObject {
 //    func getLocations() {
 //        let group = DispatchGroup()
 //
-//        let bathrooms = BathroomAttendant.shared.defaults.filter({ $0.lat == nil && $0.long == nil})
+//        let bathrooms = BathroomAttendant.shared.sortedBathrooms.filter({ $0.lat == nil && $0.long == nil})
 //        for i in 0..<bathrooms.count {
 //            group.enter()
 //
@@ -70,7 +72,7 @@ class LocationAttendant: NSObject, ObservableObject {
 //        }
 //
 //        group.notify(queue: DispatchQueue.main) {
-//            for bathroom in BathroomAttendant.shared.defaults {
+//            for bathroom in BathroomAttendant.shared.sortedBathrooms {
 //                if let coordinate = bathroom.coordinate {
 //                    print(bathroom.id)
 //                    print(coordinate)
@@ -82,56 +84,67 @@ class LocationAttendant: NSObject, ObservableObject {
 //    }
     
     func getDistances() {
-        var bathrooms = BathroomAttendant.shared.defaults
-        for i in 0..<bathrooms.count {
-            var bathroom = bathrooms[i]
-            
+        for i in 0..<BathroomAttendant.shared.sortedBathrooms.count {
             if let current = self.current {
-                let location = CLLocation(latitude: bathroom.coordinate.latitude, longitude: bathroom.coordinate.longitude)
-                let distance = location.distance(from: current)
+                let location = CLLocation(latitude: BathroomAttendant.shared.sortedBathrooms[i].coordinate.latitude, longitude: BathroomAttendant.shared.sortedBathrooms[i].coordinate.longitude)
+                let locationDistance = location.distance(from: current)
                 
-                let distanceMeters = Measurement(value: distance, unit: UnitLength.meters)
-                let distanceMiles = distanceMeters.converted(to: .miles)
-                let distanceFeet = distanceMeters.converted(to: .feet)
-                let useMiles = (distanceMiles.value >= 0.25)
-                bathroom.distance = useMiles ? distanceMiles.value : distanceFeet.value
-                bathroom.distanceMeters = distanceMeters.value
+                let distanceMeters = Measurement(value: locationDistance, unit: UnitLength.meters)
+                BathroomAttendant.shared.sortedBathrooms[i].distanceMeters = distanceMeters.value
                 
-                if var distance = bathroom.distance {
-                    distance = useMiles ? round(distance * 10) / 10.0 : round(distance)
-                    let travelTime = distance.travelTime
-                    bathroom.distanceAway = "\(distance) \(useMiles ? "Miles" : "Feet") (\(travelTime) minutes) Away"
+                if var distance = BathroomAttendant.shared.sortedBathrooms[i].distanceMeters {
+                    let distanceMiles = distanceMeters.converted(to: .miles)
+                    let distanceFeet = distanceMeters.converted(to: .feet)
+                    let useMiles = (distanceMiles.value >= 0.25)
+                    distance = useMiles ? round(distanceMiles.value * 10) / 10.0 : round(distanceFeet.value)
+                    
+                    if BathroomAttendant.shared.sortedBathrooms[i].timeAway == nil {
+                        BathroomAttendant.shared.sortedBathrooms[i].timeAway = "\(locationDistance.travelTime) minute\(locationDistance.travelTime == 1 ? "" : "s")"
+                    }
+                    BathroomAttendant.shared.sortedBathrooms[i].distanceAway = "\(distance) \(useMiles ? "Miles" : "Feet")"
+                    BathroomAttendant.shared.sortedBathrooms[i].stepsAway = "~\(distanceMeters.value.steps) step\(distanceMeters.value.steps == 1 ? "" : "s")"
                 }
-                
-                bathrooms[i] = bathroom
             }
         }
-        
-        BathroomAttendant.shared.changeDefaults(bathrooms.sorted(by: { $0.distance ?? 1000 < $1.distance ?? 1000 }))
+        BathroomAttendant.shared.sortedBathrooms = BathroomAttendant.shared.sortedBathrooms.sorted(by: { $0.distanceMeters ?? 1000 < $1.distanceMeters ?? 1000 })
+        BathroomAttendant.shared.closestBathroom = BathroomAttendant.shared.sortedBathrooms[0]
+        if getFirst, let first = BathroomAttendant.shared.sortedBathrooms.first {
+            self.getDirections(to: first.id)
+            self.getFirst = false
+        }
     }
     
     func getDirections(to toId: Int) {
-        if let current = self.current, var bathroom = BathroomAttendant.shared.defaults.first(where: { $0.id == toId }) {
-                self.getTravelDirections(sourceLocation: current.coordinate, endLocation: bathroom.coordinate) { directions, route in
-                        bathroom.directions = directions
-                        bathroom.route = route
-                        BathroomAttendant.shared.changeDefault(toId, to: bathroom)
+        if let current = self.current, let index = BathroomAttendant.shared.sortedBathrooms.firstIndex(where: {$0.id == toId}) {
+            self.getTravelDirections(sourceLocation: current.coordinate, endLocation: BathroomAttendant.shared.sortedBathrooms[index].coordinate) { directions, route in
+                BathroomAttendant.shared.sortedBathrooms[index].directions = directions
+                BathroomAttendant.shared.sortedBathrooms[index].route = route
+                BathroomAttendant.shared.closestBathroom = BathroomAttendant.shared.sortedBathrooms[0]
+                if let travelTime = route?.expectedTravelTime {
+                    let travelMinutes = Int(travelTime/60)
+                    BathroomAttendant.shared.sortedBathrooms[index].timeAway = "\(travelMinutes) minute\(travelMinutes == 1 ? "" : "s")"
+                }
+                if let firstStep = directions.first {
+                    BathroomAttendant.shared.sortedBathrooms[index].heading = firstStep.streetHeading
                 }
             }
+        }
     }
     
     func getHeadings() {
-        var bathrooms = BathroomAttendant.shared.defaults
-        for i in 0..<bathrooms.count {
-            var bathroom = bathrooms[i]
-            
+        for bathroom in BathroomAttendant.shared.sortedBathrooms {
+            if !bathroom.directions.isEmpty {
+                let firstStep = bathroom.directions[0]
+                bathroom.heading = firstStep.streetHeading
+            }
             if let current = self.current {
-                bathroom.heading = self.currentHeading.angle(current.coordinate, bathroom.coordinate)
-                bathrooms[i] = bathroom
+                bathroom.generalHeading = self.currentHeading.angle(current.coordinate, bathroom.coordinate)
+                if bathroom.id == BathroomAttendant.shared.closestBathroom.id {
+//                    print("Heading: \(bathroom.generalHeading)")
+                }
             }
         }
-        
-        BathroomAttendant.shared.defaults = bathrooms
+        BathroomAttendant.shared.closestBathroom = BathroomAttendant.shared.sortedBathrooms[0]
     }
     
     private func getLocation(from address: String, completion: @escaping (_ location: CLLocation?)-> Void) {
@@ -146,54 +159,22 @@ class LocationAttendant: NSObject, ObservableObject {
         }
     }
     
-    func getDistance(sourceLocation: CLLocationCoordinate2D, endLocation: CLLocationCoordinate2D, completion: @escaping (_ distance: Double?, _ travelTime : String?) -> (Void)){
+    func getTravelDirections(sourceLocation: CLLocationCoordinate2D, endLocation: CLLocationCoordinate2D, completion: @escaping (_ directions: [MKRoute.Step], _ route: MKRoute?) -> (Void)){
         let request = MKDirections.Request()
         let source = MKPlacemark( coordinate: sourceLocation)
         let destination = MKPlacemark( coordinate: endLocation)
         request.source =  MKMapItem(placemark: source)
         request.destination = MKMapItem(placemark: destination)
         request.transportType = MKDirectionsTransportType.walking
-        request.requestsAlternateRoutes = true
+        request.requestsAlternateRoutes = false
         let directions = MKDirections ( request: request)
         directions.calculate { (response, error) in
             if let error = error {
                 print("Distance directions calculation error\n \(error.localizedDescription)")
                 return
             }
-            if let routes = response?.routes, let shortestRoute = routes.sorted(by: { $0.distance < $1.distance}).first {
-                completion(shortestRoute.distance, shortestRoute.expectedTravelTime.description)
-            }
-        }
-    }
-    
-    func getTravelDirections(sourceLocation: CLLocationCoordinate2D, endLocation: CLLocationCoordinate2D, completion: @escaping (_ directions: [String], _ route: MKRoute?) -> (Void)){
-        let request = MKDirections.Request()
-        let source = MKPlacemark( coordinate: sourceLocation)
-        let destination = MKPlacemark( coordinate: endLocation)
-        request.source =  MKMapItem(placemark: source)
-        request.destination = MKMapItem(placemark: destination)
-        request.transportType = MKDirectionsTransportType.walking
-        request.requestsAlternateRoutes = true
-        let directions = MKDirections ( request: request)
-        directions.calculate { (response, error) in
-            if let error = error {
-                print("Distance directions calculation error\n \(error.localizedDescription)")
-                return
-            }
-            if let routes = response?.routes, let shortestRoute = routes.sorted(by: { $0.distance < $1.distance}).first {
-                let steps = shortestRoute.steps
-                
-                let directionSteps: [String] = steps.map { step in
-                    guard let blocks = step.blocks else { return step.instructions }
-                    let blockString = "\(blocks > 0 ? ("About \(blocks) blocks later, ") : "")"
-                    let stepsString = "About \(step.distance.steps) steps later, "
-                    let useSteps = step == steps.last
-                    let introString = useSteps ? stepsString : blockString
-                    
-                    return "\(introString)\(step.instructions)"
-                }
-                
-                completion(directionSteps, shortestRoute)
+            if let routes = response?.routes, let shortestRoute = routes.sorted(by: { $0.expectedTravelTime < $1.expectedTravelTime}).first {
+                completion(shortestRoute.steps, shortestRoute)
             }
         }
     }
@@ -210,19 +191,12 @@ extension LocationAttendant: CLLocationManagerDelegate {
         guard let lastLocation = locations.last else { return }
         self.current = lastLocation
         
-        if getFirst, let first = BathroomAttendant.shared.defaults.first {
-            self.getDirections(to: first.id)
-            self.getFirst = false
-        }
-        
         self.getDistances()
-        self.objectWillChange.send()
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         self.currentHeading = newHeading.trueHeading
 
         self.getHeadings()
-        self.objectWillChange.send()
     }
 }

@@ -8,17 +8,22 @@
 import Foundation
 import CoreLocation
 
+
 class BathroomAttendant: ObservableObject {
     static let shared = BathroomAttendant()
     
-    @Published var defaults: [Bathroom] {
+    @Published var closestBathroom: Bathroom
+    @Published var sortedBathrooms: [Bathroom]
+    
+    @Published var favoriteBathrooms: [Bathroom] = [] {
         didSet {
-            self.objectWillChange.send()
+            let bathroomIds = favoriteBathrooms.map { $0.id }
+            UserDefaults.standard.set(bathroomIds, forKey: "FavoriteBathroomsIds")
         }
     }
 
     init(){
-        self.defaults = [
+        let defaults = [
             Bathroom(name: "HasenStüble", address: "1184 Nostrand Ave., Brooklyn, NY 11225", coordinate: CLLocationCoordinate2D(latitude: 40.6585688, longitude: -73.9506879), id: 1),
             Bathroom(name: "Le Point Value Thrift", address: "321 Clarkson Ave, Brooklyn, NY 11226", coordinate: CLLocationCoordinate2D(latitude: 40.6555898, longitude: -73.948961), id: 2),
             Bathroom(name: "Winthrop Playground", address: "164 Winthrop St, Brooklyn, NY 11226", coordinate: CLLocationCoordinate2D(latitude: 40.656620, longitude: -73.954193), comment: "Open during park hours", id: 3),
@@ -45,17 +50,13 @@ class BathroomAttendant: ObservableObject {
             Bathroom(name: "Picnic House", address: "40 West Dr, Brooklyn, NY 11215", coordinate: CLLocationCoordinate2D(latitude: 40.6696918, longitude: -73.9718209), comment: "In Prospect Park", id: 24),
             Bathroom(name: "St Johns Park", address: "Troy Ave, Brooklyn, NY 11213", coordinate: CLLocationCoordinate2D(latitude: 40.6777027, longitude: -73.9358504), comment: "Usually open from early morning to late at night", id: 25)
             ]
-    }
-    
-    func changeDefaults(_ defaults: [Bathroom]) {
-        self.defaults = defaults
-        self.objectWillChange.send()
-    }
-    
-    func changeDefault(_ id: Int, to: Bathroom) {
-        if let index = defaults.firstIndex(where: {$0.id == id}) {
-            self.defaults[index] = to
-            self.objectWillChange.send()
+        
+        self.sortedBathrooms = defaults
+        self.closestBathroom = defaults[0]
+        
+        if let bathroomIds = UserDefaults.standard.object(forKey: "FavoriteBathroomsIds") as? [Int] {
+            self.favoriteBathrooms = bathroomIds.compactMap({ id in self.sortedBathrooms.first(where: { $0.id == id }) })
         }
     }
+    
 }

@@ -13,9 +13,14 @@
 		2224C65A29CFC49A00222FD4 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65929CFC49A00222FD4 /* HeaderView.swift */; };
 		2224C65C29CFCB4B00222FD4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65B29CFCB4B00222FD4 /* Extensions.swift */; };
 		2224C66429D1D18400222FD4 /* CompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C66329D1D18400222FD4 /* CompassView.swift */; };
+		222AD8B229E2339D00A18E76 /* BathroomCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B129E2339D00A18E76 /* BathroomCellView.swift */; };
+		222AD8B429E2362700A18E76 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B329E2362700A18E76 /* SettingsView.swift */; };
+		222AD8B629E2392000A18E76 /* SettingsAttendant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B529E2392000A18E76 /* SettingsAttendant.swift */; };
 		22C9436729C64A0100E41651 /* Bathroom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C9436629C64A0100E41651 /* Bathroom.swift */; };
 		22C9436929C64EB100E41651 /* BathroomAttendant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C9436829C64EB100E41651 /* BathroomAttendant.swift */; };
 		22C9436B29C7937700E41651 /* LocationAttendant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C9436A29C7937700E41651 /* LocationAttendant.swift */; };
+		22D43DD629D47B730085CA4C /* DirectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D43DD529D47B730085CA4C /* DirectionsView.swift */; };
+		22D43DDA29E222750085CA4C /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D43DD929E222750085CA4C /* FavoritesView.swift */; };
 		22DE02EC29C8084F00C21D67 /* BathroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DE02EB29C8084F00C21D67 /* BathroomView.swift */; };
 		22F2521229B57B990010223E /* G2GApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2521129B57B990010223E /* G2GApp.swift */; };
 		22F2521429B57B990010223E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2521329B57B990010223E /* ContentView.swift */; };
@@ -30,10 +35,17 @@
 		2224C65929CFC49A00222FD4 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		2224C65B29CFCB4B00222FD4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2224C66329D1D18400222FD4 /* CompassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassView.swift; sourceTree = "<group>"; };
+		222AD8B129E2339D00A18E76 /* BathroomCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomCellView.swift; sourceTree = "<group>"; };
+		222AD8B329E2362700A18E76 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		222AD8B529E2392000A18E76 /* SettingsAttendant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAttendant.swift; sourceTree = "<group>"; };
 		22C9436629C64A0100E41651 /* Bathroom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bathroom.swift; sourceTree = "<group>"; };
 		22C9436829C64EB100E41651 /* BathroomAttendant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomAttendant.swift; sourceTree = "<group>"; };
 		22C9436A29C7937700E41651 /* LocationAttendant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAttendant.swift; sourceTree = "<group>"; };
 		22C9436C29C7E26300E41651 /* G2G.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = G2G.entitlements; sourceTree = "<group>"; };
+		22D43DD529D47B730085CA4C /* DirectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsView.swift; sourceTree = "<group>"; };
+		22D43DD729DA544E0085CA4C /* lepoint.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = lepoint.gpx; sourceTree = "<group>"; };
+		22D43DD829DA57280085CA4C /* lepoint2.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = lepoint2.gpx; sourceTree = "<group>"; };
+		22D43DD929E222750085CA4C /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		22DE02EB29C8084F00C21D67 /* BathroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomView.swift; sourceTree = "<group>"; };
 		22F2520E29B57B990010223E /* G2G.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = G2G.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22F2521129B57B990010223E /* G2GApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = G2GApp.swift; sourceTree = "<group>"; };
@@ -56,6 +68,8 @@
 		22F2520529B57B990010223E = {
 			isa = PBXGroup;
 			children = (
+				22D43DD829DA57280085CA4C /* lepoint2.gpx */,
+				22D43DD729DA544E0085CA4C /* lepoint.gpx */,
 				22F2521029B57B990010223E /* G2G */,
 				22F2520F29B57B990010223E /* Products */,
 			);
@@ -74,11 +88,16 @@
 			children = (
 				22C9436C29C7E26300E41651 /* G2G.entitlements */,
 				22F2521129B57B990010223E /* G2GApp.swift */,
+				22D43DD929E222750085CA4C /* FavoritesView.swift */,
 				22F2521329B57B990010223E /* ContentView.swift */,
 				22C9436629C64A0100E41651 /* Bathroom.swift */,
 				22C9436829C64EB100E41651 /* BathroomAttendant.swift */,
 				22C9436A29C7937700E41651 /* LocationAttendant.swift */,
 				22DE02EB29C8084F00C21D67 /* BathroomView.swift */,
+				222AD8B129E2339D00A18E76 /* BathroomCellView.swift */,
+				22D43DD529D47B730085CA4C /* DirectionsView.swift */,
+				222AD8B329E2362700A18E76 /* SettingsView.swift */,
+				222AD8B529E2392000A18E76 /* SettingsAttendant.swift */,
 				2224C65529CFC10600222FD4 /* MapView.swift */,
 				2224C65729CFC2E400222FD4 /* Annotation.swift */,
 				2224C65929CFC49A00222FD4 /* HeaderView.swift */,
@@ -171,13 +190,18 @@
 			files = (
 				2224C65629CFC10600222FD4 /* MapView.swift in Sources */,
 				2224C65A29CFC49A00222FD4 /* HeaderView.swift in Sources */,
+				22D43DD629D47B730085CA4C /* DirectionsView.swift in Sources */,
 				22DE02EC29C8084F00C21D67 /* BathroomView.swift in Sources */,
+				22D43DDA29E222750085CA4C /* FavoritesView.swift in Sources */,
 				22C9436B29C7937700E41651 /* LocationAttendant.swift in Sources */,
 				2224C66429D1D18400222FD4 /* CompassView.swift in Sources */,
 				22C9436729C64A0100E41651 /* Bathroom.swift in Sources */,
+				222AD8B629E2392000A18E76 /* SettingsAttendant.swift in Sources */,
 				2224C65C29CFCB4B00222FD4 /* Extensions.swift in Sources */,
+				222AD8B429E2362700A18E76 /* SettingsView.swift in Sources */,
 				22C9436929C64EB100E41651 /* BathroomAttendant.swift in Sources */,
 				22F2521429B57B990010223E /* ContentView.swift in Sources */,
+				222AD8B229E2339D00A18E76 /* BathroomCellView.swift in Sources */,
 				2224C65829CFC2E400222FD4 /* Annotation.swift in Sources */,
 				22108B3F29D24203004EB964 /* CircleLabel.swift in Sources */,
 				22F2521229B57B990010223E /* G2GApp.swift in Sources */,

@@ -14,9 +14,9 @@ struct CircleLabelView: View {
     }
     
     var text: String
-    var radius: Double
-    @State var clockwise: Bool
-    
+    @State var radius: Double
+    var clockwise: Bool
+
     @State var textWidths: [Int:Double] = [:]
     
     var body: some View {
@@ -52,7 +52,6 @@ struct CircleLabelView: View {
         let widthBeforeLabel = textWidths.filter{$0.key < index}.map{$0.value}.reduce(0, +)
         let percentBeforeLabel = widthBeforeLabel / circumference
         let angleBeforeLabel = percentBeforeLabel * 2 * .pi
-
         return .radians(angleBeforeLabel + labelAngle)
     }
 }

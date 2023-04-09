@@ -11,7 +11,9 @@ import SwiftUI
 struct G2GApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                ContentView()
+            }.tint(.white)
         }
     }
 }

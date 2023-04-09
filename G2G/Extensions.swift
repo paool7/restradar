@@ -54,6 +54,30 @@ extension CLLocationDistance {
         return distanceFeet.value
     }
     
+    var miles: Double {
+        let distanceMeters = Measurement(value: self, unit: UnitLength.meters)
+        let distanceMiles = distanceMeters.converted(to: .miles)
+        return distanceMiles.value
+    }
+    
+    var stepsPostFix: String {
+        switch steps {
+        case 1:
+            return ""
+        default:
+            return "s"
+        }
+    }
+    
+    var blocksPostFix: String {
+        switch blocks {
+        case 1:
+            return ""
+        default:
+            return "s"
+        }
+    }
+    
     var steps: Int {
         let distanceMeters = Measurement(value: self, unit: UnitLength.meters)
         let distanceFeet = distanceMeters.converted(to: .feet)
@@ -73,7 +97,9 @@ extension CLLocationDistance {
     }
     
     var travelTime: Int {
-        let hours = Double(self)/3.0
+        let distanceMeters = Measurement(value: self, unit: UnitLength.meters)
+        let distanceMiles = distanceMeters.converted(to: .miles)
+        let hours = distanceMiles.value/3.0
         let minutes = hours*60
         return Int(minutes)
     }
@@ -111,11 +137,11 @@ extension CLLocationCoordinate2D {
         let y = sin(dLon) * cos(lat2)
         let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
         
-        var radiansBearing = atan2(y, x)
-        if radiansBearing < 0 {
-            radiansBearing += 2 * Double.pi
-        }
-        
+        // TODO: Decide on radians
+        let radiansBearing = atan2(y, x)
+//        if radiansBearing < 0 {
+//            radiansBearing += 2 * Double.pi
+//        }
         return radiansBearing.degrees
     }
 }
@@ -135,14 +161,52 @@ extension MKRoute.Step {
             let blockWidth = direction.blockWidth
             let distanceMeters = Measurement(value: self.distance, unit: UnitLength.meters)
             let distanceFeet = distanceMeters.converted(to: .feet)
-            print("Distance: \(distanceFeet)")
             return Int(distanceFeet.value / blockWidth)
         }
         
         return nil
     }
     
+    var blocksLeft: Int? {
+        if let direction = self.direction, let current = LocationAttendant.shared.current, let lastLat = self.coordinates.1?.latitude, let lastLong = self.coordinates.1?.longitude {
+            let blockWidth = direction.blockWidth
+            let distanceLeft = current.distance(from: CLLocation(latitude: lastLat, longitude: lastLong))
+            let distanceMeters = Measurement(value: distanceLeft, unit: UnitLength.meters)
+            let distanceFeet = distanceMeters.converted(to: .feet)
+//            print("Distance: \(distanceFeet)")
+            return Int(distanceFeet.value / blockWidth)
+        }
+        
+        return nil
+    }
+    
+    var distanceLeft: CLLocationDistance? {
+        if let current = LocationAttendant.shared.current, let lastLat = self.coordinates.1?.latitude, let lastLong = self.coordinates.1?.longitude {
+            return CLLocation(latitude: lastLat, longitude: lastLong).distance(from: current)
+        }
+        
+        return nil
+    }
+    
     var direction: StepDirection? {
+        return DirectionRange.stepDirection(self.streetHeading)
+    }
+    
+    var coordinates: (CLLocationCoordinate2D?, CLLocationCoordinate2D?) {
+        var firstCoordinate: CLLocationCoordinate2D?
+        var lastCoordiante: CLLocationCoordinate2D?
+
+        for point in UnsafeBufferPointer(start: self.polyline.points(), count: self.polyline.pointCount) {
+            if firstCoordinate == nil {
+                firstCoordinate = point.coordinate
+            }
+            lastCoordiante = point.coordinate
+        }
+        
+        return(firstCoordinate, lastCoordiante)
+    }
+    
+    var streetHeading: Double {
         var firstCoordinate: CLLocationCoordinate2D?
         var lastCoordiante: CLLocationCoordinate2D?
 
@@ -154,12 +218,28 @@ extension MKRoute.Step {
         }
 
         if let firstCoordinate = firstCoordinate, let lastCoordiante = lastCoordiante {
-            let heading = CLLocationDirection(0.0).angle(firstCoordinate, lastCoordiante)
-            print("Heading: \(heading)")
-            return DirectionRange.stepDirection(heading)
+            return CLLocationDirection(0.0).angle(firstCoordinate, lastCoordiante)
         }
         
-        return nil
+        return 0.0
+    }
+    
+    var relativeHeading: Double {
+        var firstCoordinate: CLLocationCoordinate2D?
+        var lastCoordiante: CLLocationCoordinate2D?
+
+        for point in UnsafeBufferPointer(start: self.polyline.points(), count: self.polyline.pointCount) {
+            if firstCoordinate == nil {
+                firstCoordinate = point.coordinate
+            }
+            lastCoordiante = point.coordinate
+        }
+
+        if let firstCoordinate = firstCoordinate, let lastCoordiante = lastCoordiante {
+            return LocationAttendant.shared.currentHeading.angle(firstCoordinate, lastCoordiante)
+        }
+        
+        return 0.0
     }
 }
 
