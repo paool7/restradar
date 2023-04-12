@@ -9,30 +9,32 @@ import SwiftUI
 import MapKit
 
 struct BathroomView: View {
-    @ObservedObject var attendant = BathroomAttendant.shared
-    @ObservedObject var locAttendant = LocationAttendant.shared
+    @StateObject private var bathroomAttendant = BathroomAttendant.shared
+    @StateObject private var locationAttendant = LocationAttendant.shared
     @Binding var bathroom: Bathroom
         
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HeaderView(bathroom: $bathroom)
-            DirectionsView(directions: $bathroom.directions, id: bathroom.id)
+        VStack(alignment: .center, spacing: 8) {
+            HeaderView(bathroom: $bathroom,moreDetail: true)
+                .padding(16)
+            DirectionsView(bathroom: $bathroom, id: bathroom.id)
         }
-        .padding(16)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
-                Button {
-                    
-                } label: {
-                    Image(systemName: "bookmark")
-                    
-                }
-
                 Spacer()
 
-                Button("Second") {
-                    print("Pressed")
+                Button {
+                    if let index = bathroomAttendant.favoriteBathrooms.firstIndex(where: { $0.id == bathroom.id }) {
+                        bathroomAttendant.favoriteBathrooms.remove(at: index)
+                    } else {
+                        bathroomAttendant.favoriteBathrooms.append(bathroom)
+                    }
+                } label: {
+                    Image(systemName: bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id })  ? "bookmark.fill" : "bookmark")
+                        .foregroundColor(bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id }) ? .yellow : .primary)
                 }
+
             }
         }
     }

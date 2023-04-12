@@ -9,7 +9,8 @@ import MapKit
 import SwiftUI
 
 struct MapView: UIViewRepresentable {
-    @ObservedObject var locationAttendant = LocationAttendant.shared
+    @StateObject private var bathroomAttendant = BathroomAttendant.shared
+    @StateObject private var locationAttendant = LocationAttendant.shared
     @Binding var bathroom: Bathroom
 
     class Coordinator: NSObject, MKMapViewDelegate {        
@@ -47,12 +48,12 @@ struct MapView: UIViewRepresentable {
 
       mapView.backgroundColor = .secondarySystemBackground
       
-//      let configuration = MKStandardMapConfiguration(emphasisStyle: .muted)
-//      mapView.preferredConfiguration = configuration
+      let configuration = MKStandardMapConfiguration(emphasisStyle: .muted)
+      mapView.preferredConfiguration = configuration
       
-      let overlay = BathroomTileOverlay()
-      overlay.canReplaceMapContent = true
-      mapView.addOverlay(overlay, level: .aboveRoads)
+//      let overlay = BathroomTileOverlay()
+//      overlay.canReplaceMapContent = true
+//      mapView.addOverlay(overlay, level: .aboveRoads)
       
       mapView.delegate = context.coordinator
       if let annotation = bathroom.annotation {
@@ -63,7 +64,7 @@ struct MapView: UIViewRepresentable {
       if let current = locationAttendant.current {
           camera.centerCoordinate = current.coordinate.midpointTo(location: bathroom.coordinate )
       }
-      if let distance = bathroom.distanceMeters {
+      if let current = locationAttendant.current, let distance = bathroom.distanceMeters(current: current)?.value {
           camera.centerCoordinateDistance = distance*2.5
       }
       camera.heading = locationAttendant.currentHeading
@@ -83,7 +84,7 @@ struct MapView: UIViewRepresentable {
       if let current = locationAttendant.current {
           camera.centerCoordinate = current.coordinate.midpointTo(location: bathroom.coordinate)
       }
-      if let distance = bathroom.distanceMeters {
+      if let current = locationAttendant.current, let distance = bathroom.distanceMeters(current: current)?.value {
           camera.centerCoordinateDistance = distance*2.5
       }
       if let route = bathroom.route {

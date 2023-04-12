@@ -167,8 +167,8 @@ extension MKRoute.Step {
         return nil
     }
     
-    var blocksLeft: Int? {
-        if let direction = self.direction, let current = LocationAttendant.shared.current, let lastLat = self.coordinates.1?.latitude, let lastLong = self.coordinates.1?.longitude {
+    func blocksLeft(current: CLLocation) -> Int? {
+        if let direction = self.direction, let lastLat = self.coordinates.1?.latitude, let lastLong = self.coordinates.1?.longitude {
             let blockWidth = direction.blockWidth
             let distanceLeft = current.distance(from: CLLocation(latitude: lastLat, longitude: lastLong))
             let distanceMeters = Measurement(value: distanceLeft, unit: UnitLength.meters)
@@ -180,8 +180,8 @@ extension MKRoute.Step {
         return nil
     }
     
-    var distanceLeft: CLLocationDistance? {
-        if let current = LocationAttendant.shared.current, let lastLat = self.coordinates.1?.latitude, let lastLong = self.coordinates.1?.longitude {
+    func distanceLeft(current: CLLocation) -> CLLocationDistance? {
+        if let lastLat = self.coordinates.1?.latitude, let lastLong = self.coordinates.1?.longitude {
             return CLLocation(latitude: lastLat, longitude: lastLong).distance(from: current)
         }
         
@@ -224,7 +224,7 @@ extension MKRoute.Step {
         return 0.0
     }
     
-    var relativeHeading: Double {
+    func relativeHeading(currentHeading: CLLocationDegrees) -> Double {
         var firstCoordinate: CLLocationCoordinate2D?
         var lastCoordiante: CLLocationCoordinate2D?
 
@@ -236,7 +236,7 @@ extension MKRoute.Step {
         }
 
         if let firstCoordinate = firstCoordinate, let lastCoordiante = lastCoordiante {
-            return LocationAttendant.shared.currentHeading.angle(firstCoordinate, lastCoordiante)
+            return currentHeading.angle(firstCoordinate, lastCoordiante)
         }
         
         return 0.0
@@ -281,4 +281,23 @@ enum StepDirection {
             return 750.0
         }
     }
+}
+
+
+extension UIColor {
+   convenience init(red: Int, green: Int, blue: Int) {
+       assert(red >= 0 && red <= 255, "Invalid red component")
+       assert(green >= 0 && green <= 255, "Invalid green component")
+       assert(blue >= 0 && blue <= 255, "Invalid blue component")
+
+       self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+   }
+
+   convenience init(rgb: Int) {
+       self.init(
+           red: (rgb >> 16) & 0xFF,
+           green: (rgb >> 8) & 0xFF,
+           blue: rgb & 0xFF
+       )
+   }
 }

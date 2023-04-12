@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 
 struct CircleLabelView: View {
+    @StateObject private var bathroomAttendant = BathroomAttendant.shared
+    @StateObject private var locationAttendant = LocationAttendant.shared
+    @Binding var bathroom: Bathroom
+    
     var texts: [(offset: Int, element: Character)] {
         return Array(text.enumerated())
     }
@@ -39,6 +43,7 @@ struct CircleLabelView: View {
             }
         }
         .rotationEffect(clockwise ? -angle(at: texts.count-1)/2 : angle(at: texts.count-1)/2)
+        .shadow(radius: 4)
     }
     
     func angle(at index: Int) -> Angle {
@@ -74,13 +79,12 @@ struct Sizeable: View {
 
 struct CircleLabelView_Previews: PreviewProvider {
     static var previews: some View {
-        CircleLabelView(text: "Latitude 35.08587 E • Longitude 21.43673 W".uppercased(), radius: 275/2, clockwise: true)
+        CircleLabelView(bathroom: .constant(BathroomAttendant.shared.closestBathroom), text: "Latitude 35.08587 E • Longitude 21.43673 W".uppercased(), radius: 275/2, clockwise: true)
             .font(.system(size: 13, design: .monospaced)).bold()
             .frame(width: 275, height: 275)
-        CircleLabelView(text: "Latitude 35.08587 E • Longitude 21.43673 W".uppercased(), radius: 275/2, clockwise: false)
+        CircleLabelView(bathroom: .constant(BathroomAttendant.shared.closestBathroom), text: "Latitude 35.08587 E • Longitude 21.43673 W • Elevation 64M • Incline 12".uppercased(), radius: 275/2, clockwise: false)
             .font(.system(size: 13, design: .monospaced)).bold()
             .frame(width: 275, height: 275)
         
-//        "Latitude 35.08587 E • Longitude 21.43673 W • Elevation 64M • Incline 12"
     }
 }

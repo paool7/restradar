@@ -29,7 +29,7 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section {
-                Picker("Transport Mode:", selection: $attendant.transportMode) {
+                Picker("Transport Method:", selection: $attendant.transportMode) {
                     ForEach(availableModes, id: \.self) {
                         Text($0.name)
                     }
@@ -38,18 +38,37 @@ struct SettingsView: View {
                 
                 if attendant.transportMode == .wheelchair {
                     Toggle("Electric", isOn: $attendant.useElectricWheelchair)
-                    Stepper("Wheelchair Speed (mph)", value: $attendant.walkingSpeed, in: 0.1...10.0)
+                        .tint(.mint)
+                    if attendant.useElectricWheelchair {
+                        Stepper("Wheelchair Speed: \(String(format: "%.1f", attendant.electricWheelchairSpeed)) mph", value: $attendant.electricWheelchairSpeed, in: 0.1...10.0, step: 0.1)
+                    } else {
+                        Stepper("Wheelchair Speed: \(String(format: "%.1f", attendant.wheelchairSpeed)) mph", value: $attendant.wheelchairSpeed, in: 0.1...10.0, step: 0.1)
+                    }
                 } else {
-                    Stepper("Walking Speed (mph)", value: $attendant.walkingSpeed, in: 0.1...8.0)
+                    Stepper("Walking Speed: \(String(format: "%.1f", attendant.walkingSpeed)) mph", value: $attendant.walkingSpeed, in: 0.1...8.0, step: 0.1)
+                    Button {
+                        attendant.getWalkingSpeed()
+                    } label: {
+                        Text("Get Walking Speed")
+                    }
+
                 }
-                
+                Text("Speed is used to estimate travel time to nearby bathrooms.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             } header: {
-                Text("Transport Mode:")
+                Text("Transport Method:")
+            }
+            
+            Section {
+                TextField("Heading Filter", text: $attendant.headingStringValue)
+                    .keyboardType(.numberPad)
+            } header: {
+                Text("Compass:")
             }
         }
-        .navigationTitle("Tuning:")
-        .navigationBarTitleDisplayMode(.large)
-        
+        .navigationTitle("Settings")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

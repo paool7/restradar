@@ -7,14 +7,22 @@
 
 import Foundation
 import CoreLocation
+import Combine
+import SwiftUI
 
+@MainActor class BathroomAttendant: ObservableObject {
+    static var shared = BathroomAttendant()
 
-class BathroomAttendant: ObservableObject {
-    static let shared = BathroomAttendant()
-    
+    private var subscriptions = Set<AnyCancellable>()
+
+    @Published var noCodes: Bool?
+    @Published var onlyFavorites = false
+        
     @Published var closestBathroom: Bathroom
     @Published var sortedBathrooms: [Bathroom]
+    @Published var filteredBathrooms: [Bathroom] = []
     
+    @Published var closestFavoriteBathroom: Bathroom?
     @Published var favoriteBathrooms: [Bathroom] = [] {
         didSet {
             let bathroomIds = favoriteBathrooms.map { $0.id }
@@ -53,10 +61,44 @@ class BathroomAttendant: ObservableObject {
         
         self.sortedBathrooms = defaults
         self.closestBathroom = defaults[0]
-        
+
         if let bathroomIds = UserDefaults.standard.object(forKey: "FavoriteBathroomsIds") as? [Int] {
             self.favoriteBathrooms = bathroomIds.compactMap({ id in self.sortedBathrooms.first(where: { $0.id == id }) })
         }
+        
+        self.$noCodes.sink { [weak self] noCodes in
+            if let onlyFavorites = self?.onlyFavorites, let filteredBathroom = self?.filterBathrooms(onlyFavorites: onlyFavorites, noCodes: noCodes) {
+                self?.filteredBathrooms = filteredBathroom
+            }
+        }.store(in: &subscriptions)
+        
+        self.$onlyFavorites.sink { [weak self] onlyFavorites in
+            if let filteredBathroom = self?.filterBathrooms(onlyFavorites: onlyFavorites, noCodes: self?.noCodes) {
+                self?.filteredBathrooms = filteredBathroom
+            }
+        }.store(in: &subscriptions)
+        
+        self.$favoriteBathrooms.sink {  [weak self] bathrooms in
+            if let firstFavorite = self?.favoriteBathrooms.first {
+                self?.closestFavoriteBathroom = firstFavorite
+            }
+        }.store(in: &subscriptions)
+        
+        self.$sortedBathrooms.sink {  [weak self] bathrooms in
+            if let firstSorted = self?.sortedBathrooms.first {
+                self?.closestBathroom = firstSorted
+            }
+            if let onlyFavorites = self?.onlyFavorites, let filteredBathroom = self?.filterBathrooms(onlyFavorites: onlyFavorites, noCodes: self?.noCodes) {
+                self?.filteredBathrooms = filteredBathroom
+            }
+        }.store(in: &subscriptions)
     }
     
+    func filterBathrooms(onlyFavorites: Bool, noCodes: Bool?) -> [Bathroom] {
+        guard let current = LocationAttendant.shared.current else { return [] }
+        var bathroomList = onlyFavorites ? favoriteBathrooms : sortedBathrooms
+        bathroomList = bathroomList.sorted(by: { $0.distanceMeters(current: current)?.value ?? 1000 < $1.distanceMeters(current: current)?.value ?? 1000 })
+        bathroomList = noCodes == nil ? bathroomList : (noCodes == true ? bathroomList.filter({ $0.code == nil }) : bathroomList.filter({ $0.code != nil }))
+        return bathroomList
+    }
 }

@@ -13,7 +13,8 @@ struct G2GApp: App {
         WindowGroup {
             NavigationStack {
                 ContentView()
-            }.tint(.white)
+            }.tint(.primary)
+
         }
     }
 }

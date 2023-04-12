@@ -9,15 +9,25 @@ import SwiftUI
 import MapKit
 
 struct HeaderView: View {
-    @ObservedObject var attendant = BathroomAttendant.shared
+    @StateObject private var bathroomAttendant = BathroomAttendant.shared
+    @StateObject private var locationAttendant = LocationAttendant.shared
     @Binding var bathroom: Bathroom
     
+    @State var moreDetail: Bool
+    
     var body: some View {
-        VStack(alignment: .center, spacing: 8) {
-            VStack(alignment: .center, spacing: 2) {
+        VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(bathroom.name)
                     .font(.title)
                     .bold()
+                if moreDetail {
+                    HStack {
+                        Image(systemName: "mappin")
+                        Text(bathroom.address)
+                            .font(.callout)
+                    }
+                }
                 if let code = bathroom.code {
                     HStack {
                         Image(systemName: "lock.shield")
@@ -35,23 +45,27 @@ struct HeaderView: View {
             }
             CompassView(bathroom: $bathroom)
                 .aspectRatio(contentMode: .fill)
-                .frame(maxWidth: .infinity)
-            if let instruction = bathroom.currentRouteStep?.naturalCurrentInstruction {
+            if let current = locationAttendant.current, let instruction = bathroom.currentRouteStep(current: current)?.naturalCurrentInstruction(current: current) {
                 Text(instruction)
+                    .font(.headline)
+            } else if let firstStepInstructions = bathroom.route?.steps.first?.naturalInstructions {
+                Text(firstStepInstructions)
                     .font(.headline)
             }
         }
-        .frame(maxWidth: .infinity)
         .padding(8)
-        .background {
-            Color(uiColor: .secondarySystemBackground)
+        .foregroundColor(.primary)
+        .frame(maxHeight: .infinity)
+        .onAppear {
+            if bathroom.directions.isEmpty {
+                locationAttendant.getDirections(to: bathroom.id)
+            }
         }
-        .cornerRadius(16)
     }
 }
 
 struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        HeaderView(bathroom: .constant(BathroomAttendant.shared.closestBathroom))
+        HeaderView(bathroom: .constant(BathroomAttendant().closestBathroom), moreDetail: true)
     }
 }

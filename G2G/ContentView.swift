@@ -11,80 +11,82 @@ import CoreLocation
 import Foundation
 
 struct ContentView: View {
-    @ObservedObject var attendant = BathroomAttendant.shared
-    @ObservedObject var locationAttendant = LocationAttendant.shared
+    @StateObject private var bathroomAttendant = BathroomAttendant.shared
+    @StateObject private var locationAttendant = LocationAttendant.shared
     @Environment(\.scenePhase) var scenePhase
     
-    @State private var showFavorites = false
+    @State private var showLocation = false
     @State private var showSettings = false
+    
+    @State var current = LocationAttendant.shared.current
+    @State var currentHeading = LocationAttendant.shared.currentHeading
 
     var body: some View {
             VStack {
-                VStack(alignment: .center, spacing: -12, content: {
-                    if showFavorites {
-                        NavigationLink(destination: BathroomView(bathroom: $attendant.closestBathroom)) {
-                            HeaderView(bathroom: $attendant.closestBathroom)
-                                .foregroundColor(.primary)
-                                .padding(16)
-                        }
-                    } else if let bathroom = $attendant.favoriteBathrooms.first {
+                List($bathroomAttendant.filteredBathrooms) { bathroom in
+                    if (bathroom.id == bathroomAttendant.filteredBathrooms.first?.id) {
                         NavigationLink(destination: BathroomView(bathroom: bathroom)) {
-                            HeaderView(bathroom: bathroom)
-                                .foregroundColor(.primary)
-                                .padding(16)
+                            HeaderView(bathroom: bathroom, moreDetail: false)
                         }
-                    }
-                })
-                
-                Divider()
-                
-                VStack(alignment: .leading, spacing: -6, content: {
-                    Text("Closest Bathrooms:")
-                        .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 0))
-                        .foregroundColor(Color(uiColor: .secondaryLabel))
-                        .font(.subheadline)
-                        .bold()
-                    if showFavorites {
-                        List($attendant.favoriteBathrooms) { bathroom in
-                            BathroomCellView(bathroom: bathroom)
-                        }
-                        .cornerRadius(16)
-                        .listStyle(.plain)
-                        .padding(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
                     } else {
-                        List($attendant.sortedBathrooms) { bathroom in
-                            BathroomCellView(bathroom: bathroom)
-                        }
-                        .cornerRadius(16)
-                        .listStyle(.plain)
-                        .padding(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
-                    }
-                })
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        self.showFavorites = !self.showFavorites
-                    } label: {
-                        Image(systemName: self.showFavorites ? "bookmark.fill" : "bookmark")
-                            .foregroundColor(self.showFavorites ? .yellow : .white)
+                        BathroomCellView(bathroom: bathroom)
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
+                .listStyle(.plain)
+            }
+            .navigationTitle("g2g?")
+            .toolbar {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Text("Filter:")
+                        .font(.callout)
+                    Button {
+                        bathroomAttendant.onlyFavorites = !bathroomAttendant.onlyFavorites
+                    } label: {
+                        Image(systemName: bathroomAttendant.onlyFavorites ? "bookmark.fill" : "bookmark")
+                            .foregroundColor(bathroomAttendant.onlyFavorites ? .yellow : .primary)
+                    }
+                    
+                    Button {
+                        self.showLocation = !self.showLocation
+                    } label: {
+                        Image(systemName: "location.magnifyingglass")
+                            .foregroundColor(locationAttendant.selectedSearchLocation != nil ? .mint : .primary)
+                    }
+                    .popover(isPresented: $showLocation, attachmentAnchor: .point(.trailing), arrowEdge: .top) {
+                        LocationSearchView(locationService: locationAttendant.locationService)
+                    }
+                    
+                    Button {
+                        if bathroomAttendant.noCodes == nil {
+                            bathroomAttendant.noCodes = true
+                        } else if bathroomAttendant.noCodes == true {
+                            bathroomAttendant.noCodes = false
+                        } else if bathroomAttendant.noCodes == false {
+                            bathroomAttendant.noCodes = nil
+                        }
+                    } label: {
+                        Image(systemName: bathroomAttendant.noCodes == true ? "lock.open" : (bathroomAttendant.noCodes == nil ? "lock.shield" : "lock"))
+                            .foregroundColor(bathroomAttendant.noCodes == true ? .mint : (bathroomAttendant.noCodes == nil ? .primary : .red))
+                    }
+                    
+                    
+                    Spacer()
+                    
                     Button {
                         self.showSettings = true
                     } label: {
                         Image(systemName: "gear")
                         
                     }
+                    
                 }
             }
-            .foregroundColor(.white)
+            .foregroundColor(.primary)
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .active {
-                    LocationAttendant.shared.requestAuthorization()
+                    locationAttendant.requestAuthorization()
                 } else if newPhase == .background {
-                    LocationAttendant.shared.stopUpdating()
+                    locationAttendant.stopUpdating()
                 }
             }
             .navigationDestination(isPresented: $showSettings) {
