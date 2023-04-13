@@ -17,9 +17,7 @@ struct ContentView: View {
     
     @State private var showLocation = false
     @State private var showSettings = false
-    
-    @State var current = LocationAttendant.shared.current
-    @State var currentHeading = LocationAttendant.shared.currentHeading
+
 
     var body: some View {
             VStack {

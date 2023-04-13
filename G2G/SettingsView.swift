@@ -46,12 +46,6 @@ struct SettingsView: View {
                     }
                 } else {
                     Stepper("Walking Speed: \(String(format: "%.1f", attendant.walkingSpeed)) mph", value: $attendant.walkingSpeed, in: 0.1...8.0, step: 0.1)
-                    Button {
-                        attendant.getWalkingSpeed()
-                    } label: {
-                        Text("Get Walking Speed")
-                    }
-
                 }
                 Text("Speed is used to estimate travel time to nearby bathrooms.")
                     .font(.caption)

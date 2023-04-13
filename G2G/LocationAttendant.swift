@@ -11,7 +11,7 @@ import MapKit
 import SwiftUI
 import Solar
 
-@MainActor class LocationAttendant: NSObject, ObservableObject {
+class LocationAttendant: NSObject, ObservableObject {
     static var shared = LocationAttendant()
     
     let locationManager = CLLocationManager()
@@ -38,7 +38,6 @@ import Solar
     #if targetEnvironment(simulator)
         self.current = CLLocation(latitude: 40.652005801809445, longitude: -73.94718932404285)
         self.currentHeading = -12.0 //6.162876129150391
-        self.getHeadings()
     #endif
     }
     

@@ -10,7 +10,7 @@ import CoreLocation
 import Combine
 import SwiftUI
 
-@MainActor class BathroomAttendant: ObservableObject {
+class BathroomAttendant: ObservableObject {
     static var shared = BathroomAttendant()
 
     private var subscriptions = Set<AnyCancellable>()
