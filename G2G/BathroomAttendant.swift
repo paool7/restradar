@@ -26,7 +26,7 @@ class BathroomAttendant: ObservableObject {
     @Published var favoriteBathrooms: [Bathroom] = [] {
         didSet {
             let bathroomIds = favoriteBathrooms.map { $0.id }
-            UserDefaults.standard.set(bathroomIds, forKey: "FavoriteBathroomsIds")
+            userDefaults?.set(bathroomIds, forKey: "FavoriteBathroomsIds")
         }
     }
 
@@ -62,7 +62,7 @@ class BathroomAttendant: ObservableObject {
         self.sortedBathrooms = defaults
         self.closestBathroom = defaults[0]
 
-        if let bathroomIds = UserDefaults.standard.object(forKey: "FavoriteBathroomsIds") as? [Int] {
+        if let bathroomIds = userDefaults?.object(forKey: "FavoriteBathroomsIds") as? [Int] {
             self.favoriteBathrooms = bathroomIds.compactMap({ id in self.sortedBathrooms.first(where: { $0.id == id }) })
         }
         
@@ -85,11 +85,11 @@ class BathroomAttendant: ObservableObject {
         }.store(in: &subscriptions)
         
         self.$sortedBathrooms.sink {  [weak self] bathrooms in
-            if let firstSorted = self?.sortedBathrooms.first {
-                self?.closestBathroom = firstSorted
-            }
             if let onlyFavorites = self?.onlyFavorites, let filteredBathroom = self?.filterBathrooms(onlyFavorites: onlyFavorites, noCodes: self?.noCodes) {
                 self?.filteredBathrooms = filteredBathroom
+            }
+            if let firstSorted = self?.filteredBathrooms.first {
+                self?.closestBathroom = firstSorted
             }
         }.store(in: &subscriptions)
     }
@@ -100,5 +100,12 @@ class BathroomAttendant: ObservableObject {
         bathroomList = bathroomList.sorted(by: { $0.distanceMeters(current: current)?.value ?? 1000 < $1.distanceMeters(current: current)?.value ?? 1000 })
         bathroomList = noCodes == nil ? bathroomList : (noCodes == true ? bathroomList.filter({ $0.code == nil }) : bathroomList.filter({ $0.code != nil }))
         return bathroomList
+    }
+    
+    func findClosestBathrooms() async throws -> Bathroom {
+        while LocationAttendant.shared.current == nil {
+            
+        }
+        return self.closestBathroom
     }
 }

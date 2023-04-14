@@ -11,6 +11,13 @@ import CoreLocation
 import MapKit
 
 extension MKRoute.Step {
+    func splitNaturalCurrentInstruction(current: CLLocation) -> String? {
+        guard let blocks = self.blocksLeft(current: current), let distanceLeft = self.distanceLeft(current: current) else { return self.instructions }
+        let naturalStart = "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix): ") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix): " : ""))\n"
+        
+        return "\(naturalStart)\(self.instructions)"
+    }
+    
     func naturalCurrentInstruction(current: CLLocation) -> String? {
         guard let blocks = self.blocksLeft(current: current), let distanceLeft = self.distanceLeft(current: current) else { return self.instructions }
         let naturalStart = "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix), ") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix), " : ""))"
@@ -41,16 +48,16 @@ class Bathroom: Identifiable, Equatable, ObservableObject {
     @Published var heading: Double = 0.0
     @Published var route: MKRoute?
         
-//    func heading(current: CLLocation) -> Double {
-//        if let firstStep = directions.first {
-//            return firstStep.streetHeading
-//        }
-//        return 0.0
-//    }
-//
-//    func generalHeading(current: CLLocation, currentHeading: CLLocationDirection) -> Double {
-//        return currentHeading.angle(current.coordinate, coordinate)
-//    }
+    func heading(current: CLLocation) -> Double {
+        if let firstStep = directions.first {
+            return firstStep.streetHeading
+        }
+        return 0.0
+    }
+
+    func generalHeading(current: CLLocation, currentHeading: CLLocationDirection) -> Double {
+        return currentHeading.angle(current.coordinate, coordinate)
+    }
 
     var annotation: Annotation? {
         return Annotation(title: name, coordinate: coordinate)
@@ -61,6 +68,13 @@ class Bathroom: Identifiable, Equatable, ObservableObject {
         let locationDistance = location.distance(from: current)
         
         return Measurement(value: locationDistance, unit: UnitLength.meters)
+    }
+    
+    func totalTime(current: CLLocation) -> Int {
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        let locationDistance = location.distance(from: current)
+        
+        return locationDistance.travelTime
     }
     
     func timeAway(current: CLLocation) -> String? {
@@ -85,7 +99,17 @@ class Bathroom: Identifiable, Equatable, ObservableObject {
         return "~\(distanceMeters.value.steps) step\(distanceMeters.value.steps == 1 ? "" : "s")"
     }
     
-    var totalBlocks: String {
+    var totalBlocks: Int {
+        var total = 0
+        for step in directions {
+            if let blocks = step.blocks {
+                total += blocks
+            }
+        }
+        return total
+    }
+    
+    var blocksAway: String {
         var total = 0
         for step in directions {
             if let blocks = step.blocks {

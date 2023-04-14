@@ -42,7 +42,7 @@ struct CompassView: View {
                                         .foregroundColor(.white)
                                         .padding(textPadding)
                                 }
-                                if let current = locationAttendant.current, let blocksAway = bathroom.totalBlocks, let distanceAway = bathroom.distanceAway(current: current) {
+                                if let current = locationAttendant.current, let blocksAway = bathroom.blocksAway, let distanceAway = bathroom.distanceAway(current: current) {
                                     CircleLabelView(bathroom: $bathroom, text: blocksAway + " • " + distanceAway, radius: normalizedRadius, clockwise: false)
                                         .font(.subheadline)
                                         .bold()
@@ -99,6 +99,7 @@ struct CompassShapeView: View {
 struct CompassView_Previews: PreviewProvider {
     static var previews: some View {
         CompassShapeView(rotation: .constant(90))
+            .shadow(radius: 4)
             .frame(width: 300, height: 300)
     }
 }

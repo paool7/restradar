@@ -14,7 +14,6 @@ struct BathroomCellView: View {
     @Binding var bathroom: Bathroom
     
     var body: some View {
-        NavigationLink(destination: BathroomView(bathroom: $bathroom)) {
             VStack(alignment: .leading, spacing: 2) {
                 HStack {
                     Text(bathroom.name)
@@ -48,7 +47,6 @@ struct BathroomCellView: View {
                             .font(.callout)
                     }
                 }
-            }
         }
     }
 }

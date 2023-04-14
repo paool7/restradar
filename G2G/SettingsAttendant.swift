@@ -7,6 +7,23 @@
 
 import Foundation
 import MapKit
+import EventKit
+
+let userDefaults = UserDefaults(suiteName: "group.com.paool.bathroom")
+
+enum TransportMode: CaseIterable {
+    case wheelchair
+    case walking
+    
+    var name: String {
+        switch self {
+        case .wheelchair:
+            return "Wheelchair"
+        case .walking:
+            return "Walking"
+        }
+    }
+}
 
 class SettingsAttendant: ObservableObject {
     static let shared = SettingsAttendant()
@@ -18,46 +35,52 @@ class SettingsAttendant: ObservableObject {
     static let wheelchairKey = "WheelchairSpeedSetting"
     static let transitKey = "UsePublicTransitSetting"
     static let headingKey = "HeadingFilterSetting"
+    static let gradientHourKey = "GradientHourSetting"
+    static let gradientKey = "UseGradientSetting"
+    static let calendarKey = "UseCalendarEventsSetting"
 
     static let defaultWheelchairSpeed = 4.0
     static let defaultElectricWheelchairSpeed = 5.0
     static let defaultWalkingSpeed = 3.0
     
+    let eventStore = EKEventStore()
+    
     @Published var transportMode: TransportMode {
         didSet {
-            UserDefaults.standard.set(transportMode.hashValue, forKey: SettingsAttendant.transportModeKey)
+            userDefaults?.set(transportMode.hashValue, forKey: SettingsAttendant.transportModeKey)
         }
     }
     
     @Published var useElectricWheelchair: Bool = false {
         didSet {
-            UserDefaults.standard.set(useElectricWheelchair, forKey: SettingsAttendant.usesElectricWheelchairKey)
+            userDefaults?.set(useElectricWheelchair, forKey: SettingsAttendant.usesElectricWheelchairKey)
         }
     }
     
     @Published var electricWheelchairSpeed: Double  {
         didSet {
-            UserDefaults.standard.set(electricWheelchairSpeed, forKey: SettingsAttendant.electricWheelchairKey)
+            userDefaults?.set(electricWheelchairSpeed, forKey: SettingsAttendant.electricWheelchairKey)
         }
     }
     
     @Published var walkingSpeed: Double {
         didSet {
-            UserDefaults.standard.set(walkingSpeed, forKey: SettingsAttendant.walkingKey)
+            userDefaults?.set(walkingSpeed, forKey: SettingsAttendant.walkingKey)
         }
     }
     
     @Published var wheelchairSpeed: Double  {
         didSet {
-            UserDefaults.standard.set(wheelchairSpeed, forKey: SettingsAttendant.wheelchairKey)
+            userDefaults?.set(wheelchairSpeed, forKey: SettingsAttendant.wheelchairKey)
         }
     }
 
     @Published var headingFilter: Double?  {
         didSet {
-            UserDefaults.standard.set(headingFilter, forKey: SettingsAttendant.headingKey)
+            userDefaults?.set(headingFilter, forKey: SettingsAttendant.headingKey)
         }
     }
+    
     @Published var headingStringValue: String = "" {
         didSet {
             if let doubleValue = Double(headingStringValue) {
@@ -69,19 +92,46 @@ class SettingsAttendant: ObservableObject {
         }
     }
     
+    @Published var useTimeGradients: Bool {
+        didSet {
+            userDefaults?.set(useTimeGradients, forKey: SettingsAttendant.gradientKey)
+        }
+    }
+    
+    @Published var gradientHour: Double  {
+        didSet {
+            userDefaults?.set(gradientHour, forKey: SettingsAttendant.gradientHourKey)
+        }
+    }
+    
+    @Published var useCalendarEvents: Bool = false {
+        didSet {
+            userDefaults?.set(useCalendarEvents, forKey: SettingsAttendant.calendarKey)
+        }
+    }
+    
     init() {
-        let storedMode = UserDefaults.standard.object(forKey: SettingsAttendant.transportModeKey) as? TransportMode
+        let storedMode = userDefaults?.object(forKey: SettingsAttendant.transportModeKey) as? TransportMode
         transportMode = storedMode ?? .walking
-        let storedUseElectricWheelchair = UserDefaults.standard.object(forKey: SettingsAttendant.usesElectricWheelchairKey) as? Bool
+        let storedUseElectricWheelchair = userDefaults?.object(forKey: SettingsAttendant.usesElectricWheelchairKey) as? Bool
         useElectricWheelchair = storedUseElectricWheelchair ?? false
-        let storedWalkingSpeed = UserDefaults.standard.object(forKey: SettingsAttendant.walkingKey) as? Double
+        let storedWalkingSpeed = userDefaults?.object(forKey: SettingsAttendant.walkingKey) as? Double
         walkingSpeed = storedWalkingSpeed ?? SettingsAttendant.defaultWalkingSpeed
-        let storedWheelchairSpeed = UserDefaults.standard.object(forKey: SettingsAttendant.wheelchairKey) as? Double
+        let storedWheelchairSpeed = userDefaults?.object(forKey: SettingsAttendant.wheelchairKey) as? Double
         wheelchairSpeed = storedWheelchairSpeed ?? SettingsAttendant.defaultWheelchairSpeed
-        let storedElectricWheelchairSpeed = UserDefaults.standard.object(forKey: SettingsAttendant.electricWheelchairKey) as? Double
+        let storedElectricWheelchairSpeed = userDefaults?.object(forKey: SettingsAttendant.electricWheelchairKey) as? Double
         electricWheelchairSpeed = storedElectricWheelchairSpeed ?? SettingsAttendant.defaultElectricWheelchairSpeed
         
-        let storedHeadingFilter = UserDefaults.standard.object(forKey: SettingsAttendant.headingKey) as? Double
+        let storedHeadingFilter = userDefaults?.object(forKey: SettingsAttendant.headingKey) as? Double
         headingFilter = storedHeadingFilter
+        
+        let storedGradientHour = userDefaults?.object(forKey: SettingsAttendant.gradientHourKey) as? Double
+        gradientHour = storedGradientHour ?? 0
+        
+        let storedUseGradient = userDefaults?.object(forKey: SettingsAttendant.gradientKey) as? Bool
+        useTimeGradients = storedUseGradient ?? true
+        
+        let storedUseCalendarEvents = userDefaults?.object(forKey: SettingsAttendant.calendarKey) as? Bool
+        useCalendarEvents = storedUseCalendarEvents ?? false
     }
 }

@@ -22,13 +22,17 @@ class LocationAttendant: NSObject, ObservableObject {
     @Published var current: CLLocation?
     @Published var currentHeading: CLLocationDegrees = 0.0
     
-    @Published var currentHourValue: Double = 8.0
+    @Published var currentHourValue: Double
     
     var locationService = LocationService()
     
     private var getFirst = true
     
     override init() {
+        let date = Date()
+        let calendar = Calendar.current
+        currentHourValue = Double(calendar.component(.hour, from: date))
+        
         super.init()
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
@@ -88,9 +92,8 @@ class LocationAttendant: NSObject, ObservableObject {
 //    }
     
     func gradientForCurrentTime() -> LinearGradient? {
-        let date = Date()
         let calendar = Calendar.current
-        let currentHour = calendar.component(.hour, from: date)
+        let currentHour = SettingsAttendant.shared.useTimeGradients ? Int(currentHourValue) : Int(SettingsAttendant.shared.gradientHour)
                 
         if let location = current, let solar = Solar(coordinate: location.coordinate), let sunset = solar.sunset, let sunrise = solar.sunrise  {
             let sunsetHour = calendar.component(.hour, from: sunset)
@@ -103,64 +106,32 @@ class LocationAttendant: NSObject, ObservableObject {
                 let difference = sunriseHour - currentHour
                 let gradientMapped = 6 - difference
                 if gradientMapped >= 0 {
-                    return gradient(forHour: gradientMapped)
+                    return Gradient.gradient(forHour: gradientMapped)
                 } else {
                     let wrappedMapped = 24 + gradientMapped
-                    return gradient(forHour: wrappedMapped)
+                    return Gradient.gradient(forHour: wrappedMapped)
                 }
             } else if currentHour > sunriseHour && currentHour < sunsetHour {
                 let difference = sunsetHour - currentHour
                 let gradientMapped = 19 - difference
                 if gradientMapped >= 6 {
-                    return gradient(forHour: gradientMapped)
+                    return Gradient.gradient(forHour: gradientMapped)
                 } else {
                     let wrappedMapped = 24 - gradientMapped
-                    return gradient(forHour: wrappedMapped)
+                    return Gradient.gradient(forHour: wrappedMapped)
                 }
             } else if currentHour > sunsetHour {
                 let difference = currentHour - sunsetHour
                 let gradientMapped = 19 + difference
                 if gradientMapped <= 23 {
-                    return gradient(forHour: gradientMapped)
+                    return Gradient.gradient(forHour: gradientMapped)
                 } else {
                     let wrappedMapped = gradientMapped - 24
-                    return gradient(forHour: wrappedMapped)
+                    return Gradient.gradient(forHour: wrappedMapped)
                 }
             }
         }
-        return gradient(forHour: currentHour)
-    }
-    
-    private func gradient(forHour: Int) -> LinearGradient {
-        switch forHour {
-        case 0: return Gradient.skyGradient0
-        case 1: return Gradient.skyGradient1
-        case 2: return Gradient.skyGradient2
-        case 3: return Gradient.skyGradient3
-        case 4: return Gradient.skyGradient4
-        case 5: return Gradient.skyGradient5
-            //Sunrise
-        case 6: return Gradient.skyGradient6
-        case 7: return Gradient.skyGradient7
-        case 8: return Gradient.skyGradient8
-        case 9: return Gradient.skyGradient9
-        case 10: return Gradient.skyGradient10
-        case 11: return Gradient.skyGradient11
-        case 12: return Gradient.skyGradient12
-        case 13: return Gradient.skyGradient13
-        case 14: return Gradient.skyGradient14
-        case 15: return Gradient.skyGradient15
-        case 16: return Gradient.skyGradient16
-        case 17: return Gradient.skyGradient17
-        case 18: return Gradient.skyGradient18
-            // Sunset
-        case 19: return Gradient.skyGradient19
-        case 20: return Gradient.skyGradient20
-        case 21: return Gradient.skyGradient21
-        case 22: return Gradient.skyGradient22
-        case 23: return Gradient.skyGradient23
-        default: return Gradient.skyGradient23
-        }
+        return Gradient.gradient(forHour: currentHour)
     }
     
     func getDirections(to toId: Int) {
@@ -176,6 +147,26 @@ class LocationAttendant: NSObject, ObservableObject {
                 BathroomAttendant.shared.sortedBathrooms[index] = bathroom
             }
         }
+    }
+    
+    func getDirections(toId: Int) async throws -> Bathroom? {
+        if let current = self.current, let index = BathroomAttendant.shared.sortedBathrooms.firstIndex(where: {$0.id == toId}) {
+            let bathroom = BathroomAttendant.shared.sortedBathrooms[index]
+            do {
+                let result = try await self.getTravelDirections(sourceLocation: current.coordinate, endLocation: BathroomAttendant.shared.sortedBathrooms[index].coordinate)
+                bathroom.directions = result.directions
+                bathroom.route = result.route
+                if let travelTime = result.route?.expectedTravelTime {
+                        let travelMinutes = Int(travelTime/60)
+                        bathroom.directionsEta = "\(travelMinutes) minute\(travelMinutes == 1 ? "" : "s")"
+                }
+                BathroomAttendant.shared.sortedBathrooms[index] = bathroom
+                return bathroom
+            } catch {
+                return nil
+            }
+        }
+        return nil
     }
     
     
@@ -207,7 +198,7 @@ class LocationAttendant: NSObject, ObservableObject {
         }
     }
     
-    func getTravelDirections(sourceLocation: CLLocationCoordinate2D, endLocation: CLLocationCoordinate2D, completion: @escaping (_ directions: [MKRoute.Step], _ route: MKRoute?) -> (Void)){
+    func getTravelDirections(sourceLocation: CLLocationCoordinate2D, endLocation: CLLocationCoordinate2D) async throws ->  (directions: [MKRoute.Step], route: MKRoute?) {
         let request = MKDirections.Request()
         let source = MKPlacemark( coordinate: sourceLocation)
         let destination = MKPlacemark( coordinate: endLocation)
@@ -215,7 +206,31 @@ class LocationAttendant: NSObject, ObservableObject {
         request.destination = MKMapItem(placemark: destination)
         request.transportType = MKDirectionsTransportType.walking
         request.requestsAlternateRoutes = true
-        let directions = MKDirections ( request: request)
+        let directions = MKDirections (request: request)
+        
+        do {
+            let directions = try await directions.calculate()
+            let routes = directions.routes
+            if let shortestRoute = routes.sorted(by: { $0.expectedTravelTime < $1.expectedTravelTime}).first {
+                return (shortestRoute.steps, shortestRoute)
+            } else {
+                return ([], nil)
+            }
+        } catch {
+            print("Distance directions calculation error\n \(error.localizedDescription)")
+            return ([], nil)
+        }
+    }
+    
+    func getTravelDirections(sourceLocation: CLLocationCoordinate2D, endLocation: CLLocationCoordinate2D, completion: @escaping (_ directions: [MKRoute.Step], _ route: MKRoute?) -> (Void)) {
+        let request = MKDirections.Request()
+        let source = MKPlacemark( coordinate: sourceLocation)
+        let destination = MKPlacemark( coordinate: endLocation)
+        request.source =  MKMapItem(placemark: source)
+        request.destination = MKMapItem(placemark: destination)
+        request.transportType = MKDirectionsTransportType.walking
+        request.requestsAlternateRoutes = true
+        let directions = MKDirections (request: request)
         directions.calculate { (response, error) in
             if let error = error {
                 print("Distance directions calculation error\n \(error.localizedDescription)")
@@ -225,6 +240,14 @@ class LocationAttendant: NSObject, ObservableObject {
                 completion(shortestRoute.steps, shortestRoute)
             }
         }
+    }
+    
+    func fetchLocation() async throws -> CLLocation {
+        self.locationManager.requestLocation()
+        while self.current == nil && self.currentHeading == 0.0 {
+            
+        }
+        return current!
     }
 }
 
@@ -246,5 +269,9 @@ extension LocationAttendant: CLLocationManagerDelegate {
         self.currentHeading = newHeading.trueHeading
         
         self.getHeadings()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Error:\(error)")
     }
 }
