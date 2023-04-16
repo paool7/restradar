@@ -11,6 +11,48 @@ import EventKit
 
 let userDefaults = UserDefaults(suiteName: "group.com.paool.bathroom")
 
+enum Handed: Int, CaseIterable {
+    case right
+    case left
+    
+    var name: String {
+        switch self {
+        case .right:
+            return "Right"
+        case .left:
+            return "Left"
+        }
+    }
+}
+
+enum HomeMode: CaseIterable {
+    case nearby
+    case calendar
+    
+    var name: String {
+        switch self {
+        case .nearby:
+            return "Nearby"
+        case .calendar:
+            return "Calendar"
+        }
+    }
+}
+
+enum Theme: Int, CaseIterable {
+    case sunsetsunrise = 0
+    case random = 1
+    
+    var name: String {
+        switch self {
+        case .sunsetsunrise:
+            return "Sunset to Sunrise"
+        case .random:
+            return "Assortment"
+        }
+    }
+}
+
 enum TransportMode: CaseIterable {
     case wheelchair
     case walking
@@ -37,12 +79,16 @@ class SettingsAttendant: ObservableObject {
     static let headingKey = "HeadingFilterSetting"
     static let gradientHourKey = "GradientHourSetting"
     static let gradientKey = "UseGradientSetting"
+    static let gradientThemeKey = "GradientThemeSetting"
     static let calendarKey = "UseCalendarEventsSetting"
+    static let handKey = "PrimaryHandSettings"
+    static let stepKey = "StepLengthSetting"
 
     static let defaultWheelchairSpeed = 4.0
     static let defaultElectricWheelchairSpeed = 5.0
     static let defaultWalkingSpeed = 3.0
-    
+    static let defaultStrideLength = 2.5
+
     let eventStore = EKEventStore()
     
     @Published var transportMode: TransportMode {
@@ -74,21 +120,24 @@ class SettingsAttendant: ObservableObject {
             userDefaults?.set(wheelchairSpeed, forKey: SettingsAttendant.wheelchairKey)
         }
     }
-
-    @Published var headingFilter: Double?  {
+    
+    @Published var stepLength: Double  {
         didSet {
-            userDefaults?.set(headingFilter, forKey: SettingsAttendant.headingKey)
+            userDefaults?.set(stepLength, forKey: SettingsAttendant.stepKey)
         }
     }
     
     @Published var headingStringValue: String = "" {
         didSet {
             if let doubleValue = Double(headingStringValue) {
-                self.headingFilter = doubleValue
                 LocationAttendant.shared.locationManager.headingFilter = doubleValue
-            } else {
-                self.headingFilter = nil
             }
+        }
+    }
+    
+    @Published var gradientTheme: Theme {
+        didSet {
+            userDefaults?.set(gradientTheme.rawValue, forKey: SettingsAttendant.gradientThemeKey)
         }
     }
     
@@ -98,7 +147,7 @@ class SettingsAttendant: ObservableObject {
         }
     }
     
-    @Published var gradientHour: Double  {
+    @Published var gradientHour: Double {
         didSet {
             userDefaults?.set(gradientHour, forKey: SettingsAttendant.gradientHourKey)
         }
@@ -107,6 +156,12 @@ class SettingsAttendant: ObservableObject {
     @Published var useCalendarEvents: Bool = false {
         didSet {
             userDefaults?.set(useCalendarEvents, forKey: SettingsAttendant.calendarKey)
+        }
+    }
+    
+    @Published var primaryHand: Handed {
+        didSet {
+            userDefaults?.set(primaryHand.rawValue, forKey: SettingsAttendant.handKey)
         }
     }
     
@@ -122,16 +177,26 @@ class SettingsAttendant: ObservableObject {
         let storedElectricWheelchairSpeed = userDefaults?.object(forKey: SettingsAttendant.electricWheelchairKey) as? Double
         electricWheelchairSpeed = storedElectricWheelchairSpeed ?? SettingsAttendant.defaultElectricWheelchairSpeed
         
-        let storedHeadingFilter = userDefaults?.object(forKey: SettingsAttendant.headingKey) as? Double
-        headingFilter = storedHeadingFilter
+        if let storedHeadingFilter = userDefaults?.object(forKey: SettingsAttendant.headingKey) as? String {
+            headingStringValue = storedHeadingFilter
+        }
         
         let storedGradientHour = userDefaults?.object(forKey: SettingsAttendant.gradientHourKey) as? Double
-        gradientHour = storedGradientHour ?? 0
+        gradientHour = storedGradientHour ?? LocationAttendant.shared.currentHourValue
         
         let storedUseGradient = userDefaults?.object(forKey: SettingsAttendant.gradientKey) as? Bool
         useTimeGradients = storedUseGradient ?? true
         
         let storedUseCalendarEvents = userDefaults?.object(forKey: SettingsAttendant.calendarKey) as? Bool
         useCalendarEvents = storedUseCalendarEvents ?? false
+        
+        let storedGradientTheme = userDefaults?.object(forKey: SettingsAttendant.gradientThemeKey) as? Int
+        gradientTheme = Theme(rawValue: storedGradientTheme ?? 0) ?? Theme.sunsetsunrise
+        
+        let storedPrimaryHand = userDefaults?.object(forKey: SettingsAttendant.handKey) as? Int
+        primaryHand = Handed(rawValue: storedPrimaryHand ?? 0) ?? Handed.right
+        
+        let storedStepLength = userDefaults?.object(forKey: SettingsAttendant.stepKey) as? Double
+        stepLength = storedStepLength ?? SettingsAttendant.defaultStrideLength
     }
 }

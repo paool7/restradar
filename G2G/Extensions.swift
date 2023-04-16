@@ -7,6 +7,22 @@
 
 import Foundation
 import MapKit
+import SwiftUI
+
+extension View {
+    @ViewBuilder
+    func `if`<Transform: View>(_ condition: Bool, transform: (Self) -> Transform) -> some View {
+        if condition { transform(self) }
+        else { self }
+    }
+}
+
+
+extension String {
+    func removeNewLine() -> String {        
+        return self.replacingOccurrences(of: "\n", with: ", ")
+    }
+}
 
 extension CLLocationCoordinate2D {
     func midpointTo(location:CLLocationCoordinate2D) -> CLLocationCoordinate2D {
@@ -81,7 +97,7 @@ extension CLLocationDistance {
     var steps: Int {
         let distanceMeters = Measurement(value: self, unit: UnitLength.meters)
         let distanceFeet = distanceMeters.converted(to: .feet)
-        return Int(distanceFeet.value / 2.5)
+        return Int(distanceFeet.value / SettingsAttendant.shared.stepLength)
     }
     
     var avenueBlocks: Int {
@@ -99,7 +115,8 @@ extension CLLocationDistance {
     var travelTime: Int {
         let distanceMeters = Measurement(value: self, unit: UnitLength.meters)
         let distanceMiles = distanceMeters.converted(to: .miles)
-        let hours = distanceMiles.value/3.0
+        let speed = SettingsAttendant.shared.transportMode == .walking ? SettingsAttendant.shared.walkingSpeed : (SettingsAttendant.shared.useElectricWheelchair ? SettingsAttendant.shared.electricWheelchairSpeed : SettingsAttendant.shared.wheelchairSpeed)
+        let hours = distanceMiles.value/speed
         let minutes = hours*60
         return Int(minutes)
     }
@@ -267,6 +284,30 @@ enum DirectionRange {
     }
 }
 
+enum TurnDirection: Identifiable {
+    case left
+    case right
+    case uturn
+    case none
+    
+    var id: Self {
+        return self
+    }
+    
+    var imageName: String {
+        switch self {
+        case .left:
+            return "arrow.turn.up.left"
+        case .right:
+            return "arrow.turn.up.right"
+        case .uturn:
+            return "arrow.uturn.down"
+        default:
+            return "figure.walk"
+        }
+    }
+}
+
 enum StepDirection {
     case north
     case east
@@ -280,6 +321,57 @@ enum StepDirection {
         case .east, .west:
             return 750.0
         }
+    }
+    
+    func turnFrom(previousDirection: StepDirection?) -> TurnDirection? {
+        guard let previousDirection = previousDirection else { return nil }
+        switch previousDirection {
+        case .north:
+            switch self {
+            case .north:
+                return TurnDirection.none
+            case .east:
+                return .right
+            case .south:
+                return .uturn
+            case .west:
+                return .left
+            }
+        case .east:
+            switch self {
+            case .north:
+                return .left
+            case .east:
+                return TurnDirection.none
+            case .south:
+                return .right
+            case .west:
+                return .uturn
+            }
+        case .south:
+            switch self {
+            case .north:
+                return .uturn
+            case .east:
+                return .left
+            case .south:
+                return TurnDirection.none
+            case .west:
+                return .right
+            }
+        case .west:
+            switch self {
+            case .north:
+                return .right
+            case .east:
+                return .uturn
+            case .south:
+                return .left
+            case .west:
+                return TurnDirection.none
+            }
+        }
+
     }
 }
 

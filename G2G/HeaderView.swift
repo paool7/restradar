@@ -13,44 +13,45 @@ struct HeaderView: View {
     @StateObject private var locationAttendant = LocationAttendant.shared
     @Binding var bathroom: Bathroom
     
-    @State var moreDetail: Bool
-    
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
                 Text(bathroom.name)
                     .font(.title)
                     .bold()
-                if moreDetail {
-                    HStack {
-                        Image(systemName: "mappin")
-                        Text(bathroom.address)
-                            .font(.callout)
-                    }
-                }
-                if let code = bathroom.code {
-                    HStack {
-                        Image(systemName: "lock.shield")
-                        Text("Code: \(code)")
-                            .font(.callout)
-                    }
-                }
-                if let comment = bathroom.comment {
-                    HStack{
-                        Image(systemName: "exclamationmark.bubble")
-                        Text(comment)
-                            .font(.callout)
-                    }
+                Spacer()
+                if bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id }) {
+                    Image(systemName: "bookmark.fill")
+                        .shiny(.iridescent)
                 }
             }
-            CompassView(bathroom: $bathroom)
+            HStack {
+                VStack(alignment: .leading) {
+                    CompactStatsView(bathroom: $bathroom)
+                        .frame(height: UIFont.preferredFont(forTextStyle: .headline).pointSize)
+                    
+                    if let comment = bathroom.comment {
+                        Text("\(Image(systemName: "exclamationmark.bubble")) \(comment)")
+                            .font(.title2)
+                            .bold()
+                    }
+                    
+                    if let nextStep = bathroom.currentRouteStep(), let intro = nextStep.naturalCurrentIntro() {
+                        HStack {
+                            Text("\(intro)")
+                                .font(.title2)
+                                .bold()
+                            Image(systemName: bathroom.imageFor(step: nextStep))
+                                .font(.title2)
+                                .bold()
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                
+                CompassView(bathroom: $bathroom)
                 .aspectRatio(contentMode: .fill)
-            if let current = locationAttendant.current, let instruction = bathroom.currentRouteStep(current: current)?.naturalCurrentInstruction(current: current) {
-                Text(instruction)
-                    .font(.headline)
-            } else if let firstStepInstructions = bathroom.route?.steps.first?.naturalInstructions {
-                Text(firstStepInstructions)
-                    .font(.headline)
             }
         }
         .padding(8)
@@ -66,6 +67,6 @@ struct HeaderView: View {
 
 struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        HeaderView(bathroom: .constant(BathroomAttendant().closestBathroom), moreDetail: true)
+        HeaderView(bathroom: .constant(BathroomAttendant().closestBathroom))
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Shiny
 
 struct CompassView: View {
     @StateObject private var bathroomAttendant = BathroomAttendant.shared
@@ -24,37 +25,14 @@ struct CompassView: View {
                     GeometryReader { geometry in
                         ZStack {
                             let height = geometry.size.height
-                            let kerning = height/150
-                            let textPadding = ((height - (height * 0.8))/2)+4
-                            let mapPadding = textPadding+UIFont.preferredFont(forTextStyle: .subheadline).pointSize+8
-                            let radius = (height-textPadding)/2
-                            let normalizedRadius = radius > 150.0 ? radius : 150.0
+                            let padding = height * 0.15
                             MapView(bathroom: $bathroom)
                                 .clipShape(Circle())
-                                .padding(mapPadding)
-                            if radius > 100.0 {
-                                if let current = current, let timeAway = bathroom.timeAway(current: current), let stepsAway = bathroom.stepsAway(current: current) {
-                                    CircleLabelView(bathroom: $bathroom, text: timeAway + " • " + stepsAway, radius: normalizedRadius, clockwise: true)
-                                        .font(.subheadline)
-                                        .bold()
-                                        .monospaced()
-                                        .kerning(kerning)
-                                        .foregroundColor(.white)
-                                        .padding(textPadding)
-                                }
-                                if let current = locationAttendant.current, let blocksAway = bathroom.blocksAway, let distanceAway = bathroom.distanceAway(current: current) {
-                                    CircleLabelView(bathroom: $bathroom, text: blocksAway + " • " + distanceAway, radius: normalizedRadius, clockwise: false)
-                                        .font(.subheadline)
-                                        .bold()
-                                        .monospaced()
-                                        .kerning(kerning)
-                                        .foregroundColor(.white)
-                                        .padding(textPadding)
-                                }
-                            }
+                                .padding(padding)
                         }
                     }
                 }
+                .shadow(color: .primary.opacity(0.5), radius: 1)
     }
 }
 
@@ -88,8 +66,7 @@ struct CompassShapeView: View {
             let compass = Path { path in
                 path.addArc(center: CGPoint(x: middle, y:middle), radius: width*0.8/2, startAngle: .degrees(0), endAngle: .degrees(360), clockwise: true)
                 path.addPath(arrow.path(in: CGRect(x: 0, y: 0, width: geometry.size.width, height: geometry.size.height)))
-            }.fill(locationAttendant.gradientForCurrentTime() ?? .linearGradient(colors: [.secondary], startPoint: .top, endPoint: .bottom))
-
+            }.fill(.linearGradient(Gradient.forCurrentTime() ?? Gradient(colors:  [.secondary]), startPoint: .top, endPoint: .bottom))
             
             compass
         }

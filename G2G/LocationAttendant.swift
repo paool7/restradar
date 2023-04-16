@@ -91,50 +91,7 @@ class LocationAttendant: NSObject, ObservableObject {
 //        }
 //    }
     
-    func gradientForCurrentTime() -> LinearGradient? {
-        let calendar = Calendar.current
-        let currentHour = SettingsAttendant.shared.useTimeGradients ? Int(currentHourValue) : Int(SettingsAttendant.shared.gradientHour)
-                
-        if let location = current, let solar = Solar(coordinate: location.coordinate), let sunset = solar.sunset, let sunrise = solar.sunrise  {
-            let sunsetHour = calendar.component(.hour, from: sunset)
-            let sunriseHour = calendar.component(.hour, from: sunrise)
-            if sunsetHour == currentHour {
-                return Gradient.skyGradient19
-            } else if sunriseHour == currentHour {
-                return Gradient.skyGradient6
-            } else if currentHour < sunriseHour {
-                let difference = sunriseHour - currentHour
-                let gradientMapped = 6 - difference
-                if gradientMapped >= 0 {
-                    return Gradient.gradient(forHour: gradientMapped)
-                } else {
-                    let wrappedMapped = 24 + gradientMapped
-                    return Gradient.gradient(forHour: wrappedMapped)
-                }
-            } else if currentHour > sunriseHour && currentHour < sunsetHour {
-                let difference = sunsetHour - currentHour
-                let gradientMapped = 19 - difference
-                if gradientMapped >= 6 {
-                    return Gradient.gradient(forHour: gradientMapped)
-                } else {
-                    let wrappedMapped = 24 - gradientMapped
-                    return Gradient.gradient(forHour: wrappedMapped)
-                }
-            } else if currentHour > sunsetHour {
-                let difference = currentHour - sunsetHour
-                let gradientMapped = 19 + difference
-                if gradientMapped <= 23 {
-                    return Gradient.gradient(forHour: gradientMapped)
-                } else {
-                    let wrappedMapped = gradientMapped - 24
-                    return Gradient.gradient(forHour: wrappedMapped)
-                }
-            }
-        }
-        return Gradient.gradient(forHour: currentHour)
-    }
-    
-    func getDirections(to toId: Int) {
+    func getDirections(to toId: String) {
         if let current = self.current, let index = BathroomAttendant.shared.sortedBathrooms.firstIndex(where: {$0.id == toId}) {
             let bathroom = BathroomAttendant.shared.sortedBathrooms[index]
             self.getTravelDirections(sourceLocation: current.coordinate, endLocation: BathroomAttendant.shared.sortedBathrooms[index].coordinate) { directions, route in
@@ -149,7 +106,7 @@ class LocationAttendant: NSObject, ObservableObject {
         }
     }
     
-    func getDirections(toId: Int) async throws -> Bathroom? {
+    func getDirections(toId: String) async throws -> Bathroom? {
         if let current = self.current, let index = BathroomAttendant.shared.sortedBathrooms.firstIndex(where: {$0.id == toId}) {
             let bathroom = BathroomAttendant.shared.sortedBathrooms[index]
             do {

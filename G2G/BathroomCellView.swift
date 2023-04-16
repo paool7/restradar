@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Shiny
 
 struct BathroomCellView: View {
     @StateObject private var bathroomAttendant = BathroomAttendant.shared
@@ -14,39 +15,20 @@ struct BathroomCellView: View {
     @Binding var bathroom: Bathroom
     
     var body: some View {
-            VStack(alignment: .leading, spacing: 2) {
-                HStack {
-                    Text(bathroom.name)
-                        .font(.headline)
-                    Image(systemName: "arrow.up.circle")
-                        .rotationEffect(.degrees(bathroom.generalHeading))
-                    Spacer()
-                    if bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id }) {
-                        Image(systemName: "bookmark.fill")
-                            .foregroundColor(.yellow)
-                    }
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(bathroom.name)
+                    .font(.headline)
+                Image(systemName: "arrow.up.circle")
+                    .rotationEffect(.degrees(bathroom.generalHeading))
+                Spacer()
+                if bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id }) {
+                    Image(systemName: "bookmark.fill")
+                        .shiny(.iridescent)
                 }
-                if let current = locationAttendant.current, let distanceAway = bathroom.distanceAway(current: current), let timeAway = bathroom.timeAway(current: current) {
-                    HStack {
-                        Image(systemName: "point.topleft.down.curvedto.point.filled.bottomright.up")
-                        Text("\(timeAway) • \(distanceAway)")
-                            .font(.callout)
-                    }
-                }
-                if let code = bathroom.code {
-                    HStack {
-                        Image(systemName: "lock.shield")
-                        Text("Code: \(code)")
-                            .font(.callout)
-                    }
-                }
-                if let comment = bathroom.comment {
-                    HStack {
-                        Image(systemName: "exclamationmark.bubble")
-                        Text(comment)
-                            .font(.callout)
-                    }
-                }
+            }
+            CompactStatsView(bathroom: $bathroom)
+                .frame(height: UIFont.preferredFont(forTextStyle: .headline).pointSize)
         }
     }
 }

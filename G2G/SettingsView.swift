@@ -6,14 +6,16 @@
 //
 
 import SwiftUI
+import Shiny
 
 struct SettingsView: View {
     @ObservedObject var attendant = SettingsAttendant.shared
     @ObservedObject var locationAttendant = LocationAttendant.shared
     @ObservedObject var eventsRepository = EventsRepository.shared
 
-    var availableModes = TransportMode.allCases
-    
+    let availableModes = TransportMode.allCases
+    let themes = [Theme.sunsetsunrise, Theme.random]
+
     @State private var showCalendarPicker = false
 
     var body: some View {
@@ -24,7 +26,6 @@ struct SettingsView: View {
                         Text($0.name)
                     }
                 }
-                .pickerStyle(.segmented)
                 
                 if attendant.transportMode == .wheelchair {
                     Toggle("Electric", isOn: $attendant.useElectricWheelchair)
@@ -36,76 +37,124 @@ struct SettingsView: View {
                     }
                 } else {
                     Stepper("Walking Speed: \(String(format: "%.1f", attendant.walkingSpeed)) mph", value: $attendant.walkingSpeed, in: 0.1...8.0, step: 0.1)
+                    Stepper("Step Length: \(String(format: "%.1f", attendant.stepLength)) feet", value: $attendant.walkingSpeed, in: 0.1...8.0, step: 0.1)
                 }
-                Text("Speed is used to estimate travel time to nearby bathrooms.")
+                Text("Walking Speed is used to estimate travel time to nearby bathrooms.\nStep Length is used to estimate step distance from nearby bathrooms.")
                     .font(.caption)
                     .foregroundColor(.secondary)
             } header: {
-                Text("Transport Method:")
+                Text("Tuning:")
             }
             
+//            Section {
+//                Toggle("Plan Ahead", isOn:$attendant.useCalendarEvents)
+//                .tint(.teal)
+//
+//                Text("Upcoming events from your selected calendars will be checked to identify bathrooms close by.")
+//                    .font(.caption)
+//                    .foregroundColor(.secondary)
+//
+//                if attendant.useCalendarEvents {
+//                    Button {
+//                        showCalendarPicker = true
+//                        eventsRepository.loadEvents { events in
+//                            if let events = events {
+//                                for event in events {
+//                                    if let location = event.structuredLocation?.geoLocation {
+//                                        print(event.title)
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    } label: {
+//                        Text("Choose Calendars")
+//                            .foregroundColor(.teal)
+//                    }
+//                }
+//            } header: {
+//                Text("Calendar:")
+//            }
+            
+//            Section {
+//                TextField("Heading Filter", text: $attendant.headingStringValue)
+//                    .keyboardType(.numberPad)
+//                Text("The minimum angular change in degrees relative to the last heading required to update the compass.")
+//                    .font(.caption)
+//                    .foregroundColor(.secondary)
+//            } header: {
+//                Text("Compass:")
+//            }
+//
             Section {
-                Toggle("Plan Ahead", isOn:$attendant.useCalendarEvents)
-                .tint(.teal)
+                Picker("Primary Hand:", selection: $attendant.primaryHand) {
+                    ForEach(Handed.allCases, id: \.self) {
+                        Text($0.name)
+                    }
+                }
                 
-                Text("Upcoming events from your selected calendars will be checked to identify bathrooms close by.")
+                Text("Important buttons will appear on the side of your primary hand.")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
-                if attendant.useCalendarEvents {
-                    Button {
-                        showCalendarPicker = true
-                        eventsRepository.loadEvents { events in
-                            print(events?.count)
-                            if let events = events {
-                                for event in events {
-                                    if let location = event.structuredLocation?.geoLocation {
-                                        print(event.title)
-                                    }
+
+                Picker("Theme:", selection: $attendant.gradientTheme) {
+                    ForEach(themes, id: \.self) {
+                        Text($0.name)
+                    }
+                }
+                Toggle("Update Hourly:", isOn: $attendant.useTimeGradients)
+                    .tint(.teal)
+                Text(attendant.useTimeGradients ? "Gradient colors will update automatically every hour." : "Only your selected gradient color will be shown.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHStack {
+                            ForEach((0...23), id: \.self) { i in
+                                Button {
+                                    attendant.gradientHour = Double(i)
+                                } label: {
+                                    LinearGradient(gradient: Gradient.gradient(forHour: i), startPoint: .top, endPoint: .bottom)
+                                        .mask {
+                                            CompassShapeView(rotation: $locationAttendant.currentHeading)
+                                                .aspectRatio(contentMode: .fit)
+                                        }
+                                        .shadow(color: .primary.opacity(0.5), radius: 1)
+                                        .background {
+                                            if attendant.useTimeGradients == true {
+                                                Circle()
+                                                    .foregroundColor(Int(locationAttendant.currentHourValue) == i ? .secondary : .clear)
+                                            } else {
+                                                Circle()
+                                                    .foregroundColor(Int(attendant.gradientHour) == i ? .secondary : .clear)
+                                            }
+                                        }
+                                        .frame(height: 60)
+                                        .frame(width: 60)
                                 }
                             }
                         }
-                    } label: {
-                        Text("Choose Calendars")
-                            .foregroundColor(.teal)
-                    }
+                    }.frame(height: 60)
+                        .onAppear{
+                            if attendant.useTimeGradients == true {
+                                proxy.scrollTo(Int(locationAttendant.currentHourValue))
+                            } else {
+                                proxy.scrollTo(Int(attendant.gradientHour))
+                            }
+                        }
+                        .onChange(of: attendant.useTimeGradients) { useTime in
+                            if useTime == true {
+                                proxy.scrollTo(Int(locationAttendant.currentHourValue))
+                            } else {
+                                proxy.scrollTo(Int(attendant.gradientHour))
+                            }
+                        }
                 }
             } header: {
-                Text("Calendar:")
-            }
-            
-            Section {
-                TextField("Heading Filter", text: $attendant.headingStringValue)
-                    .keyboardType(.numberPad)
-            } header: {
-                Text("Compass:")
-            }
-            
-            Section {
-                Toggle("Use current time to change compass gradient.", isOn: $attendant.useTimeGradients)
-                    .tint(.teal)
-                if !attendant.useTimeGradients {
-                    VStack {
-                        Text("Choose gradient:")
-                        HStack(spacing: 4) {
-                            Slider(value: $attendant.gradientHour, in: 0...23)
-                            Gradient.gradient(forHour: Int(attendant.gradientHour))
-                                .mask {
-                                    CompassShapeView(rotation: .constant(0))
-                                        .aspectRatio(contentMode: .fit)
-                                        .shadow(radius: 4)
-                                }
-                                .frame(height: 60)
-                                .frame(width: 60)
-                        }
-                    }
-                } 
-            } header: {
-                Text("Colors:")
+                Text("Customization:")
             }
         }
         .listStyle(.grouped)
-        .navigationTitle("Settings")
+        .navigationTitle("G2G")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showCalendarPicker) {
             CalendarChooser(calendars: self.$eventsRepository.selectedCalendars, eventStore: self.eventsRepository.eventStore)

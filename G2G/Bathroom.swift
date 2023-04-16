@@ -11,15 +11,8 @@ import CoreLocation
 import MapKit
 
 extension MKRoute.Step {
-    func splitNaturalCurrentInstruction(current: CLLocation) -> String? {
-        guard let blocks = self.blocksLeft(current: current), let distanceLeft = self.distanceLeft(current: current) else { return self.instructions }
-        let naturalStart = "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix): ") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix): " : ""))\n"
-        
-        return "\(naturalStart)\(self.instructions)"
-    }
-    
-    func naturalCurrentInstruction(current: CLLocation) -> String? {
-        guard let blocks = self.blocksLeft(current: current), let distanceLeft = self.distanceLeft(current: current) else { return self.instructions }
+    func naturalCurrentInstruction() -> String? {
+        guard let current = LocationAttendant.shared.current, let blocks = self.blocksLeft(current: current), let distanceLeft = self.distanceLeft(current: current) else { return self.instructions }
         let naturalStart = "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix), ") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix), " : ""))"
         
         return "\(naturalStart)\(self.instructions)"
@@ -31,6 +24,11 @@ extension MKRoute.Step {
         
         return "\(naturalStart)\(self.instructions)"
     }
+    
+    func naturalCurrentIntro() -> String? {
+        guard let current = LocationAttendant.shared.current, let blocks = self.blocksLeft(current: current), let distanceLeft = self.distanceLeft(current: current) else { return self.instructions }
+        return "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix)") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix)" : " "))"
+    }
 }
 
 class Bathroom: Identifiable, Equatable, ObservableObject {
@@ -38,7 +36,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject {
     var code: String?
     var comment: String?
     var hours: Hours?
-    var id: Int
+    var id: String
     var name: String
     
     @Published var coordinate: CLLocationCoordinate2D
@@ -47,6 +45,18 @@ class Bathroom: Identifiable, Equatable, ObservableObject {
     @Published var generalHeading: Double = 0.0
     @Published var heading: Double = 0.0
     @Published var route: MKRoute?
+    
+    func imageFor(step: MKRoute.Step) -> String {
+        let isFirst = step == directions.first
+        let isLast = step == directions.last
+        var imageName = "figure.walk"
+        if isLast {
+            imageName = step.instructions.lowercased().contains("on your right") ? "signpost.right" : (step.instructions.lowercased().contains("on your left") ? "signpost.left" : "mappin")
+        } else if !isFirst {
+            imageName = step.instructions.lowercased().contains("take a right") ? "arrow.turn.up.right" : (step.instructions.lowercased().contains("take a left") ? "arrow.turn.up.left" : "figure.walk")
+        }
+        return imageName
+    }
         
     func heading(current: CLLocation) -> Double {
         if let firstStep = directions.first {
@@ -94,6 +104,11 @@ class Bathroom: Identifiable, Equatable, ObservableObject {
         return "\(distance) \(useMiles ? "Miles" : "Feet")"
     }
     
+    func totalSteps(current: CLLocation) -> Int? {
+        guard let distanceMeters = distanceMeters(current: current) else { return nil }
+        return distanceMeters.value.steps
+    }
+    
     func stepsAway(current: CLLocation) -> String? {
         guard let distanceMeters = distanceMeters(current: current) else { return nil }
         return "~\(distanceMeters.value.steps) step\(distanceMeters.value.steps == 1 ? "" : "s")"
@@ -119,8 +134,8 @@ class Bathroom: Identifiable, Equatable, ObservableObject {
         return "\(total > 0 ? ("\(total) block\(total == 1 ? "" : "s")") : "")"
     }
     
-    func currentRouteStep(current: CLLocation) -> MKRoute.Step? {
-        guard let route = self.route else { return nil }
+    func currentRouteStep() -> MKRoute.Step? {
+        guard let route = self.route, let current = LocationAttendant.shared.current else { return nil }
         
         let currentRect = MKCircle(center: current.coordinate, radius: 6.0).boundingMapRect
         
@@ -135,7 +150,27 @@ class Bathroom: Identifiable, Equatable, ObservableObject {
         return nil
     }
     
-    init(name: String, address: String, coordinate: CLLocationCoordinate2D, comment: String? = nil, code: String? = nil, hours: Hours? = nil, id: Int) {
+    func indexFor(step: MKRoute.Step) -> Int? {
+        return directions.firstIndex(where: {$0.instructions == step.instructions})
+    }
+    
+    var currentRouteStepIndex: Int? {
+        guard let route = self.route, let current = LocationAttendant.shared.current else { return nil }
+        
+        let currentRect = MKCircle(center: current.coordinate, radius: 6.0).boundingMapRect
+        
+        for step in route.steps {
+            let line = step.polyline
+            
+            if line.intersects(currentRect), let index = directions.firstIndex(where: {$0.instructions == step.instructions}) {
+                return index
+            }
+        }
+        
+        return nil
+    }
+    
+    init(name: String, address: String, coordinate: CLLocationCoordinate2D, comment: String? = nil, code: String? = nil, hours: Hours? = nil, id: String) {
         self.name = name
         self.address = address
         self.comment = comment
