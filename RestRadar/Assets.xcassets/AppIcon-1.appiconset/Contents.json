@@ -1,0 +1,14 @@
+{
+  "images" : [
+    {
+      "filename" : "PaulD_a_beautiful_app_icon_containing_a_person_sitting_on_the_e_70ce9b54-503d-49ae-b142-ae0c573329cb-transformed.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "images" : [
+    {
+      "filename" : "PaulD_Beautiful_iOS_icon_for_an_app_that_finds_nearby_bathroom._2b2e773e-b420-4c92-9980-973dbe303f53.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "images" : [
+    {
+      "filename" : "PaulD_a_beautiful_app_icon_of_a_toilet_and_sink_864a83de-bc68-431d-b867-b135bb5ee2b4-transformed.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
