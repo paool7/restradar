@@ -1193,7 +1193,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "68FD4F78-2E33-4F40-A62D-BC3231728897"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RestRadar/Attendants/BathroomAttendant.swift"

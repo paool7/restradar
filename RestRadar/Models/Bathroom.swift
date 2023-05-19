@@ -195,7 +195,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     var description : String {
         get {
             return """
-            { "name": \"\(name)\", "id": "\(self.id)", "lat": \(self.coordinate.latitude.description), "lng": \(self.coordinate.longitude.description),, "accessibility": \"\(accessibility.rawValue)\", "comment": \"\(comment ?? "")\" },
+            { "name": \"\(name)\", "id": "\(self.id)", "lat": \(self.coordinate.latitude.description), "lng": \(self.coordinate.longitude.description), "accessibility": \"\(accessibility.rawValue)\", "comment": \"\(comment ?? "")\" },
             """
         }
     }

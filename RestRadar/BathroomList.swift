@@ -20,6 +20,7 @@ struct BathroomListItemModel: Decodable {
     let name: String
     let comment: String
     let accessibility: String?
+    let id: String
 }
 
 struct Constants { static func getBathrooms() -> [Bathroom] {
@@ -36,9 +37,7 @@ struct Constants { static func getBathrooms() -> [Bathroom] {
         let bathrooms: [Bathroom] = listItems.compactMap { item in
             let coordinate = CLLocationCoordinate2D(latitude: item.lat, longitude: item.lng)
             
-            let id = self.randomizeAndHyphenateWords(in: item.name) + UUID().uuidString
-            
-            return Bathroom(name: item.name, accessibility: Accessibility(rawValue: item.accessibility ?? "unknown") ?? .unknown, coordinate: coordinate, comment: item.comment, id: id)
+            return Bathroom(name: item.name, accessibility: Accessibility(rawValue: item.accessibility ?? "unknown") ?? .unknown, coordinate: coordinate, comment: item.comment, id: item.id)
         }
         
         for bathroom in bathrooms {
@@ -108,1457 +107,764 @@ struct Constants { static func getBathrooms() -> [Bathroom] {
     
     static let bathroomList = """
     [
-    { "lat": 40.7957, "lng": -73.9685, "name": "Happy Warrior Playground Public Restroom", "comment": "West 98 Street & Amsterdam Avenue"
-    },
-    { "lat": 40.8705, "lng": -73.7866, "name": "Orchard Beach Nature Center", "comment": "at Orchard Beach, near Twin Island Trail"
-    },
-    { "lat": 40.7659, "lng": -73.7945, "name": "Auburndale Playground Public Restroom", "comment": "170-171 Streets, 33-35 Avenues"
-    },
-    { "lat": 40.8672, "lng": -73.7938, "name": "Orchard Beach Pavilion North Men's Public Restroom", "comment": "End of Orchard Beach Road, north side"
-    },
-    { "lat": 40.5979, "lng": -74.0, "name": "Bensonhurst Park Field House", "comment": "Cropsey Ave between Bay 28th St & Bay 29th St"
-    },
-    { "lat": 40.6934, "lng": -73.7781, "name": "174 St Playground Public Restroom", "comment": "174 Street & 113 Avenue"
-    },
-    { "lat": 40.7409, "lng": -73.8495, "name": "Playground For All Children Public Restroom", "comment": "111 Street and Corona Avenue"
-    },
-    { "lat": 40.8485, "lng": -73.8253, "name": "Playground For All Children Public Restroom", "comment": "Bruckner Expressway & Buhre Avenue"
-    },
-    { "lat": 40.6398, "lng": -74.0236, "name": "John Allen Payne Playground Public Restroom", "comment": "3 Ave. bet. 64 St. and 65 St."
-    },
-    { "lat": 40.8488, "lng": -73.852, "name": "Loreto Playground Public Restroom", "comment": "Morris Park Avenue, Haight Avenue, Tomlinson Avenue, Van Nest Avenue"
-    },
-    { "lat": 40.8318, "lng": -73.9252, "name": "Rev. T. Wendell Foster Recreation Center", "comment": "1020 Jerome Ave"
-    },
-    { "lat": 40.7219, "lng": -73.9606, "name": "Bushwick Inlet Park House", "comment": "Kent Ave. between N. 9 St. and N. 12 St."
-    },
-    { "lat": 40.7249, "lng": -73.8954, "name": "Frontera Park Public Restroom", "comment": "Between 55th Dr. & 58th Ave. and Between Brown Pl. & 69th St."
-    },
-    { "lat": 40.6359, "lng": -73.9122, "name": "Bildersee Playground Public Restroom", "comment": "Flatlands Avenue between East 81 & East 82 Streets"
-    },
-    { "lat": 40.6647, "lng": -73.8504, "name": "Harold Schneiderman Playground Public Restroom", "comment": "155 Avenue & 83 Street"
-    },
-    { "lat": 40.8193, "lng": -73.8497, "name": "Randall Playground Public Restroom", "comment": "Randall Avenue, Castle Hill Avenue"
-    },
-    { "lat": 40.7499, "lng": -74.0008, "name": "Chelsea Park Public Restroom", "comment": "West 27 Street & 9 Avenue"
-    },
-    { "lat": 40.6505, "lng": -73.9766, "name": "Greenwood Playground Public Restroom", "comment": "Fort Hamilton Parkway, Greenwood, East 5 Street"
-    },
-    { "lat": 40.7299, "lng": -73.8162, "name": "Vleigh Playground Public Restroom", "comment": "70 Road to 71 Avenue"
-    },
-    { "lat": 40.8907, "lng": -73.8974, "name": "Van Cortlandt Pool Public Restroom", "comment": "Broadway between West 242nd St. and Manhattan College Pkwy."
-    },
-    { "lat": 40.7013, "lng": -73.8545, "name": "Victory Field Public Restroom", "comment": "Woodhaven Blvd., Myrtle Ave., Park Dr."
-    },
-    { "lat": 40.8753, "lng": -73.8927, "name": "Harris Playground Public Restroom", "comment": "Bedford Park Boulevard W between Goulden Avenue & Paul Avenue"
-    },
-    { "lat": 40.5766, "lng": -74.0995, "name": "Midland Field Public Restroom", "comment": "Midland Avenue & Mason Avenue"
-    },
-    { "lat": 40.6468, "lng": -73.8995, "name": "100% Playground Public Restroom", "comment": "Glenwood Road, East 100 & East 101 Streets"
-    },
-    { "lat": 40.8684, "lng": -73.868, "name": "Parkside Playground Public Restroom", "comment": "Arnow Avenue, Adee Avenue, Olinville Avenue"
-    },
-    { "lat": 40.6187, "lng": -73.972, "name": "Friends Field Public Restroom", "comment": "Avenue L, East 4 Street, McDonald Avenue, Avenue M"
-    },
-    { "lat": 40.7003, "lng": -73.9285, "name": "Fermi Playground Public Restroom", "comment": "Troutman Street & Central Avenue"
-    },
-    { "lat": 40.7511, "lng": -73.8274, "name": "Kissena Corridor Park-Queens Botanical Garden-Roof Canopy/Auditorium", "comment": "Dahlia Avenue"
-    },
-    { "lat": 40.8043, "lng": -73.917, "name": "Millbrook Playground Public Restroom", "comment": "East 135 Street, Cypress Avenue"
-    },
-    { "lat": 40.682, "lng": -73.9442, "name": "Potomac Playground Public Restroom", "comment": "Tompkins Avenue & Halsey Street"
-    },
-    { "lat": 40.7416, "lng": -73.7485, "name": "Alley Pond Spring Public Restroom", "comment": "Springfield Boulevard, 73rd Avenue, 76th Avenue to tree line & natural area"
-    },
-    { "lat": 40.8698, "lng": -73.8527, "name": "Eastchester Playground Public Restroom", "comment": "Adee Avenue & Tenbroeck Avenue"
-    },
-    { "lat": 40.6355, "lng": -74.0193, "name": "Millennium Playground Public Restroom", "comment": "5th Ave. between 66th St. & 67th St."
-    },
-    { "lat": 40.7128, "lng": -73.9761, "name": "Fire Boat House Public Restroom", "comment": "East River Park at Grand Street"
-    },
-    { "lat": 40.8099, "lng": -73.9105, "name": "St Mary's Playground East Public Restroom", "comment": "Jackson Avenue between East 144 and 145 Streets"
-    },
-    { "lat": 40.771, "lng": -73.779, "name": "Raymond O'Connor Park Public Restroom", "comment": "Corp. Kennedy Street & 33 Avenue"
-    },
-    { "lat": 40.704, "lng": -73.7851, "name": "173rd St Playground Public Restroom", "comment": "173rd St. & 106th Ave."
-    },
-    { "lat": 40.7872, "lng": -73.9472, "name": "Cherry Tree Park Public Restroom", "comment": "99 to 100 Streets, 3 Avenue"
-    },
-    { "lat": 40.6945, "lng": -73.9467, "name": "Willoughby Playground Public Restroom", "comment": "Tompkins & Willoughby Avenues"
-    },
-    { "lat": 40.6766, "lng": -73.9655, "name": "Underhill Playground Public Restroom", "comment": "Underhill Avenue & Prospect Place"
-    },
-    { "lat": 40.7447, "lng": -73.7875, "name": "Underhill Playground Public Restroom", "comment": "Peck Avenue & 188 Street"
-    },
-    { "lat": 40.6589, "lng": -73.8794, "name": "Jerome Playground Public Restroom", "comment": "Wortman Ave between Jerome St & Warwick St"
-    },
-    { "lat": 40.796, "lng": -73.9235, "name": "Randall's Island Golf Center Public Restroom", "comment": "Central Road & Bronx Shore Road"
-    },
-    { "lat": 40.7614, "lng": -73.9413, "name": "Spirit Playground Public Restroom", "comment": "36 Avenue between 9 & 10 Streets"
-    },
-    { "lat": 40.6807, "lng": -73.9227, "name": "Brevoort Playground Public Restroom", "comment": "Ralph Ave. bet. Chauncey St. and Sumpter St."
-    },
-    { "lat": 40.6778, "lng": -73.7841, "name": "Baisley Pond Park House Public Restroom", "comment": "Lakeview Blvd E. & 122nd Ave"
-    },
-    { "lat": 40.6954, "lng": -73.9666, "name": "Washington Hall Park Public Restroom", "comment": "Park, Washington Avenues to Hall Street"
-    },
-    { "lat": 40.8381, "lng": -73.8934, "name": "Crotona Park Nature Center", "comment": "Crotona Park East & Charlotte Street"
-    },
-    { "lat": 40.8065, "lng": -73.9356, "name": "Alice Kornegay Triangle Public Restroom", "comment": "Lexington Avenue, East 128 & East 129 Streets"
-    },
-    { "lat": 40.7175, "lng": -74.0115, "name": "Washington Market Park Public Restroom", "comment": "Greenwich St. & Chambers St."
-    },
-    { "lat": 40.7033, "lng": -73.8034, "name": "Rufus King Park Public Restroom", "comment": "Jamaica Avenue, 153 Street, 89 Avenue, 150 Street"
-    },
-    { "lat": 40.6971, "lng": -73.9486, "name": "Stockton Playground Public Restroom", "comment": "Marcy & Park Avenues"
-    },
-    { "lat": 40.8514, "lng": -73.8686, "name": "Brady Playground Public Restroom", "comment": "Bronx Park East between Bronxdale Avenue and Unionport Road"
-    },
-    { "lat": 40.785, "lng": -73.8328, "name": "136 St Playground Public Restroom", "comment": "132 to 138 Streets, 14 Road"
-    },
-    { "lat": 40.8625, "lng": -73.8582, "name": "Mazzei Playground Public Restroom", "comment": "Mace Avenue, Williamsbridge Road"
-    },
-    { "lat": 40.7655, "lng": -73.8714, "name": "East Elmhurst Playground Public Restroom", "comment": "25 Avenue & 98 Street"
-    },
-    { "lat": 40.7363, "lng": -73.9896, "name": "Evelyn's Playground Public Restroom", "comment": "Union Square West Between E. 16th & E. 17th St."
-    },
-    { "lat": 40.8837, "lng": -73.8816, "name": "Sachkerah Woods Playground Public Restroom", "comment": "East 212 Street and Jerome Avenue"
-    },
-    { "lat": 40.5161, "lng": -74.1894, "name": "Wolfe's Pond Modular Public Restroom - Men's", "comment": "Prefab CS near beach, East structure"
-    },
-    { "lat": 40.726, "lng": -73.7289, "name": "Breininger Park Public Restroom", "comment": "Braddock Avenue & 240 Street"
-    },
-    { "lat": 40.7524, "lng": -73.965, "name": "MacArthur Playground Public Restroom", "comment": "East 49 Street & East River Drive"
-    },
-    { "lat": 40.6593, "lng": -73.9446, "name": "Wingate Park Public Restroom", "comment": "Brooklyn Avenue & Rutland Road"
-    },
-    { "lat": 40.6922, "lng": -73.9747, "name": "Visitors Center at Fort Greene Park", "comment": "Visitors Center at Fort Greene Park"
-    },
-    { "lat": 40.629, "lng": -73.896, "name": "Canarsie Park Public Restroom", "comment": "Seaview Ave. & East 88th St."
-    },
-    { "lat": 40.8059, "lng": -73.8886, "name": "Barretto Point Park Public Restroom", "comment": "Tiffany Street & Viele Avenue"
-    },
-    { "lat": 40.5956, "lng": -73.7446, "name": "Beach 9 Playground Public Restroom", "comment": "Beach 9th Street, North of the Boardwalk"
-    },
-    { "lat": 40.8046, "lng": -73.9448, "name": "Marcus Garvey Park Public Restroom", "comment": "18 Mount Morris Park West"
-    },
-    { "lat": 40.7267, "lng": -73.7754, "name": "Redwood Playground Public Restroom", "comment": "193 Street and Aberdeen Road"
-    },
-    { "lat": 40.7435, "lng": -73.8148, "name": "Captain Mario Fajardo Park Public Restroom", "comment": "Kissena Boulevard & Booth Memorial Avenue"
-    },
-    { "lat": 40.7023, "lng": -73.8681, "name": "Dry Harbor Playground Public Restroom", "comment": "80 Street & Myrtle Avenue"
-    },
-    { "lat": 40.6776, "lng": -73.8842, "name": "Sperandeo Brothers Playground Public Restroom", "comment": "Atlantic Avenue & Elton Street"
-    },
-    { "lat": 40.7044, "lng": -74.0159, "name": "The Battery Public Restroom", "comment": "Battery Pl. & Washington St."
-    },
-    { "lat": 40.8911, "lng": -73.8939, "name": "Van Cortlandt Nature Center", "comment": "246th Street and Broadway"
-    },
-    { "lat": 40.7109, "lng": -73.9109, "name": "Grover Cleveland Playground Public Restroom", "comment": "Rene Court, Grandview Avenue, Stanjope Street & Fairview Avenue"
-    },
-    { "lat": 40.5846, "lng": -73.8108, "name": "Rockaway Playground M Public Restroom", "comment": "Boardwalk between Beach 84th St and Beach 90th St"
-    },
-    { "lat": 40.6746, "lng": -73.912, "name": "Ocean Hill Playground Public Restroom", "comment": "Bergen Street, Rockaway Avenue, Dean Street"
-    },
-    { "lat": 40.7635, "lng": -73.8247, "name": "Margaret I. Carman Green - Weeping Beech Public Restroom", "comment": "37 Avenue & Bowne Street"
-    },
-    { "lat": 40.8811, "lng": -73.9008, "name": "Bailey Playground Public Restroom", "comment": "W. 234th St. between Bailey Ave. & Major Deegan Expwy."
-    },
-    { "lat": 40.5971, "lng": -73.9574, "name": "Mellett Playground Public Restroom", "comment": "Avenue V between East 13 & East 14 Streets"
-    },
-    { "lat": 40.8129, "lng": -73.9134, "name": "St Mary's Playground West Public Restroom", "comment": "St. Ann's Avenue & East 147 Street"
-    },
-    { "lat": 40.6856, "lng": -73.9464, "name": "Hattie Carthan Playground Public Restroom", "comment": "East of Marcy Street"
-    },
-    { "lat": 40.6583, "lng": -73.8875, "name": "Linden Park Public Restroom", "comment": "Stanley Avenue, Linden Boulevard"
-    },
-    { "lat": 40.5161, "lng": -74.1895, "name": "Wolfe's Pond Modular Public Restroom - Women's", "comment": "Prefab CS near beach, West structure"
-    },
-    { "lat": 40.6938, "lng": -73.9716, "name": "Oracle Playground Public Restroom", "comment": "Adelphi & Myrtle Avenues"
-    },
-    { "lat": 40.7691, "lng": -73.9491, "name": "John Jay Park Pool Building", "comment": "East of York Avenue on 77th St."
-    },
-    { "lat": 40.776, "lng": -73.8172, "name": "Leonardo Ingravallo Playground Public Restroom", "comment": "Bayside Avenue, 25 Avenue, 149 to 150 Streets"
-    },
-    { "lat": 40.5586, "lng": -74.1025, "name": "Great Kills Park-New Dorp Beach Modular Public Restroom - Women's", "comment": "Prefab CS near beach, South structure"
-    },
-    { "lat": 40.8188, "lng": -73.8983, "name": "Rainey Park Public Restroom", "comment": "Dawson Street between Polite Ave & Rogers Pl."
-    },
-    { "lat": 40.5372, "lng": -74.1624, "name": "Lieutenant John H. Martinson Playground Public Restroom", "comment": "Osborne Street and Preston Avenue"
-    },
-    { "lat": 40.8226, "lng": -73.8883, "name": "Lyons Square Playground Public Restroom", "comment": "Aldus St. between Bryant Ave. & Longfellow Ave."
-    },
-    { "lat": 40.5918, "lng": -73.9456, "name": "Bill Brown Playground Public Restroom", "comment": "Bedford Avenue, Avenue X to Avenue Y, E 24 Street"
-    },
-    { "lat": 40.7492, "lng": -73.8038, "name": "Kissena Park- Boathouse Public Restroom", "comment": "Oak Avenue & 164th Street"
-    },
-    { "lat": 40.7019, "lng": -73.7835, "name": "Detective Keith L Williams Park-Field House", "comment": "106-16 173rd Street between 106 Av and 107 Av"
-    },
-    { "lat": 40.8122, "lng": -73.9464, "name": "Langston Hughes Playground Public Restroom", "comment": "Adam Clayton Powell Jr. Blvd & W. 130th St"
-    },
-    { "lat": 40.8272, "lng": -73.9146, "name": "Arcilla Playground Public Restroom", "comment": "Teller Avenue, Park Avenue, Clay Avenue, East 64 Street"
-    },
-    { "lat": 40.7653, "lng": -73.9586, "name": "St. Catherine's Park Public Restroom", "comment": "1st Avenue between E. 67th St & E. 68th St."
-    },
-    { "lat": 40.6795, "lng": -73.8762, "name": "City Line Park Public Restroom", "comment": "Atlantic & Fountain Avenues"
-    },
-    { "lat": 40.5749, "lng": -73.9598, "name": "Coney Island Beach & Boardwalk-Building", "comment": "Coney Island Boardwalk East Between Brighton 1 Rd. and Brighton 2 St."
-    },
-    { "lat": 40.6629, "lng": -73.9635, "name": "Children's Corner Public Restroom", "comment": "Willink Hill, Ocean Ave. & Flatbush Ave."
-    },
-    { "lat": 40.6479, "lng": -73.9314, "name": "Tilden Playground Public Restroom", "comment": "Tilden Avenue, East 48 to East 49 Streets"
-    },
-    { "lat": 40.8841, "lng": -73.8452, "name": "Edenwald Playground Public Restroom", "comment": "East 226 Drive, Schieffelin Avenue"
-    },
-    { "lat": 40.6814, "lng": -73.8568, "name": "Ampere Playground Public Restroom", "comment": "101 Avenue & 82 Street"
-    },
-    { "lat": 40.8657, "lng": -73.8505, "name": "Allerton Playground Public Restroom", "comment": "Allerton Avenue between Throop Avenue & Stedman Place"
-    },
-    { "lat": 40.8651, "lng": -73.9295, "name": "Anne Loftus Playground Public Restroom", "comment": "Broadway & Dyckman Street"
-    },
-    { "lat": 40.7419, "lng": -73.848, "name": "FMCP-Carousel Loop Public Restroom", "comment": "23 Carousel Loop"
-    },
-    { "lat": 40.781, "lng": -73.9616, "name": "Ancient Playground Public Restroom", "comment": "85th St. & 5th Ave."
-    },
-    { "lat": 40.7362, "lng": -73.8698, "name": "Newtown Playground Public Restroom", "comment": "92nd St. & 56th Ave."
-    },
-    { "lat": 40.6947, "lng": -73.8215, "name": "Phil 'Scooter' Rizzuto Park Public Restroom", "comment": "125 Street & Atlantic Avenue"
-    },
-    { "lat": 40.7971, "lng": -73.9515, "name": "Charles A. Dana Discovery Center", "comment": "Inside the Park at 110th Street between Fifth and Lenox Avenues"
-    },
-    { "lat": 40.7159, "lng": -73.9816, "name": "Luther Gulick Park Public Restroom", "comment": "Broome Street between Bialystoker Pl. & Columbia St."
-    },
-    { "lat": 40.8496, "lng": -73.9021, "name": "Richman (Echo) Park Upper Level Public Restroom", "comment": "East 178 Street & Ryer Avenue, Upper Level"
-    },
-    { "lat": 40.8674, "lng": -73.7937, "name": "Orchard Beach Pavilion North Women's Public Restroom", "comment": "End of Orchard Beach Road, north side"
-    },
-    { "lat": 40.722, "lng": -73.9518, "name": "McCarren Park Public Restroom", "comment": "903 Lorimer St"
-    },
-    { "lat": 40.5616, "lng": -74.1115, "name": "Dugan Playground Public Restroom", "comment": "Mill Road & Tysens Lane"
-    },
-    { "lat": 40.5779, "lng": -73.8352, "name": "Beach 115th Street Public Restroom", "comment": "Beach 115th St. & Rockaway Boardwalk"
-    },
-    { "lat": 40.7239, "lng": -73.9728, "name": "East River Playground Public Restroom", "comment": "Northern end of park at East 10th Street."
-    },
-    { "lat": 40.7892, "lng": -73.9379, "name": "East River Playground Public Restroom", "comment": "FDR Drive, East 106 to East 107 Streets"
-    },
-    { "lat": 40.7062, "lng": -74.004, "name": "Imagination Playground Public Restroom", "comment": "Front St., John St., and South St."
-    },
-    { "lat": 40.6788, "lng": -73.942, "name": "St. Andrew's Playground Public Restroom", "comment": "Atlantic Avenue & Herkimer Street"
-    },
-    { "lat": 40.742, "lng": -73.9608, "name": "Hunter's Point South Park Pavilion", "comment": "Center Blvd. & Borden Ave."
-    },
-    { "lat": 40.8005, "lng": -73.9733, "name": "Structure north of W 102nd St soccer field stairs", "comment": "North of W 102nd St soccer field stairs"
-    },
-    { "lat": 40.8767, "lng": -73.8786, "name": "Williamsbridge Oval Recreation Center", "comment": "Reservoir Oval East & Van Cortlandt Avenue East"
-    },
-    { "lat": 40.6283, "lng": -74.099, "name": "Silver Lake Park Field House", "comment": "Victory Boulevard, Clove Road, Forest Avenue"
-    },
-    { "lat": 40.5798, "lng": -74.0759, "name": "South Beach Public Restroom", "comment": "Boardwalk, near Seaview Ave."
-    },
-    { "lat": 40.6203, "lng": -73.958, "name": "Kolbert Playground Public Restroom", "comment": "Avenue L, East 17 to East 18 Streets"
-    },
-    { "lat": 40.8747, "lng": -73.8654, "name": "Gun Hill Playground Public Restroom", "comment": "Holland Avenue, Magenta Street, Cueger Avenue"
-    },
-    { "lat": 40.873, "lng": -73.8711, "name": "Rosewood Playground Public Restroom", "comment": "Bronx River Parkway & Rosewood Street"
-    },
-    { "lat": 40.8242, "lng": -73.8978, "name": "Horseshoe Playground Public Restroom", "comment": "Hall Place, Rogers Place, East 165 Street"
-    },
-    { "lat": 40.8111, "lng": -73.9472, "name": "St. Nicholas Playground South Public Restroom", "comment": "West 129 & 7 Avenue"
-    },
-    { "lat": 40.6851, "lng": -73.919, "name": "Saratoga Park Public Restroom", "comment": "Howard Avenue, Halsey, Macon Streets"
-    },
-    { "lat": 40.8417, "lng": -73.9379, "name": "Audubon Playground Public Restroom", "comment": "West 170 Street & Audubon Avenue"
-    },
-    { "lat": 40.6917, "lng": -73.9578, "name": "Star Spangled Playground Public Restroom", "comment": "Franklin & Willoughby Avenues"
-    },
-    { "lat": 40.7485, "lng": -73.9885, "name": "Greeley Square Park Public Restroom", "comment": "Ave. of the Americas & W. 32nd St."
-    },
-    { "lat": 40.7754, "lng": -73.9688, "name": "Loeb Boathouse", "comment": "East Side between 74th and 75th Streets"
-    },
-    { "lat": 40.7904, "lng": -73.9546, "name": "Robert Bendheim Playground Public Restroom", "comment": "100th Street and Fifth Ave"
-    },
-    { "lat": 40.7955, "lng": -73.9189, "name": "Sunken Meadow Public Restroom", "comment": "Sunken Meadow Loop, Between Fields 13 and 19"
-    },
-    { "lat": 40.5734, "lng": -73.9759, "name": "West 8th Street Public Restroom", "comment": "Boardwalk, near West. 8th Street Entrance"
-    },
-    { "lat": 40.6879, "lng": -73.9255, "name": "P.O. Reinaldo Salgado Playground Public Restroom", "comment": "Madison Street & Patchen Avenue"
-    },
-    { "lat": 40.8351, "lng": -73.8962, "name": "Martin Van Buren Playground Public Restroom", "comment": "Crotona East & Claremont Parkway"
-    },
-    { "lat": 40.657, "lng": -73.8695, "name": "Berriman Playground Public Restroom", "comment": "Berriman St between Vandalia Ave & Schroeders Ave"
-    },
-    { "lat": 40.7046, "lng": -73.9044, "name": "Rosemary's Playground Public Restroom", "comment": "Woodward Avenue, Woodbine Street, Fairview Avenue"
-    },
-    { "lat": 40.7423, "lng": -73.8824, "name": "Moore Homestead Playground Public Restroom", "comment": "Broadway & 83 Street"
-    },
-    { "lat": 40.646, "lng": -73.9805, "name": "Albemarle Playground Public Restroom", "comment": "Albermarle Road & Dahill Road"
-    },
-    { "lat": 40.823, "lng": -73.8631, "name": "Story Playground Public Restroom", "comment": "Story Avenue, Thieriot Avenue, Taylor Avenue"
-    },
-    { "lat": 40.6933, "lng": -73.7956, "name": "Marconi Park Public Restroom", "comment": "109 Avenue & 155 Street"
-    },
-    { "lat": 40.6264, "lng": -74.0363, "name": "Russell Pedersen Playground Public Restroom", "comment": "Colonial Road, 83 to 85 Streets"
-    },
-    { "lat": 40.5942, "lng": -73.7506, "name": "Beach 17 Playground Public Restroom", "comment": "Beach 17th St. & Seagirt Blvd."
-    },
-    { "lat": 40.8629, "lng": -73.8366, "name": "Burns Playground Public Restroom", "comment": "Mace Ave. between Lodovick Ave. & Gunther Ave."
-    },
-    { "lat": 40.7722, "lng": -73.9776, "name": "Tavern on the Green", "comment": "West Side between 66th and 67th Streets"
-    },
-    { "lat": 40.724, "lng": -73.8516, "name": "Russell Sage Playground Public Restroom", "comment": "68 Avenue, Booth to Austin Streets"
-    },
-    { "lat": 40.6805, "lng": -74.0019, "name": "Dimattina Playground Public Restroom", "comment": "Hicks & Rapelye Streets"
-    },
-    { "lat": 40.8137, "lng": -73.939, "name": "Howard Bennett Playground Public Restroom", "comment": "West 135 to West 136 Streets, Lenox to 5 Avenues"
-    },
-    { "lat": 40.6674, "lng": -73.8902, "name": "Martin Luther King Jr. Playground Public Restroom", "comment": "Dumont, Blake, Miller Avenues"
-    },
-    { "lat": 40.7725, "lng": -73.9857, "name": "Guggenheim Bandshell", "comment": "Amsterdam Ave. and W. 62 St."
-    },
-    { "lat": 40.6367, "lng": -73.9201, "name": "Glenwood Playground Public Restroom", "comment": "Ralph Avenue & Farragut Road"
-    },
-    { "lat": 40.6537, "lng": -73.894, "name": "Breukelen Playground Public Restroom", "comment": "Louisiana & Flatlands Avenue"
-    },
-    { "lat": 40.6146, "lng": -73.9448, "name": "PFC Norton Playground Public Restroom", "comment": "Nostrand Avenue & Marine Parkway"
-    },
-    { "lat": 40.5906, "lng": -73.9385, "name": "Playground 286 Public Restroom", "comment": "Avenue Y, between Brown & Haring Streets"
-    },
-    { "lat": 40.7144, "lng": -73.984, "name": "Sol Lain Playground Public Restroom", "comment": "Broadway, Henry Street, Samuel Dickstein Place"
-    },
-    { "lat": 40.6608, "lng": -73.9653, "name": "Prospect Park Audubon Center", "comment": "101 East Dr"
-    },
-    { "lat": 40.6182, "lng": -74.1072, "name": "District 1 Headquarters", "comment": "Park Drive, South of Parking Lot"
-    },
-    { "lat": 40.7414, "lng": -73.7764, "name": "Holy Cow Playground Public Restroom", "comment": "Peck Avenue Between 64th Ave. & 67th Ave."
-    },
-    { "lat": 40.6203, "lng": -73.9372, "name": "Sarsfield Playground Public Restroom", "comment": "East 38 Street & Ryder Street, Avenue M"
-    },
-    { "lat": 40.7898, "lng": -73.9687, "name": "Sol Bloom Playground Public Restroom", "comment": "Columbus Avenue, West 91 to West 92 Streets, Central Park West"
-    },
-    { "lat": 40.7973, "lng": -73.9591, "name": "The Great Hill Public Restroom", "comment": "West Side from 103rd to 107th Streets"
-    },
-    { "lat": 40.8026, "lng": -73.9719, "name": "Ellington in the Park", "comment": "Riverside Dr & W 105th St"
-    },
-    { "lat": 40.6089, "lng": -74.0, "name": "Garibaldi Playground Public Restroom", "comment": "82 to 83 Street at 18 Avenue"
-    },
-    { "lat": 40.6295, "lng": -74.1151, "name": "Austin J. McDonald Playground Public Restroom", "comment": "Forest Avenue, Myrtle Avenue between Broadway & Burgher"
-    },
-    { "lat": 40.5586, "lng": -74.1024, "name": "Great Kills Park-New Dorp Beach Modular Public Restroom - Men's", "comment": "Prefab CS near beach, North structure"
-    },
-    { "lat": 40.6961, "lng": -73.912, "name": "Bushwick Playground Public Restroom", "comment": "Knickerbocker Ave between Putnam Ave & Woodbine St"
-    },
-    { "lat": 40.7017, "lng": -73.9395, "name": "Bushwick Playground Public Restroom", "comment": "Flushing Avenue, Bushwick Avenue & Humboldt Street"
-    },
-    { "lat": 40.7235, "lng": -73.937, "name": "Sgt. William Dougherty Playground Public Restroom", "comment": "Anthony St. & Vandervoort Ave."
-    },
-    { "lat": 40.8113, "lng": -73.9657, "name": "Riverside Clay Tennis Courts Public Restroom", "comment": "96th Street at the river"
-    },
-    { "lat": 40.7268, "lng": -73.9814, "name": "Tompkins Square Park Public Restroom", "comment": "Avenues A to B, East 7 to East 10 Streets"
-    },
-    { "lat": 40.669, "lng": -73.9119, "name": "Chester Playground Public Restroom", "comment": "Chester Street, Sutter Avenue"
-    },
-    { "lat": 40.7117, "lng": -73.9798, "name": "Corlears Hook Park Public Restroom", "comment": "Cherry St. & Jackson St."
-    },
-    { "lat": 40.6011, "lng": -73.9722, "name": "McDonald Playground Public Restroom", "comment": "McDonald Avenue, between Avenues S & T"
-    },
-    { "lat": 40.611, "lng": -73.7491, "name": "Redfern Playground Public Restroom", "comment": "B 12 Street & Redfern Avenue"
-    },
-    { "lat": 40.7149, "lng": -74.0001, "name": "Columbus Park Playground Public Restroom", "comment": "Mid-Park between Baxter and Mulberry Streets"
-    },
-    { "lat": 40.73, "lng": -74.0029, "name": "Downing Street Playground Public Restroom", "comment": "Downing to Carmine Streets, Avenue of the Americas"
-    },
-    { "lat": 40.6833, "lng": -73.905, "name": "Rudd Playground Public Restroom", "comment": "Aberdeen Street & Bushwick Avenue"
-    },
-    { "lat": 40.7937, "lng": -73.9531, "name": "Conservatory Garden Men's Public Restroom", "comment": "5th Avenue, 103rd Street to 106th Street"
-    },
-    { "lat": 40.8229, "lng": -73.9075, "name": "Hilton White Playground Public Restroom", "comment": "Caldwell Avenue, East 163 Street, East 161 Street"
-    },
-    { "lat": 40.7759, "lng": -73.9252, "name": "Astoria Park Field House", "comment": "Near the track and tennis courts at Astoria Park South and 18th Street"
-    },
-    { "lat": 40.6857, "lng": -73.7701, "name": "Roy Wilkins Playground Public Restroom", "comment": "Enter at Baisley Blvd. & 177th St."
-    },
-    { "lat": 40.6609, "lng": -73.9069, "name": "Newport Playground Public Restroom", "comment": "Newport Avenue & Osborn Street"
-    },
-    { "lat": 40.7389, "lng": -74.0047, "name": "Corporal John A. Seravalli Playground Public Restroom", "comment": "Hudson & Horatio Streets"
-    },
-    { "lat": 40.7011, "lng": -73.843, "name": "Jackson Pond Playground Public Restroom", "comment": "108 Street and Park Lane South"
-    },
-    { "lat": 40.8637, "lng": -73.9049, "name": "Devoe Park Public Restroom", "comment": "West Fordham Road, University Avenue, Sedgwick Avenue, Father Zeiser Place"
-    },
-    { "lat": 40.5717, "lng": -73.9959, "name": "Nautilus Playground Public Restroom", "comment": "West 30 Street at Boardwalk"
-    },
-    { "lat": 40.6674, "lng": -73.9074, "name": "Dr. Green Playground Public Restroom", "comment": "Mother Gaston Boulevard (Stone Avenue) & Sutter Avenues"
-    },
-    { "lat": 40.7131, "lng": -73.7581, "name": "Haggerty Park Public Restroom", "comment": "202 Street & Jamaica Avenue"
-    },
-    { "lat": 40.6898, "lng": -73.9465, "name": "Herbert Von King Cultural Arts Center", "comment": "Greene, Marcy, Lafayette, Tompkins Avenues"
-    },
-    { "lat": 40.612, "lng": -74.0357, "name": "4th Avenue Entrance Public Restroom", "comment": "Shore Road between 3rd Ave. & 4th Ave."
-    },
-    { "lat": 40.7831, "lng": -73.9308, "name": "Wards Meadow Fields Public Restroom", "comment": "Wards Meadow Loop, near Field 71"
-    },
-    { "lat": 40.8908, "lng": -73.8641, "name": "227th Street Playground Public Restroom", "comment": "Bronx Boulevard between East 226 and East 228 Streets"
-    },
-    { "lat": 40.7109, "lng": -73.739, "name": "Wayanda Park Public Restroom", "comment": "Robard Lane & 217 Street"
-    },
-    { "lat": 40.8113, "lng": -73.9227, "name": "Willis Playground Public Restroom", "comment": "East 139 Street, East 140 Street, Willis & Alexander Avenues"
-    },
-    { "lat": 40.6971, "lng": -73.9428, "name": "Sumner Playground Public Restroom", "comment": "Throop, Park, Mytrle Avenues"
-    },
-    { "lat": 40.773, "lng": -73.9744, "name": "Sheep Meadow at Mineral Springs Pavilion", "comment": "Mid-park at 69th Street"
-    },
-    { "lat": 40.7569, "lng": -73.7281, "name": "Challenge Playground Public Restroom", "comment": "251 Street & 63 Avenue"
-    },
-    { "lat": 40.5724, "lng": -74.086, "name": "Midland Beach Lot 8 Modular Public Restroom - Men's", "comment": "Father Capodonno Blvd at Hunter Avenue"
-    },
-    { "lat": 40.5725, "lng": -74.0859, "name": "Midland Beach Lot 8 Modular Public Restroom - Women's", "comment": "FR Capodanno Blvd at Hunter Avenue"
-    },
-    { "lat": 40.6967, "lng": -73.986, "name": "McLaughlin Park Public Restroom", "comment": "Tillary Street, Jay Street, Cathedral Place, Bridge Street"
-    },
-    { "lat": 40.8137, "lng": -73.9509, "name": "St. Nicholas Playground at West 129th St. Public Restroom", "comment": "St. Nicholas Terrace and West 129th Street"
-    },
-    { "lat": 40.6886, "lng": -73.9667, "name": "Underwood Park Public Restroom", "comment": "Lafayette & Waverly Avenues"
-    },
-    { "lat": 40.8097, "lng": -73.9392, "name": "P.S. 133 / Moore Playground Public Restroom", "comment": "Madison Ave. between E. 130 St. and E. 131 St."
-    },
-    { "lat": 40.8674, "lng": -73.9291, "name": "Payson Nature Center", "comment": "Gaelic Field and Area around Salt Marsh West of Indian Road (at 218th Street)"
-    },
-    { "lat": 40.7081, "lng": -73.9641, "name": "Bedford Playground Public Restroom", "comment": "Bedford Avenue & South 9 Street, Division Avenue"
-    },
-    { "lat": 40.709, "lng": -73.9389, "name": "Ten Eyck Playground Public Restroom", "comment": "Meserole St. & Bushwick Pl."
-    },
-    { "lat": 40.7758, "lng": -73.8373, "name": "College Point Fields Public Restroom", "comment": "130th Street & 23rd Avenue"
-    },
-    { "lat": 40.5828, "lng": -74.0898, "name": "Dongan Playground Public Restroom", "comment": "Mason Ave. between Buel Ave. and Dongan Hills Ave."
-    },
-    { "lat": 40.7411, "lng": -73.9224, "name": "L/CPL Thomas P. Noonan Jr. Playground Public Restroom", "comment": "Greenpoint & 47 Avenues, 43 Street"
-    },
-    { "lat": 40.8679, "lng": -73.8424, "name": "Angelo Campanaro Playground Public Restroom", "comment": "Eastchester Rd., E. Gun Hill Rd., and Arrow Ave."
-    },
-    { "lat": 40.7402, "lng": -73.9027, "name": "Big Bush Playground Public Restroom", "comment": "61 Street, north and south of Brooklyn-Queens Expressway"
-    },
-    { "lat": 40.7097, "lng": -73.9559, "name": "Rodney Playground South Public Restroom", "comment": "Rodney St. Between S. 3rd St. & S. 4th St."
-    },
-    { "lat": 40.7386, "lng": -73.7566, "name": "Telephone Playground Public Restroom", "comment": "Bell Boulevard, 75 Avenue & 217 Street"
-    },
-    { "lat": 40.8269, "lng": -73.8978, "name": "Rev J Polite Playground Public Restroom", "comment": "Rev. James Polite Avenue, Intervale Avenue, East 167 Street"
-    },
-    { "lat": 40.8959, "lng": -73.879, "name": "Indian Field Public Restroom", "comment": "East 233rd Street and Van Cortlandt Park East"
-    },
-    { "lat": 40.6508, "lng": -73.9682, "name": "Parade Ground Public Restroom", "comment": "Between Parkside Ave. & Caton Ave, and Rugby Rd. & Argyle Rd."
-    },
-    { "lat": 40.7064, "lng": -73.7747, "name": "Peters Field Public Restroom", "comment": "183 Place & Henderson Avenue"
-    },
-    { "lat": 40.8199, "lng": -73.9085, "name": "Grove Hill Playground Public Restroom", "comment": "East 158 Street, Caldwell Avenue, Eagle Avenue"
-    },
-    { "lat": 40.8856, "lng": -73.8392, "name": "Stars & Stripes Playground Public Restroom", "comment": "Baychester Avenue, Crawford Avenue"
-    },
-    { "lat": 40.5521, "lng": -74.1361, "name": "Greencroft Playground Public Restroom", "comment": "Redgrave, Ainsworth & Durant Avenues"
-    },
-    { "lat": 40.7741, "lng": -73.7677, "name": "John Golden Park Public Restroom", "comment": "215 Place, south of 32 Avenue"
-    },
-    { "lat": 40.761, "lng": -73.9113, "name": "Astoria Heights Playground Public Restroom", "comment": "30 Road, 45 to 46 Streets"
-    },
-    { "lat": 40.5828, "lng": -74.1225, "name": "High Rock Visitors Center", "comment": "Paw Trail & Red Dot Trail"
-    },
-    { "lat": 40.8068, "lng": -73.9578, "name": "Morningside Playground Public Restroom", "comment": "West 117th Street & Morningside Avenue"
-    },
-    { "lat": 40.6338, "lng": -74.1291, "name": "Levy Playground Field House", "comment": "Jewett & Castleton Avenues"
-    },
-    { "lat": 40.6721, "lng": -73.9659, "name": "Mount Prospect Park Public Restroom", "comment": "Eastern Parkway, Underhill Avenue"
-    },
-    { "lat": 40.8271, "lng": -73.8737, "name": "Parque De Los Ninos Public Restroom", "comment": "Morrison Avenue & Watson Street"
-    },
-    { "lat": 40.6972, "lng": -73.8581, "name": "Forest Parkway Tennis House Public Restroom", "comment": "Park Lane South to north of tennis courts"
-    },
-    { "lat": 40.5761, "lng": -73.9788, "name": "Luna Playground Public Restroom", "comment": "W. 12th St. & Surf Ave."
-    },
-    { "lat": 40.6738, "lng": -73.9353, "name": "St. John's Park Public Restroom", "comment": "1251 Prospect Place"
-    },
-    { "lat": 40.823, "lng": -73.9511, "name": "Alexander Hamilton Playground Public Restroom", "comment": "Hamilton Place, West 140 to West 141 Streets"
-    },
-    { "lat": 40.5726, "lng": -73.9831, "name": "West 16th Street Public Restroom", "comment": "Boardwalk at West 16th Street"
-    },
-    { "lat": 40.6746, "lng": -73.7878, "name": "Sutphin Playground Public Restroom", "comment": "Sutphin Blvd & 125 Avenue"
-    },
-    { "lat": 40.6569, "lng": -73.9704, "name": "Prospect Park-Lookout Hill-Wellhouse", "comment": ""
-    },
-    { "lat": 40.8571, "lng": -73.8982, "name": "Slattery Playground Public Restroom", "comment": "East 183 Street, Ryer Avenue, Valentine Avenue"
-    },
-    { "lat": 40.6349, "lng": -73.8872, "name": "Bayview Playground Public Restroom", "comment": "Seaview Avenue & East 99 Street"
-    },
-    { "lat": 40.73, "lng": -73.8351, "name": "Triassic Playground Public Restroom", "comment": "Jewel Ave. & Van Wyck Expwy."
-    },
-    { "lat": 40.8703, "lng": -73.9214, "name": "Isham St. Entrance Public Restroom", "comment": "Seaman Ave. & Isham St."
-    },
-    { "lat": 40.6057, "lng": -74.0178, "name": "Dyker Beach Park-District HQ", "comment": "Bay 8th Street & Independence Ave."
-    },
-    { "lat": 40.8999, "lng": -73.8722, "name": "Woodlawn Playground Public Restroom", "comment": "West 239 Street & Van Cortlandt East"
-    },
-    { "lat": 40.6619, "lng": -73.9144, "name": "Betsy Head Park Public Restroom", "comment": "Livonia Ave & Strauss St"
-    },
-    { "lat": 40.8343, "lng": -73.8622, "name": "Virginia Playground Public Restroom", "comment": "Virginia Avenue, McGraw Avenue, Cross Bronx Expressway, White Plains Road"
-    },
-    { "lat": 40.8025, "lng": -73.959, "name": "Morningside Park Ball Fields Public Restroom", "comment": "West 112th Street & Manhattan Avenue"
-    },
-    { "lat": 40.7021, "lng": -73.9335, "name": "Green Central Knoll Public Restroom", "comment": "49 Evergreen Avenue"
-    },
-    { "lat": 40.7942, "lng": -73.9527, "name": "Conservatory Garden Women's Public Restroom", "comment": "5th Avenue, 103rd Street to 106th Street"
-    },
-    { "lat": 40.8719, "lng": -73.906, "name": "Riverbend Playground Public Restroom", "comment": "Bailey Avenue, West Kingsbridge Road"
-    },
-    { "lat": 40.7716, "lng": -73.9073, "name": "Ditmars Playground Public Restroom", "comment": "23 Avenue to Ditmars Boulevard"
-    },
-    { "lat": 40.818, "lng": -73.8704, "name": "Soundview Park Playground Public Restroom", "comment": "Metcalf Avenue between Seward and Randall Avenues"
-    },
-    { "lat": 40.5828, "lng": -74.1232, "name": "High Rock Park Men's Public Restroom", "comment": "Paw Trail near Blue Trail"
-    },
-    { "lat": 40.6227, "lng": -74.0792, "name": "Rev. Dr. Maggie Howard Playground Public Restroom", "comment": "Tompkins Avenue & Broad Street"
-    },
-    { "lat": 40.8078, "lng": -73.9251, "name": "Lozada Playground Public Restroom", "comment": "East 135 Street, Willis Avenue, Alexander Avenue"
-    },
-    { "lat": 40.7264, "lng": -73.8084, "name": "Playground Seventy Five Public Restroom", "comment": "160 Street & 75 Avenue"
-    },
-    { "lat": 40.829, "lng": -73.8691, "name": "Watson Gleason Playground Public Restroom", "comment": "Gleason Avenue, Rosedale Avenue, Watson Avenue, Nobel Avenue"
-    },
-    { "lat": 40.6927, "lng": -73.9358, "name": "Eleanor Roosevelt Playground Public Restroom", "comment": "Lewis & DeKalb Avenues"
-    },
-    { "lat": 40.703, "lng": -73.924, "name": "Maria Hernandez Park Public Restroom", "comment": "Knickerbocker to Irving Avenues, Starr to Suydam Streets"
-    },
-    { "lat": 40.7106, "lng": -73.9598, "name": "La Guardia Playground Public Restroom", "comment": "Havemeyer, Roebling Streets & South 4"
-    },
-    { "lat": 40.7473, "lng": -73.922, "name": "Torsney Playground Public Restroom", "comment": "Skillman Avenue & 43 Street"
-    },
-    { "lat": 40.6231, "lng": -74.1463, "name": "Markham Playground Public Restroom", "comment": "Willowbrook Parkway, Forest Avenue & Houston Street"
-    },
-    { "lat": 40.6832, "lng": -73.8929, "name": "Upper Highland Playground Public Restroom", "comment": "Heath Pl & Highland Blvd"
-    },
-    { "lat": 40.9021, "lng": -73.9049, "name": "Vinmont Veteran Park Public Restroom", "comment": "Mosholu Avenue, West 254 Street, Riverdale Avenue, West 256 Street"
-    },
-    { "lat": 40.6023, "lng": -74.0116, "name": "Bath Beach Park Public Restroom", "comment": "Shore Pkwy. bet. Bay 14 St. and Bay 16 St."
-    },
-    { "lat": 40.757, "lng": -73.9474, "name": "Vernon Playground Public Restroom", "comment": "21 Street, Bridge Plaza, Vernon Boulevard, East River"
-    },
-    { "lat": 40.812, "lng": -73.8386, "name": "Ferry Point Park West Public Restroom", "comment": "mid-park, at Hutchinson River Parkway parking lot"
-    },
-    { "lat": 40.8221, "lng": -73.8599, "name": "Space Time Playground Public Restroom", "comment": "Streetory Avenue, Bolton Avenue, Lafayette Avenue, Underhill Avenue"
-    },
-    { "lat": 40.8862, "lng": -73.9171, "name": "Seton Park Public Restroom", "comment": "West 135 Street, Independence Avenue, West 232 Street"
-    },
-    { "lat": 40.8405, "lng": -73.8978, "name": "Crotona Park Pool House", "comment": "1700 Fulton Avenue"
-    },
-    { "lat": 40.7473, "lng": -73.8086, "name": "Kissena Park -Tennis Courts Public Restroom", "comment": "mid-Park, enter at Rose & Oak Avenues"
-    },
-    { "lat": 40.754, "lng": -73.9827, "name": "Bryant Park Public Restroom", "comment": "W. 42nd St. & Ave. of the Americas"
-    },
-    { "lat": 40.7873, "lng": -73.9821, "name": "River Run Playground Public Restroom", "comment": "83rd Street near Riverside Drive"
-    },
-    { "lat": 40.8525, "lng": -73.8347, "name": "Colucci Playground Public Restroom", "comment": "Hutchinson River Parkway, Wilkinson Avenue, Mayflower Avenue"
-    },
-    { "lat": 40.5993, "lng": -73.7442, "name": "Lannett Playground Public Restroom", "comment": "Lanett Ave. between Beach 8th St. & Beach 9th St."
-    },
-    { "lat": 40.772, "lng": -73.7694, "name": "Crocheron Park Public Restroom", "comment": "33rd Rd. & 215th Pl."
-    },
-    { "lat": 40.7814, "lng": -73.8445, "name": "Poppenhusen Playground Public Restroom", "comment": "20 Avenue between 123 & 124 Streets"
-    },
-    { "lat": 40.7224, "lng": -73.9912, "name": "Houston St. Playground Public Restroom", "comment": "Stanton St. between Chrystie St. & Forsyth St."
-    },
-    { "lat": 40.7894, "lng": -73.9619, "name": "Tennis House Public Restroom", "comment": "West Side between 94th and 96th Streets near the West Drive"
-    },
-    { "lat": 40.6385, "lng": -74.1179, "name": "Corporal Thompson Playground Public Restroom", "comment": "Broadway, Henderson Avenue"
-    },
-    { "lat": 40.773, "lng": -73.785, "name": "Bayside Fields Public Restroom", "comment": "204 Street & 29 Avenue, Clearview Expressway"
-    },
-    { "lat": 40.698, "lng": -73.9828, "name": "Golconda Playground  Public Restroom", "comment": "Gold St & Concord St"
-    },
-    { "lat": 40.7612, "lng": -73.9929, "name": "Mathews-Palmer Playground Public Restroom", "comment": "West 45 Street between 9 & 10 Avenues"
-    },
-    { "lat": 40.685, "lng": -73.727, "name": "Laurelton West Playground Public Restroom", "comment": "238th St. & 120th Ave."
-    },
-    { "lat": 40.6635, "lng": -73.9499, "name": "Marc And Jason's Playground Public Restroom", "comment": "Sterling Street & Empire Boulevard"
-    },
-    { "lat": 40.758, "lng": -73.8247, "name": "Bowne Playground Public Restroom", "comment": "Union Street and Sanford Avenue"
-    },
-    { "lat": 40.6533, "lng": -74.0192, "name": "Bush Terminal Park Public Restroom", "comment": "Marginal St. & 43rd St"
-    },
-    { "lat": 40.7361, "lng": -73.8527, "name": "Playground Sixty Two LXII Public Restroom", "comment": "Yellowstone Boulevard between 62 Avenue & 62 Road"
-    },
-    { "lat": 40.8532, "lng": -73.938, "name": "Bennett Park Public Restroom", "comment": "West 185 Street, Ft Washington Avenue"
-    },
-    { "lat": 40.6989, "lng": -73.8585, "name": "Seuffert Bandshell Public Restroom", "comment": "West Main Drive to eastern side of golf course"
-    },
-    { "lat": 40.7544, "lng": -73.8895, "name": "Travers Park Public Restroom", "comment": "78 Street, south of Northern Boulevard"
-    },
-    { "lat": 40.6613, "lng": -73.9893, "name": "Slope Park Playground Public Restroom", "comment": "6th Avenue Between 18th & 19th Sts"
-    },
-    { "lat": 40.6565, "lng": -73.9548, "name": "Winthrop Playground Public Restroom", "comment": "Winthrop St between Bedford Ave & Rogers Ave"
-    },
-    { "lat": 40.7994, "lng": -73.9662, "name": "Bloomingdale Playground Public Restroom", "comment": "Amsterdam Avenue, West 104 & West 105 Streets"
-    },
-    { "lat": 40.535, "lng": -74.2085, "name": "Bloomingdale Playground Public Restroom", "comment": "Richmond Pkwy, Bloomingdale Rd., Lenevar Ave"
-    },
-    { "lat": 40.7919, "lng": -73.8083, "name": "Whitestone Playground Public Restroom", "comment": "12 Avenue & 153 Street"
-    },
-    { "lat": 40.7796, "lng": -73.9227, "name": "Charybdis Playground Public Restroom", "comment": "Shore Boulevard opposite 23 Road"
-    },
-    { "lat": 40.8291, "lng": -73.9443, "name": "Carmansville Playground Public Restroom", "comment": "Amsterdam Avenue, West 151 to West 152 Streets"
-    },
-    { "lat": 40.7126, "lng": -73.9886, "name": "Little Flower Playground Public Restroom", "comment": "Madison Street opposite Jefferson Street"
-    },
-    { "lat": 40.7709, "lng": -73.7376, "name": "Admiral Playground Public Restroom", "comment": "Little Neck Parkway, 42 to 43 Avenues"
-    },
-    { "lat": 40.6996, "lng": -73.8131, "name": "Howard Von Dohlen Playground Public Restroom", "comment": "Howard Von Dohlen Playground"
-    },
-    { "lat": 40.7366, "lng": -73.7707, "name": "Cunningham Park Fields Public Restroom", "comment": "mid-Park on 73rd Ave. near Fields 15 and 16"
-    },
-    { "lat": 40.7188, "lng": -73.8846, "name": "Juniper Valley Park Running Track Public Restroom", "comment": "Enter at 71st Street and Juniper Blvd. South"
-    },
-    { "lat": 40.6605, "lng": -73.9636, "name": "Lincoln Road Playground Public Restroom", "comment": "Lincoln Rd. & Ocean Ave."
-    },
-    { "lat": 40.8415, "lng": -73.9068, "name": "Claremont Park North Public Restroom", "comment": "mid-park, E. Mt. Eden Ave between Monroe Ave & Topping Ave"
-    },
-    { "lat": 40.7736, "lng": -73.945, "name": "Catbird Playground Public Restroom", "comment": "Gracie Square & East End Avenue"
-    },
-    { "lat": 40.6664, "lng": -73.9276, "name": "Lincoln Terrace Park / Arthur S. Somers Park Public Restroom", "comment": "Rochester Avenue between President Street and Carroll Street"
-    },
-    { "lat": 40.6818, "lng": -73.8397, "name": "Police Officer Nicholas Demutiis Park Public Restroom", "comment": "102 Street & Liberty Avenue"
-    },
-    { "lat": 40.5225, "lng": -74.1858, "name": "E.M.T. Christopher J. Prescott Playground Public Restroom", "comment": "Hylan Boulevard & Huguenot Avenue"
-    },
-    { "lat": 40.6131, "lng": -74.0132, "name": "Dyker Playground Public Restroom", "comment": "86th Street & 14th Avenue"
-    },
-    { "lat": 40.6987, "lng": -73.7399, "name": "East Springfield Playground Public Restroom", "comment": "115 Road between 218 & 219 Streets"
-    },
-    { "lat": 40.5896, "lng": -73.921, "name": "Seba Playground Public Restroom", "comment": "Gerritsen Ave. & Seba Ave."
-    },
-    { "lat": 40.7619, "lng": -73.8842, "name": "Gorman Playground Public Restroom", "comment": "30 Avenue between 84 & 85 Streets"
-    },
-    { "lat": 40.7159, "lng": -73.9998, "name": "Columbus Park Pavilion", "comment": "Bayard Street between Baxter and Mulberry Streets"
-    },
-    { "lat": 40.7824, "lng": -73.7773, "name": "Bay Terrace Playground Public Restroom", "comment": "23 Avenue & 212 Street"
-    },
-    { "lat": 40.7481, "lng": -73.9687, "name": "Robert Moses Playground Public Restroom", "comment": "1 Avenue, East 41 to East 42 Streets"
-    },
-    { "lat": 40.7549, "lng": -73.8552, "name": "Louis Armstrong Playground Public Restroom", "comment": "37 Avenue between 112 & 113 Streets"
-    },
-    { "lat": 40.6087, "lng": -74.1195, "name": "Christopher J. Igneri Playground Public Restroom", "comment": "Schmidts Lane & Manor Road"
-    },
-    { "lat": 40.7208, "lng": -73.9501, "name": "McCarren Park Play Center PR", "comment": "McCarren Pool & Play Center"
-    },
-    { "lat": 40.6897, "lng": -73.9996, "name": "Van Voorhees Playground Public Restroom", "comment": "Congress, Columbia, West/South BQE"
-    },
-    { "lat": 40.7757, "lng": -73.9439, "name": "Carl Schurz Promenade Public Restroom", "comment": "East 87th Street & East End Avenue"
-    },
-    { "lat": 40.8617, "lng": -73.8908, "name": "Rose Hill Park Public Restroom", "comment": "Webster Avenue, Harlem River, East Fordham Road"
-    },
-    { "lat": 40.8377, "lng": -73.908, "name": "Claremont Park South Public Restroom", "comment": "Mount Eden Parkway & Morris Avenue"
-    },
-    { "lat": 40.7571, "lng": -73.7715, "name": "Marie Curie Playground Public Restroom", "comment": "211 & Oceana Streets, 46 Avenue"
-    },
-    { "lat": 40.6738, "lng": -73.9438, "name": "Brower Park Public Restroom", "comment": "Brooklyn Ave & Prospect Pl"
-    },
-    { "lat": 40.8358, "lng": -73.9034, "name": "Gouverneur Playground Public Restroom", "comment": "3rd Avenue, St. Paul's Place, East 170 Street"
-    },
-    { "lat": 40.8517, "lng": -73.8247, "name": "Pelham Bay Nature Center", "comment": "Bruckner Blvd. and Wilkinson Avenue"
-    },
-    { "lat": 40.677, "lng": -73.9785, "name": "Park Slope Playground Public Restroom", "comment": "Berkeley Street & Lincoln Place"
-    },
-    { "lat": 40.8695, "lng": -73.8766, "name": "French Charley's Playground Public Restroom", "comment": "East 204 Street & Webster Avenue entrance; south of playground"
-    },
-    { "lat": 40.8173, "lng": -73.9048, "name": "Abigail Playground Public Restroom", "comment": "East 156 Street, Tinton Avenue"
-    },
-    { "lat": 40.8663, "lng": -73.7947, "name": "Pelham Bay Park-ORCHARD BEACH/HQ", "comment": "Park Dr cul de sac, Orchard Beach "
-    },
-    { "lat": 40.7362, "lng": -73.8141, "name": "Pomonok Playground Public Restroom", "comment": "Kissena Boulevard, 65 Avenue"
-    },
-    { "lat": 40.7449, "lng": -73.7096, "name": "Playground Eighty LXXX Public Restroom", "comment": "80th Ave. between 261st St. & 262nd. St."
-    },
-    { "lat": 40.8389, "lng": -73.946, "name": "Lily Brown Playground Public Restroom", "comment": "West 162 Street, east of Riverside Drive"
-    },
-    { "lat": 40.6203, "lng": -74.1635, "name": "Jennifer's Playground Field House", "comment": "Regis Dr between Farragut Ave & Elson Ct"
-    },
-    { "lat": 40.711, "lng": -73.9974, "name": "Alfred E. Smith Playground Public Restroom", "comment": "Monroe Street & Catherine Street"
-    },
-    { "lat": 40.8685, "lng": -73.9313, "name": "Fort Washington Park Dyckman St. Public Restroom", "comment": "338 Dyckman Street"
-    },
-    { "lat": 40.5718, "lng": -73.9988, "name": "West 33rd Street Public Restroom", "comment": "Boardwalk at West 33rd Street"
-    },
-    { "lat": 40.7419, "lng": -73.74, "name": "Alley Pond Park Public Restroom", "comment": "Entrance off Grand Central Parkway, includes athletic fields and picnic areas"
-    },
-    { "lat": 40.84, "lng": -73.8953, "name": "Cary Leeds Tennis Center", "comment": "Crotona Avenue & Crotona Park North"
-    },
-    { "lat": 40.6321, "lng": -74.0387, "name": "79th Street Entrance Public Restroom", "comment": "Shore Road & 78th Street"
-    },
-    { "lat": 40.8432, "lng": -73.8773, "name": "River Park Playground Public Restroom", "comment": "East 180th Street, Boston Road"
-    },
-    { "lat": 40.7833, "lng": -73.9867, "name": "Classic Playground Men", "comment": "Along Hudson River, b/w W 75th & W 76th St."
-    },
-    { "lat": 40.7167, "lng": -73.9941, "name": "Sara D. Roosevelt Park Track Public Restroom", "comment": "Hester Street between Forsyth St. & Christie St."
-    },
-    { "lat": 40.7583, "lng": -73.9003, "name": "St. Michael's Playground Public Restroom", "comment": "30 - 31 Avenues, Boody Street and BQE"
-    },
-    { "lat": 40.8445, "lng": -73.8947, "name": "Walter Gladwin Park Playground Public Restroom", "comment": "Corner of East 175 Street & Arthur Avenue"
-    },
-    { "lat": 40.7747, "lng": -73.9235, "name": "Triborough Bridge Playground B Public Restroom", "comment": "Hoyt Avenue, 21 to 23 Streets"
-    },
-    { "lat": 40.814, "lng": -73.9212, "name": "Clark Playground Public Restroom", "comment": "3 Avenue, East 144 Street, East 146 Street"
-    },
-    { "lat": 40.7463, "lng": -73.7583, "name": "Tall Oak Playground Public Restroom", "comment": "64 Avenue, 218 & 219 Streets"
-    },
-    { "lat": 40.7467, "lng": -73.8386, "name": "South Of Fountain Of The Planets Public Restroom", "comment": "mid-Park, between Avenue of Commerce & Avenue of Progress"
-    },
-    { "lat": 40.7159, "lng": -73.9752, "name": "Brian Watkins Tennis Center Public Restroom", "comment": "East River Park at Broome Street"
-    },
-    { "lat": 40.8441, "lng": -73.8814, "name": "Vidalia Park Public Restroom", "comment": "Vyse & Daly Avenues between West 179-180 Streets"
-    },
-    { "lat": 40.7007, "lng": -73.8552, "name": "Forest Park Visitor Center", "comment": "Woodhaven Boulevard and Forest Park Drive"
-    },
-    { "lat": 40.5901, "lng": -74.1879, "name": "Schmul Park Public Restroom", "comment": "Wild Avenue, Pearson Street"
-    },
-    { "lat": 40.7356, "lng": -73.9593, "name": "Greenpoint Playground Public Restroom", "comment": "Franklin St. bet. Commercial St. and Dupont St."
-    },
-    { "lat": 40.8464, "lng": -73.9408, "name": "J. Hood Wright Recreation Center", "comment": "Ft. Washington & Haven Avenues, West 173 Street"
-    },
-    { "lat": 40.783, "lng": -73.8068, "name": "Clintonville Playground Public Restroom", "comment": "Clintonville Street, 17 Road & 17 Avenue"
-    },
-    { "lat": 40.6867, "lng": -73.981, "name": "Sixteen Sycamores Playground Public Restroom", "comment": "Schermerhorn & Nevins Street"
-    },
-    { "lat": 40.833, "lng": -73.9033, "name": "Drew Playground Public Restroom", "comment": "Fulton Avenue, East 169 Street"
-    },
-    { "lat": 40.5859, "lng": -74.1008, "name": "Gen. Douglas MacArthur Park Public Restroom", "comment": "254 JEFFERSON STREET"
-    },
-    { "lat": 40.8204, "lng": -73.9521, "name": "Jacob H. Schiff Playground Public Restroom", "comment": "Amsterdam Avenue, West 136 Street"
-    },
-    { "lat": 40.7551, "lng": -73.9496, "name": "QueensBridge Park-Field House", "comment": "QueensBridge Park"
-    },
-    { "lat": 40.5743, "lng": -73.9716, "name": "West 2nd Street Public Restroom", "comment": ""
-    },
-    { "lat": 40.6561, "lng": -73.9062, "name": "Osborn Playground Public Restroom", "comment": "Linden Boulevard & Osborn Street"
-    },
-    { "lat": 40.577, "lng": -73.9441, "name": "Manhattan Beach Bathhouse Public Restroom", "comment": "Oriental Blvd. & Hastings St."
-    },
-    { "lat": 40.8191, "lng": -73.8783, "name": "Soundview Park Dog Run Public Restroom", "comment": "Lafayette Avenue between Colgate and Boynton Avenues"
-    },
-    { "lat": 40.6914, "lng": -73.8536, "name": "Equity Playground Public Restroom", "comment": "90 Street, 88 & 89 Avenues"
-    },
-    { "lat": 40.6866, "lng": -73.9394, "name": "Raymond Bush Playground Public Restroom", "comment": "Sumner Avenue, Madison Street"
-    },
-    { "lat": 40.7682, "lng": -73.9946, "name": "De Witt Clinton Park Public Restroom", "comment": "West 52 to West 54 Streets, 11 to 12 Avenues"
-    },
-    { "lat": 40.577, "lng": -73.9702, "name": "Century Playground Public Restroom", "comment": "Brighton Beach Avenue & West 2 Street"
-    },
-    { "lat": 40.6656, "lng": -73.9716, "name": "The Picnic House", "comment": "Long Meadow at West Dr. & 5th St."
-    },
-    { "lat": 40.7207, "lng": -73.8774, "name": "Juniper North Playground Tennis Public Restroom", "comment": "62nd Avenue & 80th Street"
-    },
-    { "lat": 40.8469, "lng": -73.8615, "name": "Matthews Muliner Playground Public Restroom", "comment": "Delancy Place, Muliner Avenue, Matthews Avenue"
-    },
-    { "lat": 40.8209, "lng": -73.9467, "name": "Arlington 'Ollie' Edinboro Playground Public Restroom", "comment": "West 140 Street & St. Nicholas Avenue"
-    },
-    { "lat": 40.7355, "lng": -73.8572, "name": "Real Good Playground Public Restroom", "comment": "LIE, 99 Street & 62 Avenue"
-    },
-    { "lat": 40.8284, "lng": -73.9297, "name": "Joseph Yancey Track & Field Public Restroom", "comment": "East 161st Street, near Major Deegan Expwy."
-    },
-    { "lat": 40.774, "lng": -73.9665, "name": "Kerbs Boathouse (Model Boat Pond)", "comment": "Conservatory Water, East Side at 74th Street."
-    },
-    { "lat": 40.8209, "lng": -73.9119, "name": "Flynn Playground Public Restroom", "comment": "3 Avenue, East 158 Street, Brook Avenue, East 157 Street"
-    },
-    { "lat": 40.6801, "lng": -73.7751, "name": "North Rochdale Playground Public Restroom", "comment": "Baisley Boulevard & Bedell Street"
-    },
-    { "lat": 40.5881, "lng": -73.9903, "name": "Calvert Vaux Playground Public Restroom", "comment": "Cropsey Ave. Between 27th Ave. & Bay 46th St."
-    },
-    { "lat": 40.6492, "lng": -73.914, "name": "Railroad Playground Public Restroom", "comment": "Ditmas Avenue between East 91 & East 92 Streets"
-    },
-    { "lat": 40.6266, "lng": -74.0167, "name": "McKinley Park Public Restroom", "comment": "Fort Hamilton Parkway, 73 to 78 Streets, 7 Avenue"
-    },
-    { "lat": 40.6847, "lng": -73.9878, "name": "Nicholas Naquan Heyward Jr. Park Public Restroom", "comment": "Wyckoff Street between Bond & Hoyt Streets"
-    },
-    { "lat": 40.768, "lng": -73.9219, "name": "Athens Square Public Restroom", "comment": "29 Street, 30 Street, 30 Avenue, Newtown Avenue"
-    },
-    { "lat": 40.7372, "lng": -73.8457, "name": "World's Fair Playground Public Restroom", "comment": "62nd Drive And Grand Central Pkwy Service Rd"
-    },
-    { "lat": 40.5023, "lng": -74.2517, "name": "Conference House Park-Visitor Center & Lenape Gallery", "comment": "7455 Hylan Blvd"
-    },
-    { "lat": 40.6916, "lng": -73.9325, "name": "Jesse Owens Playground Public Restroom", "comment": "Stuyvesant & Lafayette Avenues"
-    },
-    { "lat": 40.8255, "lng": -73.9009, "name": "Behagen Playground Public Restroom", "comment": "Tinton Avenue, East 165 Street, Union Avenue, East 166 Street"
-    },
-    { "lat": 40.7577, "lng": -73.9335, "name": "Dutch Kills Playground Public Restroom", "comment": "Crescent Street between 36 Avenue & 37 Avenue"
-    },
-    { "lat": 40.8584, "lng": -73.908, "name": "Aqueduct Walk Public Restroom", "comment": "Aqueduct Ave. E & W. 182nd St."
-    },
-    { "lat": 40.7592, "lng": -73.9914, "name": "McCaffrey Playground Public Restroom", "comment": "West 43 Street, 8 & 9 Avenues"
-    },
-    { "lat": 40.8654, "lng": -73.8985, "name": "St. James Park Golden Age Center", "comment": "Jerome Avenue, Morris Avenue, East 191 Street, Creston Avenue, East 192 Street,*"
-    },
-    { "lat": 40.8608, "lng": -73.9328, "name": "Fort Tryon Park Café", "comment": "1 Margaret Corbin Drive"
-    },
-    { "lat": 40.7243, "lng": -73.9856, "name": "McKinley Playground Public Restroom", "comment": "Avenue A, East 3-East 4 Streets"
-    },
-    { "lat": 40.8196, "lng": -73.9362, "name": "Brigadier General Charles Young Playground Public Restroom", "comment": "West 144 Street & Lenox Avenue"
-    },
-    { "lat": 40.61, "lng": -73.9696, "name": "Colonel David Marcus Playground Public Restroom", "comment": "Ocean Parkway, Avenue P, East 3 Street"
-    },
-    { "lat": 40.8279, "lng": -73.9399, "name": "Playground One Fifty Two CLII Public Restroom", "comment": "West 152 Street & Bradhurst Avenue"
-    },
-    { "lat": 40.5829, "lng": -74.1243, "name": "High Rock Park Women’s Public Restroom", "comment": ""
-    },
-    { "lat": 40.7444, "lng": -73.8869, "name": "Frank D. O'Connor Playground Public Restroom", "comment": "Broadway & 78 Street"
-    },
-    { "lat": 40.7829, "lng": -73.8236, "name": "Harvey Park Playground Public Restroom", "comment": "South of Park, near 144th St & 20th Ave"
-    },
-    { "lat": 40.8343, "lng": -73.8779, "name": "Captain William Harry Thompson Public Restroom", "comment": "East 174 Street, Stratford Avenue, Bronx River Avenue"
-    },
-    { "lat": 40.7479, "lng": -73.7762, "name": "Saul Weprin Playground Public Restroom", "comment": "53 Avenue between 201 & 202 Streets"
-    },
-    { "lat": 40.6162, "lng": -74.0395, "name": "96th Street Entrance Public Restroom", "comment": "Shore Road & 95th Street"
-    },
-    { "lat": 40.8472, "lng": -73.9312, "name": "Quisqueya Playground Public Restroom", "comment": "W. 180th St. & Amsterdam Ave."
-    },
-    { "lat": 40.7692, "lng": -73.9808, "name": "Merchants' Gate Public Restroom", "comment": "West 61st Street by Columbus Circle"
-    },
-    { "lat": 40.7256, "lng": -74.0025, "name": "Vesuvio Playground Public Restroom", "comment": "Spring & Thompson Streets"
-    },
-    { "lat": 40.6859, "lng": -73.7562, "name": "Locust Manor Playground Public Restroom", "comment": "192 Street, 121 Avenue"
-    },
-    { "lat": 40.7229, "lng": -73.8271, "name": "Albert H. Mauro Playground Public Restroom", "comment": "Park Drive East & 73 Terrace"
-    },
-    { "lat": 40.6809, "lng": -73.9948, "name": "Robert Acito Parkhouse", "comment": "Court & Smith Streets"
-    },
-    { "lat": 40.5825, "lng": -73.9644, "name": "Grady Playground Public Restroom", "comment": "Brighton 4th St. & Brighton 4th Rd."
-    },
-    { "lat": 40.751, "lng": -73.8338, "name": "College Point Blvd Soccer Fields Public Restroom", "comment": "Fowler Avenue & College Point Blvd, behind Al Oerter Recreation Center"
-    },
-    { "lat": 40.5746, "lng": -73.9645, "name": "Brighton 2nd Street Public Restroom", "comment": "Brighton 2nd Street & Boardwalk"
-    },
-    { "lat": 40.6707, "lng": -73.8711, "name": "Cypress Hills Playground Public Restroom", "comment": "Blake & Euclid Avenues"
-    },
-    { "lat": 40.7472, "lng": -73.9489, "name": "Murray Playground Public Restroom", "comment": "21 Street, 45 Avenue, 11 Street, 45 Road"
-    },
-    { "lat": 40.7653, "lng": -73.941, "name": "Rainey Park Playground Public Restroom", "comment": "Vernon Boulevard, 33 Road, 34 Street, East River"
-    },
-    { "lat": 40.7293, "lng": -73.8798, "name": "Crowley Playground Public Restroom", "comment": "57 Avenue & 83 Street"
-    },
-    { "lat": 40.6408, "lng": -73.9176, "name": "Curtis Playground Public Restroom", "comment": "Foster Avenue between East 81 and East 82 Streets"
-    },
-    { "lat": 40.8606, "lng": -73.8712, "name": "Waring Playground Public Restroom", "comment": "Bronx Park East between Waring Avenure and Thwaites Place"
-    },
-    { "lat": 40.6816, "lng": -73.9592, "name": "Crispus Attucks Playground Public Restroom", "comment": "Fulton Street & Classon Avenue"
-    },
-    { "lat": 40.6634, "lng": -73.9767, "name": "Lena Horne Bandshell", "comment": "Prospect Park W & 11th St"
-    },
-    { "lat": 40.6903, "lng": -73.8395, "name": "Maurice A Fitzgerald Playground Public Restroom", "comment": "Atlantic Avenue & 106 Street"
-    },
-    { "lat": 40.6042, "lng": -74.1586, "name": "Willowbrook Park-Boathouse", "comment": "Eton Pl. at Willowbrook Lake"
-    },
-    { "lat": 40.7307, "lng": -73.9983, "name": "Washington Square Park Public Restroom", "comment": "5 Avenue, Waverly Place, West 4 & MacDougal Streets."
-    },
-    { "lat": 40.8247, "lng": -73.9348, "name": "Frederick Johnson Playground Public Restroom", "comment": "7 Avenue, West 150-151 Streets"
-    },
-    { "lat": 40.7935, "lng": -73.8514, "name": "MacNeil Playground Public Restroom", "comment": "East of paved path running north from 119th Street"
-    },
-    { "lat": 40.7296, "lng": -73.7736, "name": "Cunningham Park Tennis House Public Restroom", "comment": "196-00 Union Turnpike"
-    },
-    { "lat": 40.8698, "lng": -73.7904, "name": "Hunter Island Picnic Area Public Restroom", "comment": "at Orchard Beach, near Kazimiroff Nature Trail"
-    },
-    { "lat": 40.7361, "lng": -73.7773, "name": "Farm Playground Public Restroom", "comment": "73 Avenue, 195 Street & 196 Place"
-    },
-    { "lat": 40.6626, "lng": -73.9407, "name": "Hamilton Metz Field Public Restroom", "comment": "Albany, East New York, Lefferts Avenues"
-    },
-    { "lat": 40.8003, "lng": -73.9503, "name": "Martin Luther King, Jr. Playground Public Restroom", "comment": "Lenox Avenue, West 113 to West 114 Streets"
-    },
-    { "lat": 40.8368, "lng": -73.8718, "name": "Noble Playground Public Restroom", "comment": "Nobel Avenue, Bronx River Avenue, Bronx River Parkway, Cross Bronx Expressway"
-    },
-    { "lat": 40.7834, "lng": -73.9848, "name": "Neufeld (Elephant) Playground Public Restroom", "comment": "76th Street & Riverside Drive"
-    },
-    { "lat": 40.6691, "lng": -73.7887, "name": "Baisley Park South Playground Public Restroom", "comment": "150th Street & 130th Avenue"
-    },
-    { "lat": 40.6665, "lng": -73.8625, "name": "Pink Playground Public Restroom", "comment": "Stanley Avenue & Eldert Lane"
-    },
-    { "lat": 40.5924, "lng": -73.9358, "name": "Yak Playground Public Restroom", "comment": "Avenue Y between Coyle & Batchelder Streets"
-    },
-    { "lat": 40.8805, "lng": -73.8617, "name": "Agnes Haywood Playground Public Restroom", "comment": "East 215 Street, Barnes Avenue, East 216 Street"
-    },
-    { "lat": 40.7477, "lng": -73.854, "name": "Corona Golf Playground Public Restroom", "comment": "109 Street between 46-47 Avenues"
-    },
-    { "lat": 40.7011, "lng": -73.9954, "name": "Squibb Park Public Restroom", "comment": "Columbia Heights, Middagh Street"
-    },
-    { "lat": 40.7484, "lng": -73.8337, "name": "Lawrence Playground Public Restroom", "comment": "College Point Boulevard and Lawrence Street"
-    },
-    { "lat": 40.6083, "lng": -73.7646, "name": "Westbourne Playground Public Restroom", "comment": "Mott Avenue & Bay 25 Street"
-    },
-    { "lat": 40.7134, "lng": -73.9545, "name": "Jaime Campiz Playground Public Restroom", "comment": "Hope Street & Metropolitan Avenue"
-    },
-    { "lat": 40.865, "lng": -73.8947, "name": "Poe Park Visitor Center", "comment": "Grand Concourse at E. 193rd St"
-    },
-    { "lat": 40.7172, "lng": -73.9769, "name": "Baruch Playground Public Restroom", "comment": "Stanton St. & Baruch Pl."
-    },
-    { "lat": 40.7777, "lng": -73.9841, "name": "Matthew P. Sapolin Playground Public Restroom", "comment": "West End Avenue & West 70 Street"
-    },
-    { "lat": 40.7594, "lng": -73.9589, "name": "Twenty-Four Sycamores Park Public Restroom", "comment": "FDR Drive, East 60 to East 61 Streets & York Avenue"
-    },
-    { "lat": 40.6741, "lng": -73.7744, "name": "Vic Hanson Field House-Building", "comment": "133-39 Guy R. Brewer Boulevard"
-    },
-    { "lat": 40.7153, "lng": -73.964, "name": "William Sheridan Playground Public Restroom", "comment": "Wythe Avenue, Berry & Grand Streets"
-    },
-    { "lat": 40.7147, "lng": -73.9891, "name": "Seward Park Public Restroom", "comment": "Jefferson & Canal Streets"
-    },
-    { "lat": 40.6805, "lng": -73.9728, "name": "Dean Playground Public Restroom", "comment": "Bergen St. Between 6th Ave. & Carlton Ave."
-    },
-    { "lat": 40.5806, "lng": -73.8261, "name": "Beach 106th Street Public Restroom", "comment": "Boardwalk at Beach 106th Street"
-    },
-    { "lat": 40.5737, "lng": -73.9927, "name": "Surf Playground Public Restroom", "comment": "West 27 Street & Surf Avenue"
-    },
-    { "lat": 40.797, "lng": -73.9677, "name": "Frederick Douglass Playground Public Restroom", "comment": "West 100-101 Street Amsterdam Avenue"
-    },
-    { "lat": 40.6827, "lng": -73.9307, "name": "El Shabazz Playground Public Restroom", "comment": "Malcolm X Blvd between Mason St & Mac Donough St"
-    },
-    { "lat": 40.81, "lng": -73.9559, "name": "Playground 123 Public Restroom", "comment": "West 123rd Street & Morningside Avenue"
-    },
-    { "lat": 40.9009, "lng": -73.8927, "name": "Stables Area Public Restroom", "comment": "Rockwood Circle near John Muir Trailhead"
-    },
-    { "lat": 40.8217, "lng": -73.9417, "name": "Renaissance Playground Public Restroom", "comment": "West 144 Street, between 7 & 8 Avenues"
-    },
-    { "lat": 40.7344, "lng": -73.7962, "name": "Fresh Meadows Playground Public Restroom", "comment": "67 Avenue & 173 Street"
-    },
-    { "lat": 40.7364, "lng": -73.9899, "name": "Union Square Pavilion", "comment": "20 Union Square W"
-    },
-    { "lat": 40.7059, "lng": -73.9472, "name": "Sternberg Park Public Restroom", "comment": "Montrose Avenue, Boerum, Lorimer, Leonard Streets"
-    },
-    { "lat": 40.7517, "lng": -73.8432, "name": "Passerelle Building", "comment": "across from outdoor Tennis Courts, at Meridian Road"
-    },
-    { "lat": 40.7305, "lng": -73.8851, "name": "Queens Vietnam Veterans Memorial", "comment": "79th St. & Grand Ave."
-    },
-    { "lat": 40.7356, "lng": -73.9821, "name": "Augustus St. Gaudens Playground Public Restroom", "comment": "East 19 to East 20 Streets, 2 Avenue"
-    },
-    { "lat": 40.8578, "lng": -73.922, "name": "Sherman Creek Park Public Restroom", "comment": "Dyckman St., 10th Ave, and Harlem River Drive"
-    },
-    { "lat": 40.6923, "lng": -73.9772, "name": "Fort Greene Playground Public Restroom", "comment": "St. Edwards Street & Willoughby Street"
-    },
-    { "lat": 40.7563, "lng": -73.8745, "name": "Northern Playground Public Restroom", "comment": "Northern Boulevard & 93 Street"
-    },
-    { "lat": 40.5889, "lng": -73.7891, "name": "Beach 59th St Playground Public Restroom", "comment": "Boardwalk & Beach 59-60 Streets"
-    },
-    { "lat": 40.7775, "lng": -73.9026, "name": "Woodtree Playground Public Restroom", "comment": "20 Avenue, 37 Street, 38 Street"
-    },
-    { "lat": 40.675, "lng": -73.9622, "name": "Stroud Playground Public Restroom", "comment": "Classon Avenue & Sterling Place"
-    },
-    { "lat": 40.6802, "lng": -73.9273, "name": "Jackie Robinson Park Playground Public Restroom", "comment": "Malcolm X Boulevard between Chauncey and Marion Streets"
-    },
-    { "lat": 40.7407, "lng": -73.8412, "name": "Ederle Terrace Public Restroom", "comment": "17 Ederle Promenade"
-    },
-    { "lat": 40.8388, "lng": -73.8457, "name": "The Pearly Gates Public Restroom", "comment": "Tratman Avenue between St. Peter's Avenue & Rowland Street"
-    },
-    { "lat": 40.7784, "lng": -73.9677, "name": "The Ramble Shed", "comment": "The Ramble Shed, Mid-Park south of 79th St Tranverse"
-    },
-    { "lat": 40.7488, "lng": -73.8972, "name": "Hart Playground Public Restroom", "comment": "37 Avenue, west of 69 Street"
-    },
-    { "lat": 40.7358, "lng": -73.8385, "name": "Meadow Lake Boathouse", "comment": "Boathouse Bridge & Meadow Lake Dr"
-    },
-    { "lat": 40.7489, "lng": -73.8618, "name": "Park Of The Americas Public Restroom", "comment": "104 Street & 41 Avenue"
-    },
-    { "lat": 40.8502, "lng": -73.89, "name": "Quarry Ballfields Public Restroom", "comment": "Quarry Road, East 181 Street, Oak Place & Hughes Avenue"
-    },
-    { "lat": 40.6814, "lng": -73.7872, "name": "Baisley Pond Park Playground Public Restroom", "comment": "119th Avenue and 155th Street"
-    },
-    { "lat": 40.7819, "lng": -73.9787, "name": "Tecumseh Playground Public Restroom", "comment": "West 77 Street & Amsterdam Avenue"
-    },
-    { "lat": 40.6147, "lng": -74.0739, "name": "De Matti Park Field House", "comment": "Tompkins Avenue, Chestnut Avenue"
-    },
-    { "lat": 40.8852, "lng": -73.8906, "name": "Classic Playground Public Restroom", "comment": "Van Cortlandt Park South and Gouverneur Avenue"
-    },
-    { "lat": 40.7837, "lng": -73.9864, "name": "Classic Playground Public Restroom", "comment": "75th Street near the river"
-    },
-    { "lat": 40.7272, "lng": -73.9043, "name": "Virginia Principe Playground Public Restroom", "comment": "Maurice, Borden, 54 Avenues, 63 Street"
-    },
-    { "lat": 40.7392, "lng": -73.7651, "name": "210 St Playground Public Restroom", "comment": "210 Street & 73 Avenue"
-    },
-    { "lat": 40.631, "lng": -74.1651, "name": "The Big Park Public Restroom", "comment": "Grandview Avenue, Continental Place"
-    },
-    { "lat": 40.6951, "lng": -73.9186, "name": "Heckscher Playground Public Restroom", "comment": "Grove Street to Linden Street"
-    },
-    { "lat": 40.7157, "lng": -73.8011, "name": "Joseph Austin Playground Public Restroom", "comment": "Grand Central Parkway & 164 Place"
-    },
-    { "lat": 40.793, "lng": -73.919, "name": "Randall's Island Tennis Center", "comment": "Sunken Meadow Loop"
-    },
-    { "lat": 40.5754, "lng": -73.9729, "name": "Asser Levy Park Public Restroom", "comment": "Boardwalk, Surf, Sea Breeze Avenues, Ocean Parkway"
-    },
-    { "lat": 40.6024, "lng": -74.0023, "name": "Benson Playground Public Restroom", "comment": "Bath Avenue between Bay 22 & Bay 23 Streets"
-    },
-    { "lat": 40.8595, "lng": -73.8929, "name": "Webster Playground Public Restroom", "comment": "E. 188 St. between Webster Ave. And Park Ave."
-    },
-    { "lat": 40.7618, "lng": -73.7354, "name": "Louis Pasteur Park Public Restroom", "comment": "248 Street & 51 Avenue"
-    },
-    { "lat": 40.6669, "lng": -73.9737, "name": "Litchfield Villa", "comment": "95 Prospect Park West"
-    },
-    { "lat": 40.838, "lng": -73.831, "name": "Bufano Park Public Restroom", "comment": "La Salle Avenue, Edison Avenue, Bradford Avenue, Waterbury Avenue"
-    },
-    { "lat": 40.7105, "lng": -73.8201, "name": "Hoover - Manton Playgrounds Public Restroom", "comment": "Manton Street & 83 Avenue"
-    },
-    { "lat": 40.7911, "lng": -73.9596, "name": "North Meadow Recreation Center", "comment": "Mid-park at 97th Street"
-    },
-    { "lat": 40.6831, "lng": -73.8079, "name": "Frederick B. Judge Playground Public Restroom", "comment": "111 Avenue, 134 & 135 Streets, Lincoln Street"
-    },
-    { "lat": 40.793, "lng": -73.9431, "name": "Poor Richard's Playground Public Restroom", "comment": "East 109 Street between 2 & 3 Avenues"
-    },
-    { "lat": 40.881, "lng": -73.9206, "name": "Henry Hudson Park Public Restroom", "comment": "Palisade Avenue, Kappock Street & Independence Avenue"
-    },
-    { "lat": 40.6165, "lng": -74.1046, "name": "Senior Park Public Restroom", "comment": "Clove Road and Victory Blvd."
-    },
-    { "lat": 40.7573, "lng": -73.8783, "name": "Playground Ninety Public Restroom", "comment": "Northern Boulevard & 90 Street"
-    },
-    { "lat": 40.7308, "lng": -73.8061, "name": "Emerald Playground Public Restroom", "comment": "164 Street between Jewel & 71 Avenues"
-    },
-    { "lat": 40.7204, "lng": -73.8597, "name": "The Painter's Playground Public Restroom", "comment": "Alderton Street from Dieterle to Elwell Crescents"
-    },
-    { "lat": 40.7188, "lng": -73.9019, "name": "Reiff Playground Public Restroom", "comment": "Fresh Pond Road, 63 Street, 59 Drive"
-    },
-    { "lat": 40.5716, "lng": -73.9923, "name": "West 27th Street Public Restroom", "comment": "Boardwalk at West 27th Street"
-    },
-    { "lat": 40.7684, "lng": -73.9771, "name": "Central Park-Heckscher Public Restroom", "comment": "Heckscher Playground"
-    },
-    { "lat": 40.5924, "lng": -74.0636, "name": "South Beach Playground Public Restroom", "comment": "Doty Ave & Father Capodanno Blvd"
-    },
-    { "lat": 40.5955, "lng": -74.0815, "name": "Old Town Playground Public Restroom", "comment": "Parkinson Avenue, Kramer Street"
-    },
-    { "lat": 40.6892, "lng": -73.9717, "name": "Edmonds Playground Public Restroom", "comment": "DeKalb Avenue, Adelphi Street"
-    },
-    { "lat": 40.5979, "lng": -73.9468, "name": "Galapo Playground Public Restroom", "comment": "Bedford Avenue, Gravesend Neck Road"
-    },
-    { "lat": 40.8149, "lng": -73.9622, "name": "Claremont (Dolphin) Playground Public Restroom", "comment": "124th Street behind Grant's Tomb"
-    },
-    { "lat": 40.5807, "lng": -73.8305, "name": "Seaside Playground Public Restroom", "comment": "Rockaway Beach Boulevard, B109-B110 Streets"
-    },
-    { "lat": 40.7855, "lng": -73.951, "name": "Samuel Seabury Playground Public Restroom", "comment": "Lexington Avenue, East 95 to East 96 Streets"
-    },
-    { "lat": 40.6846, "lng": -73.7287, "name": "Delphin H. Greene Playground Public Restroom", "comment": "121 Avenue & 237 Street"
-    },
-    { "lat": 40.8275, "lng": -73.9284, "name": "Elston Gene Howard Field Public Restroom", "comment": "mid-park, enter at East 161st Street & River Ave."
-    },
-    { "lat": 40.7047, "lng": -74.0034, "name": "PIER 15", "comment": "FDR Drive & Fletcher St."
-    },
-    { "lat": 40.6314, "lng": -74.0129, "name": "8th Ave. & 66th St. Public Restroom", "comment": "8th Ave. between 66th St. & 67th St."
-    },
-    { "lat": 40.6902, "lng": -73.9705, "name": "Albert J. Parham Playground Public Restroom", "comment": "Between Adelphi St & Clermont Ave & between Willoughby Ave & Dekalb Ave"
-    },
-    { "lat": 40.6135, "lng": -74.0983, "name": "Terrace Playground Public Restroom", "comment": "Howard Avenue & Martha Street"
-    },
-    { "lat": 40.5724, "lng": -73.9885, "name": "West 22nd Street Public Restroom", "comment": "Riegelmann Boardwalk, near W. 22nd St."
-    },
-    { "lat": 40.697, "lng": -73.8964, "name": "Evergreen Park Public Restroom", "comment": "St Felix Ave. between Seneca Ave. and 60 Pl."
-    },
-    { "lat": 40.716, "lng": -73.9373, "name": "Carnegie Playground Public Restroom", "comment": "Sharon, Olive Streets, Maspeth & Morgan Avenues"
-    },
-    { "lat": 40.8356, "lng": -73.8997, "name": "Playground of the Stars Public Restroom", "comment": "173rd Street and Fulton Avenue"
-    },
-    { "lat": 40.8899, "lng": -73.8813, "name": "Allen Shandler Recreation Area Public Restroom", "comment": "Jerome Avenue and East 233rd Street"
-    },
-    { "lat": 40.7225, "lng": -73.8371, "name": "Willow Lake Playground Public Restroom", "comment": "Grand Central Parkway between 71 & 72 Avenues"
-    },
-    { "lat": 40.8202, "lng": -73.8263, "name": "Ferry Point Park East Public Restroom", "comment": "Balcom Avenue & Dewey Avenue"
-    },
-    { "lat": 40.7438, "lng": -73.8615, "name": "Josephine Caminiti Playground Public Restroom", "comment": "Alystine Avenue & 102 Street"
-    },
-    { "lat": 40.6079, "lng": -73.9374, "name": "Carmine Carro Community Center", "comment": "3000 Fillmore Ave"
-    },
-    { "lat": 40.6381, "lng": -73.9381, "name": "Paerdegat Park Public Restroom", "comment": "Foster Avenue, East 40-41 Streets"
-    },
-    { "lat": 40.6558, "lng": -73.8868, "name": "Ethan Allen Playground Public Restroom", "comment": "New Jersey Avenue & Vermont Street/Worthman"
-    },
-    { "lat": 40.6328, "lng": -73.9773, "name": "DiGilio Playground Public Restroom", "comment": "McDonald Avenue & Avenue F"
-    },
-    { "lat": 40.636, "lng": -73.8832, "name": "American Legion Liberty Post #1073", "comment": "American Legion Ballfields near E. 102nd St. & Seaview Ave."
-    },
-    { "lat": 40.7067, "lng": -73.7531, "name": "Hollis Playground Public Restroom", "comment": "205 Street & Hollis Avenue"
-    },
-    { "lat": 40.8005, "lng": -73.9239, "name": "Bronx Shore Fields Public Restroom", "comment": "Bronx Shore Road, Between Fields 3 & 4"
-    },
-    { "lat": 40.8214, "lng": -73.926, "name": "Franz Sigel Park Ballfields Public Restroom", "comment": "Grand Concourse at East 153rd Street"
-    },
-    { "lat": 40.6976, "lng": -73.9792, "name": "Commodore Barry Park Public Restroom", "comment": "South of Flushing Avenue"
-    },
-    { "lat": 40.7287, "lng": -73.9576, "name": "American Playground Public Restroom", "comment": "Franklin St between Noble St and Milton St"
-    },
-    { "lat": 40.6818, "lng": -73.9134, "name": "Marion Hopkinson Playground Public Restroom", "comment": "Hopkinson Avenue & Marion Street"
-    },
-    { "lat": 40.5875, "lng": -73.7957, "name": "Beach 67 Modular Public Restroom", "comment": "Boardwalk @ Beach 67 Street"
-    },
-    { "lat": 40.6083, "lng": -73.9865, "name": "Seth Low Playground/Bealin Square Public Restroom", "comment": "Avenue P, Bay Parkway, West 12 Street"
-    },
-    { "lat": 40.6859, "lng": -73.8531, "name": "London Planetree Playground Public Restroom", "comment": "95th Ave between 88th St & 89th St"
-    },
-    { "lat": 40.6622, "lng": -73.7422, "name": "Brookville Park Public Restroom", "comment": "Conduit Avenue, Brookville Boulevard, 144th Avenue, 233rd Street"
-    },
-    { "lat": 40.6433, "lng": -73.9232, "name": "Harry Maze Playground Public Restroom", "comment": "Avenue D between East 56 & East 57 Street"
-    },
-    { "lat": 40.7704, "lng": -73.8063, "name": "Bowne Park Field House", "comment": "159 Street, 29 Avenue, 155 Street, 32 Avenue"
-    },
-    { "lat": 40.733, "lng": -73.8715, "name": "Hoffman Park Public Restroom", "comment": "Hoffman Drive west of Queens Boulevard"
-    },
-    { "lat": 40.8375, "lng": -73.8538, "name": "Caserta Playground Public Restroom", "comment": "St. Raymond Avenue, Purdy Street"
-    },
-    { "lat": 40.6587, "lng": -73.9218, "name": "Kennedy King Playground Public Restroom", "comment": "East 93 Street & Lenox Road"
-    },
-    { "lat": 40.7262, "lng": -73.8479, "name": "Yellowstone Park Public Restroom", "comment": "Yellowstone Boulevard between 68 Avenue & 68 Road"
-    },
-    { "lat": 40.83, "lng": -73.8479, "name": "Havemeyer Playground Public Restroom", "comment": "Watson Avenue, Havemeyer Avenue, Cross Bronx Expressway"
-    },
-    { "lat": 40.6519, "lng": -73.9657, "name": "Stewart Playground Public Restroom", "comment": "Parade Pl. between Woodruff Ave. & Crooke Ave."
-    },
-    { "lat": 40.7219, "lng": -73.8239, "name": "Queens Valley Playground Public Restroom", "comment": "137 Street & 77 Avenue"
-    },
-    { "lat": 40.6437, "lng": -74.1088, "name": "Walker Park Tennis House", "comment": "Delafield Pl. & Bard Ave."
-    },
-    { "lat": 40.6393, "lng": -74.032, "name": "Owl's Head Park Public Restroom", "comment": "68th St between Narrows Ave & Bliss Terr"
-    },
-    { "lat": 40.6875, "lng": -73.8901, "name": "Highland Park Barbecue Area Public Restroom", "comment": "mid-Park near Vermont Place"
-    },
-    { "lat": 40.8312, "lng": -73.9247, "name": "Rev. T. Wendell Foster Skate Park Public Restroom", "comment": "East 164 Street near River Avenue"
-    },
-    { "lat": 40.7963, "lng": -73.8257, "name": "Francis Lewis Park Public Restroom", "comment": "3 Avenue and Bronx Whitestone Bridge"
-    },
-    { "lat": 40.6748, "lng": -73.9292, "name": "Woods Playground Public Restroom", "comment": "Bergen Street & Utica Avenue"
-    },
-    { "lat": 40.7975, "lng": -73.9353, "name": "P.S. 155 Playground Public Restroom", "comment": "East 117 to East 118 Streets, 1 to 2 Avenues"
-    },
-    { "lat": 40.8871, "lng": -73.9162, "name": "Spuyten Duyvil Playground Public Restroom", "comment": "Douglas Ave between West 235th St & West 236th St"
-    },
-    { "lat": 40.7014, "lng": -74.015, "name": "The View at Battery ", "comment": "Battery Park Underpass at South St."
-    },
-    { "lat": 40.7218, "lng": -73.974, "name": "East River Park Track Public Restroom", "comment": "Near East 6th Street Entrance"
-    },
-    { "lat": 40.6701, "lng": -73.8446, "name": "Vito Locascio Field Public Restroom", "comment": "North Conduit & 149 Avenue"
-    },
-    { "lat": 40.5924, "lng": -73.7626, "name": "Beach 30th Street Playground Public Restroom", "comment": "Boardwalk at Beach 32nd Street"
-    },
-    { "lat": 40.5748, "lng": -74.0984, "name": "Midland Playground Public Restroom", "comment": "Midland Avenue, South of Mason Avenue"
-    },
-    { "lat": 40.624, "lng": -73.9849, "name": "Gravesend Park Public Restroom", "comment": "18 Avenue & 56 Street"
-    },
-    { "lat": 40.5683, "lng": -74.0908, "name": "Midland Beach Playground Public Restroom", "comment": "Greeley Ave & Father Capodanno Blvd"
-    },
-    { "lat": 40.8472, "lng": -73.9462, "name": "Fort Washington Park Tennis Courts Public Restroom", "comment": "South of Little Red Lighthouse"
-    },
-    { "lat": 40.6557, "lng": -73.9475, "name": "Rolph Henry Playground Public Restroom", "comment": "New York & Clarkson Avenues"
-    },
-    { "lat": 40.5882, "lng": -73.8094, "name": "Hammel Playground Public Restroom", "comment": "B 83 Street & Rockaway Beach Boulevard"
-    },
-    { "lat": 40.7797, "lng": -73.9884, "name": "Riverside South – Pier I Café", "comment": "Riverside Drive bet.ween 65 St. and 72 St."
-    },
-    { "lat": 40.8726, "lng": -73.8829, "name": "Mosholu Playground Public Restroom", "comment": "Mosholu Pkwy, Bainbridge Avenue, Briggs Avenue"
-    },
-    { "lat": 40.673, "lng": -73.9846, "name": "Old Stone House of Brooklyn", "comment": "336 3rd St"
-    },
-    { "lat": 40.6877, "lng": -73.7725, "name": "Roy Wilkins Field House", "comment": "south of track, enter at Foch Blvd. & Merrick Blvd."
-    },
-    { "lat": 40.7364, "lng": -74.0056, "name": "Bleecker Playground Public Restroom", "comment": "Hudson & West 11 Streets"
-    },
-    { "lat": 40.8553, "lng": -73.9175, "name": "Cedar Playground Public Restroom", "comment": "Cedar Avenue, mid-park near W. 179th St."
-    },
-    { "lat": 40.74, "lng": -73.7342, "name": "Alley Athletic Playground Public Restroom", "comment": "Grand Central Parkway, Winchester Boulevard, & Union Turnpike"
-    },
-    { "lat": 40.7114, "lng": -73.7982, "name": "Captain Tilly Park Public Restroom", "comment": "Highland Avenue, Upland Parkway, Gothic Parkway, 85 Avenue"
-    },
-    { "lat": 40.8735, "lng": -73.8678, "name": "Magenta Playground Public Restroom", "comment": "Olinville Avenue, Rosewood Street"
-    },
-    { "lat": 40.745, "lng": -73.8173, "name": "Kissena Cricket Fields Public Restroom", "comment": "56th Avenue & 151st Street"
-    },
-    { "lat": 40.5174, "lng": -74.191, "name": "Wolfe's Pond Park - District 3 HQ", "comment": "At beachfront, south of parking lot"
-    },
-    { "lat": 40.8317, "lng": -73.9416, "name": "Wright Brothers Playground Public Restroom", "comment": "West 156 Street & St. Nicholas Avenue"
-    },
-    { "lat": 40.8259, "lng": -73.9413, "name": "Playground One Forty Nine CIL Public Restroom", "comment": "West 149 Street & Bradhurst Avenue"
-    },
-    { "lat": 40.6494, "lng": -74.0121, "name": "Pena Herrera Playground Public Restroom", "comment": "46 & 47 Streets, 3 Avenue"
-    },
-    { "lat": 40.8544, "lng": -73.8697, "name": "Ben Abrams Playground Public Restroom", "comment": "Lydig Avenue & Bronx Park East"
-    },
-    { "lat": 40.7358, "lng": -73.8054, "name": "Electric Playground Public Restroom", "comment": "164 Street, south of 65 Avenue"
-    },
-    { "lat": 40.8777, "lng": -73.9079, "name": "Marble Hill Playground Public Restroom", "comment": "Marble Hill Avenue, West 230 Street, West 228 Street"
-    },
-    { "lat": 40.7217, "lng": -73.758, "name": "Bellaire Playground Public Restroom", "comment": "89 Avenue, 207 & 208 Streets"
-    },
-    { "lat": 40.8156, "lng": -73.949, "name": "St Nicholas Playground at West 133rd St. Public Restroom", "comment": "St. Nicholas Avenue and W. 133rd Street"
-    },
-    { "lat": 40.8661, "lng": -73.8687, "name": "Zimmerman Playground Public Restroom", "comment": "Britton Street, Barker Avenue, Olinville Avenue"
-    },
-    { "lat": 40.6728, "lng": -74.0078, "name": "Red Hook Park Public Restroom", "comment": "Bay St. & Columbia St."
-    },
-    { "lat": 40.8089, "lng": -73.9193, "name": "Saw Mill Playground Public Restroom", "comment": "Brook Avenue between E. 139th St. & E. 140th St."
-    },
-    { "lat": 40.7158, "lng": -73.837, "name": "Ehrenreich-Austin Playground Public Restroom", "comment": "Austin Street between 76 Avenue & 76 Drive"
-    },
-    { "lat": 40.6608, "lng": -73.7623, "name": "Springfield Playground Public Restroom", "comment": "Near ballfields at 184th Street between 146 Rd & 146 Ter"
-    },
-    { "lat": 40.7837, "lng": -73.9262, "name": "Scylla Playground Public Restroom", "comment": "Wards Meadow Loop & Hell Gate Circle"
-    },
-    { "lat": 40.8095, "lng": -73.917, "name": "People's Park Public Restroom", "comment": "Brook Avenue, East 141 Street"
-    },
-    { "lat": 40.8876, "lng": -73.8588, "name": "Rienzi Playground Public Restroom", "comment": "East 226 Street, Barnes Avenue, East 225 Street"
-    },
-    { "lat": 40.583, "lng": -73.8176, "name": "Beach 97th Street Public Restroom", "comment": "Boardwalk at Beach 97th Street"
-    },
-    { "lat": 40.6963, "lng": -73.9976, "name": "Pierrepont Playground Public Restroom", "comment": "Furman Street, Pierrepont Place"
-    },
-    { "lat": 40.5982, "lng": -73.9396, "name": "Herman Dolgon Playground Public Restroom", "comment": "Avenue V & Nostrand Avenue"
-    },
-    { "lat": 40.6435, "lng": -74.0862, "name": "Mahoney Playground Public Restroom", "comment": "Beechwood & Cleveland Avenues"
-    },
-    { "lat": 40.5988, "lng": -73.7675, "name": "Bayswater Playground Public Restroom", "comment": "Beach Channel Drive, B 32 Street, Dwight Avenue, Norton Avenue"
-    },
-    { "lat": 40.7002, "lng": -73.7582, "name": "Daniel M. O'Connell Playground Public Restroom", "comment": "113 Avenue & 196 Street"
-    },
-    { "lat": 40.7563, "lng": -73.9997, "name": "Hudson Park Public Restroom", "comment": "W. 36th St. & Hudson Blvd. E."
-    },
-    { "lat": 40.8256, "lng": -73.9539, "name": "Riverbank Playground Public Restroom", "comment": "West 142 Street & Riverside Drive"
-    },
-    { "lat": 40.7829, "lng": -73.9446, "name": "Stanley Isaacs Playground Public Restroom", "comment": "East 96-97 Streets & FDR Drive"
-    },
-    { "lat": 40.6772, "lng": -74.0087, "name": "Coffey Park Public Restroom", "comment": "King, Richards, & Dwight Streets"
-    },
-    { "lat": 40.6123, "lng": -73.9112, "name": "Lindower Park Public Restroom", "comment": "Mill & Strickland Avenues, 60 Street"
-    },
-    { "lat": 40.8298, "lng": -73.9527, "name": "Ten Mile River Playground Public Restroom", "comment": "West 148 Street & Hudson River"
-    },
-    { "lat": 40.8152, "lng": -73.8986, "name": "Fox Park-Public Restroom", "comment": "Fox Street and East 156 Street"
-    },
-    { "lat": 40.8843, "lng": -73.867, "name": "Olinville Playground Public Restroom", "comment": "East 219 Street & Bronx River Parkway"
-    },
-    { "lat": 40.7716, "lng": -73.9347, "name": "Hallets Cove Playground (area A) Public Restroom", "comment": "Hallets Cove, Vernon Boulevard"
-    },
-    { "lat": 40.8235, "lng": -73.8505, "name": "P.O. Serrano Playground Public Restroom", "comment": "Turnbull Avenue, Olmstead Avenue, Lafayette Avenue"
-    },
-    { "lat": 40.7008, "lng": -73.9855, "name": "Bridge Park Public Restroom", "comment": "Jay Street, York Street, Bridge Street, Prospect Street"
-    },
-    { "lat": 40.7323, "lng": -73.7317, "name": "Detective William T. Gunn Playground Public Restroom", "comment": "Hillside Avenue, east of 235 Court"
-    },
-    { "lat": 40.8143, "lng": -73.8859, "name": "Hunts Point Playground Public Restroom", "comment": "Spofford Avenue, Hunts Point Avenue, Faile Street"
-    },
-    { "lat": 40.5978, "lng": -74.0712, "name": "Arrochar Playground Public Restroom", "comment": "228 Major Avenue"
-    },
-    { "lat": 40.6477, "lng": -74.005, "name": "Sunset Park Public Restroom", "comment": "44th St between 5th Ave & 6th Ave"
-    },
-    { "lat": 40.8154, "lng": -73.9014, "name": "Playground 52 LII Public Restroom", "comment": "Kelly Street, St. John's Avenue, Beck Street"
-    },
-    { "lat": 40.6186, "lng": -73.8988, "name": "McGuire Fields Public Restroom", "comment": "Ave Y., Bergen Ave. bet. Ave. V and Belt Pkwy."
-    },
-    { "lat": 40.7188, "lng": -73.993, "name": "Lions Gate Field Public Restroom", "comment": "Broome Street between Forsyth St. & Christie St."
-    },
-    { "lat": 40.8244, "lng": -73.9315, "name": "Mill Pond Park Power House Building", "comment": "Exterior Street & E. 153rd Street"
-    },
-    { "lat": 40.8248, "lng": -73.8943, "name": "Tiffany Playground Public Restroom", "comment": "Tiffany Street, Fox Street, East 167 Street"
-    },
-    { "lat": 40.7328, "lng": -73.7177, "name": "Bellerose Playground Public Restroom", "comment": "85 Avenue, 248 & 249 Streets"
-    },
-    { "lat": 40.6037, "lng": -73.9576, "name": "Kelly Park Playground Public Restroom", "comment": "Avenue S, East 14 & East 15 Streets"
-    },
-    { "lat": 40.6654, "lng": -73.886, "name": "Schenck Playground Public Restroom", "comment": "Livonia Ave. between Barbey St. and Schenck Ave."
-    },
-    { "lat": 40.7496, "lng": -73.8232, "name": "Silent Springs Playground PR", "comment": "45-20 Colden Street"
-    },
-    { "lat": 40.7311, "lng": -73.8517, "name": "Annadale Playground Public Restroom", "comment": "Yellowstone Boulevard, 65 Road, 65 Avenue"
-    },
-    { "lat": 40.684, "lng": -73.8858, "name": "Lower Highland Playground Public Restroom", "comment": "Jamaica Avenue & Elton Street"
-    },
-    { "lat": 40.7499, "lng": -73.7208, "name": "Castlewood Playground Public Restroom", "comment": "Little Neck Parkway & 72 Avenue"
-    },
-    { "lat": 40.6798, "lng": -73.9316, "name": "Fulton Park Public Restroom", "comment": "Fulton, Chauncey Streets, Stuyvesant, Lewis Avenues"
-    },
-    { "lat": 40.7099, "lng": -73.8354, "name": "Sobelsohn Playground Public Restroom", "comment": "Park Lane South and Abingdon Road"
-    },
-    { "lat": 40.6368, "lng": -74.0008, "name": "Rappaport Playground Public Restroom", "comment": "52-53 Streets, Fort Hamilton Parkway"
-    },
-    { "lat": 40.8559, "lng": -73.8866, "name": "Ciccarone Park Public Restroom", "comment": "Arthur Avenue, East 188 Street"
-    },
-    { "lat": 40.8173, "lng": -73.939, "name": "Fred Samuel Playground Public Restroom", "comment": "Lenox Avenue, West 139 to West 140 Streets"
-    },
-    { "lat": 40.6492, "lng": -73.8738, "name": "Spring Creek Park-Public Restroom ", "comment": ""
-    },
-    { "lat": 40.8816, "lng": -73.8959, "name": "Fort Independence Playground Public Restroom", "comment": "Stevenson Place, West 238 Street, Sedgwick Avenue"
-    },
-    { "lat": 40.678, "lng": -73.7867, "name": "121st Avenue Entrance Public Restroom", "comment": "121st Ave. & 155th St."
-    },
-    { "lat": 40.5785, "lng": -73.9954, "name": "Kaiser Park Public Restroom", "comment": "South of Gravesend Bay, southeast of Path, northeast of Neptune Avenue"
-    },
-    { "lat": 40.835, "lng": -73.9266, "name": "Nelson Playground Public Restroom", "comment": "West 166 Street, Nelson Avenue, Woodycrest Avenue"
-    },
-    { "lat": 40.6926, "lng": -73.9622, "name": "Pratt Playground Public Restroom", "comment": "Willoughby Avenue, Emerson Place"
-    },
-    { "lat": 40.9018, "lng": -73.8548, "name": "Wakefield Playground Public Restroom", "comment": "Matilda Avenue, East 239 Street, Carpenter Avenue"
-    },
-    { "lat": 40.5728, "lng": -73.9808, "name": "Stillwell Ave. Public Restroom", "comment": "Boardwalk between W. 10th St. & Stillwell Ave."
-    },
-    { "lat": 40.839, "lng": -73.8662, "name": "Taylor Playground Public Restroom", "comment": "Guerlain Street, Thieriot Avenue, Taylor Avenue"
-    },
-    { "lat": 40.7804, "lng": -73.9691, "name": "Delacorte Theater Women's Restroom", "comment": "Mid-Park at 80th Street on the southwest corner of the Great Lawn"
-    },
-    { "lat": 40.8123, "lng": -73.9371, "name": "Abraham Lincoln Playground Public Restroom", "comment": "East 135 Street, between Madison & 5 Avenues"
-    },
-    { "lat": 40.6327, "lng": -73.9239, "name": "Fox Playground Public Restroom", "comment": "Avenue H, East 54 to E 55 Streets"
-    },
-    { "lat": 40.6145, "lng": -74.0294, "name": "John J Carty Park Public Restroom", "comment": "Fort Hamilton Parkway, 94-95 Streets"
-    },
-    { "lat": 40.6384, "lng": -73.9475, "name": "Nostrand Playground Public Restroom", "comment": "Nostrand & Foster Avenues"
-    },
-    { "lat": 40.674, "lng": -73.7564, "name": "Montbellier Park Public Restroom", "comment": "Springfield Boulevard & 139 Avenue"
-    },
-    { "lat": 40.6885, "lng": -73.7425, "name": "Cambria Playground Public Restroom", "comment": "121 Avenue & 220 Street"
-    },
-    { "lat": 40.7701, "lng": -73.827, "name": "Colden Playground Public Restroom", "comment": "Union Street & 31 Road"
-    },
-    { "lat": 40.7449, "lng": -73.9733, "name": "St. Vartan Park Public Restroom", "comment": "East 35-East 36 Streets, between 1 & 2 Avenues"
-    },
-    { "lat": 40.7967, "lng": -73.9752, "name": "Dinosaur Playground Public Restroom", "comment": "97th Street & Riverside Drive"
-    },
-    { "lat": 40.8506, "lng": -73.8875, "name": "Belmont Playground Public Restroom", "comment": "E. 182nd Street & Grote Street"
-    },
-    { "lat": 40.6744, "lng": -73.8651, "name": "Robert E. Venable Park Public Restroom", "comment": "Belmont Ave. & Sheridan Ave."
-    },
-    { "lat": 40.577, "lng": -73.9462, "name": "Pat Parlato Playground Public Restroom", "comment": "Ocean Ave. & Oriental Blvd."
-    },
-    { "lat": 40.7265, "lng": -73.7737, "name": "Upper Picnic Area Public Restroom", "comment": "North of Grand Central Parkway to ballfields & tennis courts between 193rd Street and Francis Lewis*"
-    },
-    { "lat": 40.8229, "lng": -73.9139, "name": "Yolanda García Park Public Restroom", "comment": "Melrose Ave. & E. 159th St."
-    },
-    { "lat": 40.7025, "lng": -73.9495, "name": "De Hostos Playground Public Restroom", "comment": "Harrison Ave between Lorimer St & Walton St"
-    },
-    { "lat": 40.7735, "lng": -73.9711, "name": "Bethesda Terrace", "comment": "Mid-Park at 72nd Street"
-    },
-    { "lat": 40.8883, "lng": -73.8981, "name": "Van Cortlandt Stadium", "comment": "Broadway between West 240 and West 242 Streets"
-    },
-    { "lat": 40.839, "lng": -73.853, "name": "Castle Hill Playground Public Restroom", "comment": "Parker Street, Castle Hill Avenue, Puroy Street"
-    },
-    { "lat": 40.8313, "lng": -73.9147, "name": "Mott Playground Public Restroom", "comment": "Morris Avenue, College Avenue, Mc Clellan Street"
-    },
-    { "lat": 40.7109, "lng": -73.9935, "name": "Coleman Playground Public Restroom", "comment": "Between Cherry & Monroe Streets"
-    },
-    { "lat": 40.8292, "lng": -73.9362, "name": "Holcombe Rucker Park Public Restroom", "comment": "West 155 Street, 8 Avenue to Harlem River Drive"
-    },
-    { "lat": 40.5889, "lng": -74.0668, "name": "Playland Playground Public Restroom", "comment": "Sand Lane & Father Capodanno Blvd"
-    },
-    { "lat": 40.7588, "lng": -73.754, "name": "Horatio Playground Public Restroom", "comment": "Horatio Parkway and 50 Avenue"
-    },
-    { "lat": 40.7929, "lng": -73.9247, "name": "Icahn Stadium", "comment": "Central Road"
-    },
-    { "lat": 40.7904, "lng": -73.782, "name": "Little Bay Park - Public Restroom", "comment": "211-01 Cross Island Parkway"
-    },
-    { "lat": 40.6659, "lng": -73.9589, "name": "Jackie Robinson Playground Public Restroom", "comment": "Sullivan Place & Franklin Avenue, Montgomery Street"
-    },
-    { "lat": 40.7061, "lng": -73.9624, "name": "Roebling Playground Public Restroom", "comment": "Wilson & Lee Avenues, Taylor Street"
-    },
-    { "lat": 40.8179, "lng": -73.9068, "name": "Captain Rivera Playground Public Restroom", "comment": "East 156 Street, Forest Avenue"
-    },
-    { "lat": 40.7715, "lng": -73.9887, "name": "Gertrude Ederle Recreation Center & Playground PR", "comment": "232 West 60th Street"
-    },
-    { "lat": 40.7504, "lng": -73.9875, "name": "Herald Square Public Restroom", "comment": "Ave. of the Americas & W. 35th St."
-    },
-    { "lat": 40.6804, "lng": -73.9205, "name": "Carver Playground Public Restroom", "comment": "Ralph Avenue & Sumpter Street"
-    },
-    { "lat": 40.7248, "lng": -73.9435, "name": "Monsignor McGolrick Playground Public Restroom", "comment": "Nashua Ave. between Monitor St. & Russell St."
-    },
-    { "lat": 40.6638, "lng": -73.7595, "name": "Springfield Park North Public Restroom", "comment": "145th Rd. & Springfield Blvd."
-    },
-    { "lat": 40.8153, "lng": -73.956, "name": "Sheltering Arms Playground Public Restroom", "comment": "West 129 Street, Amsterdam Avenue"
-    },
-    { "lat": 40.7007, "lng": -73.946, "name": "Bartlett Playground Public Restroom", "comment": "Bartlett Street & Throop Avenue"
-    },
-    { "lat": 40.585, "lng": -73.825, "name": "Bayside Playground-Public Restroom", "comment": "Beach Channel Drive @ Seaside Avenue"
-    },
-    { "lat": 40.747, "lng": -73.7456, "name": "Alley Park Public Restroom", "comment": "67 Avenue & 230 Street"
-    },
-    { "lat": 40.6864, "lng": -73.9658, "name": "Greene Playground Public Restroom", "comment": "Greene & Washington Avenues"
-    },
-    { "lat": 40.8735, "lng": -73.8393, "name": "Haffen Park Public Restroom", "comment": "Burke Avenue, Hammersley Avenue, Gunther Avenue, Ely Avenue"
-    },
-    { "lat": 40.5913, "lng": -73.9811, "name": "Marlboro Playground Public Restroom", "comment": "West 11 Street & Avenue W"
-    },
-    { "lat": 40.688, "lng": -73.9112, "name": "Tiger Playground Public Restroom", "comment": "Evergreen Avenue & Eldert Street"
-    },
-    { "lat": 40.7187, "lng": -73.8204, "name": "Judge Moses Weinstein Playground Public Restroom", "comment": "Vleigh Place & 141 Street"
-    },
-    { "lat": 40.7934, "lng": -73.978, "name": "Hippo Playground Public Restroom", "comment": "91st Street near Riverside Drive"
-    },
-    { "lat": 40.756, "lng": -73.8261, "name": "Maple Playground Public Restroom", "comment": "Kissena Boulevard & Maple Avenue"
-    },
-    { "lat": 40.8528, "lng": -73.9272, "name": "Wallenberg Playground Public Restroom", "comment": "W. 189th St. & Amsterdam Ave."
-    },
-    { "lat": 40.6802, "lng": -73.8024, "name": "Dr. Charles R. Drew Park Public Restroom", "comment": "Van Wyck Expressway, 116 Avenue, 140 Street, 115 Avenue"
-    },
-    { "lat": 40.7475, "lng": -73.9106, "name": "Lawrence Virgilio Playground Public Restroom", "comment": "39 Drive & 54 Street"
-    },
-    { "lat": 40.706, "lng": -73.8913, "name": "Mafera Park Public Restroom", "comment": "65 Place & Catalpa Avenue & 68 Avenue"
-    },
-    { "lat": 40.7332, "lng": -73.8603, "name": "Horace Harding Playground Public Restroom", "comment": "62 Drive between 97 Place & 98 Street"
-    },
-    { "lat": 40.72, "lng": -73.9815, "name": "Hamilton Fish Recreation Center", "comment": "128 Pitt St"
-    },
-    { "lat": 40.7042563, "lng": -73.9886841, "name": "Adams Street Library", "accessibility": "full", "comment": "9 Adams Street (between John and Plymouth) Brooklyn, NY 11201" },
-    { "lat": 40.6806308, "lng": -73.8872311, "name": "Arlington Library", "accessibility": "full", "comment": "203 Arlington Ave. at Warwick St. Brooklyn, NY 11207" },
-    { "lat": 40.6336184, "lng": -74.0295114, "name": "Bay Ridge Library", "accessibility": "full", "comment": "7223 Ridge Blvd. at 73rd St. Brooklyn, NY 11209" },
-    { "lat": 40.681831, "lng": -73.9560213, "name": "Bedford Library", "accessibility": "full", "comment": "496 Franklin Avenue Brooklyn, NY 11238" },
-    { "lat": 40.681831, "lng": -73.9560213, "name": "Bedford Library Learning Center", "accessibility": "partial", "comment": "496 Franklin Avenue Brooklyn, NY 11238" },
-    { "lat": 40.6388137, "lng": -73.9891201, "name": "Borough Park Library", "accessibility": "full", "comment": "1265 43rd St. at 13th Ave. Brooklyn, NY 11219" },
-    { "lat": 40.576069, "lng": -73.9667601, "name": "Brighton Beach Library", "accessibility": "full", "comment": "6 Brighton First Rd. at Brighton Beach Ave. Brooklyn, NY 11235" },
-    { "lat": 40.6961204, "lng": -73.9914203, "name": "Brooklyn Heights Library", "accessibility": "full", "comment": "286 Cadman Plaza West Brooklyn, NY 11201" },
-    { "lat": 40.6744268, "lng": -73.9439205, "name": "Brower Park Library at Brooklyn Children's Museum", "accessibility": "full", "comment": "145 Brooklyn Ave Brooklyn, NY 11213" },
-    { "lat": 40.6708734, "lng": -73.9079603, "name": "Brownsville Library", "accessibility": "full", "comment": "61 Glenmore Ave. at Watkins St. Brooklyn, NY 11212" },
-    { "lat": 40.7045728, "lng": -73.9395457, "name": "Bushwick Library", "accessibility": "full", "comment": "340 Bushwick Avenue Brooklyn, NY 11206" },
-    { "lat": 40.6422625, "lng": -73.8994432, "name": "Canarsie Library", "accessibility": "partial", "comment": "1580 Rockaway Pkwy. at Ave. J Brooklyn, NY 11236" },
-    { "lat": 40.6832331, "lng": -73.9980304, "name": "Carroll Gardens Library", "accessibility": "full", "comment": "396 Clinton St. Brooklyn, NY 11231" },
-    { "lat": 40.6948029, "lng": -73.9924046, "name": "Center for Brooklyn History", "accessibility": "full", "comment": "128 Pierrepont Street Brooklyn, NY 11201" },
-    { "lat": 40.6723862, "lng": -73.9682475, "name": "Central Library", "accessibility": "full", "comment": "10 Grand Army Plaza Brooklyn, NY 11238" },
-    { "lat": 40.6723862, "lng": -73.9682475, "name": "Central Library Learning Center", "accessibility": "partial", "comment": "10 Grand Army Plaza Brooklyn, NY 11238" },
-    { "lat": 40.6356657, "lng": -73.9476862, "name": "Clarendon Library", "accessibility": "full", "comment": "2035 Nostrand Ave. Brooklyn, NY 11210" },
-    { "lat": 40.687401, "lng": -73.965943, "name": "Clinton Hill Library", "accessibility": "full", "comment": "380 Washington Ave. at Lafayette Ave. Brooklyn, NY 11238" },
-    { "lat": 40.5767211, "lng": -73.9860632, "name": "Coney Island Library", "accessibility": "full", "comment": "1901 Mermaid Ave. (Near W. 19th St.) Brooklyn, NY 11224" },
-    { "lat": 40.6406079, "lng": -73.9660055, "name": "Cortelyou Library", "accessibility": "full", "comment": "1305 Cortelyou Rd. at Argyle Rd. Brooklyn, NY 11226" },
-    { "lat": 40.6612125, "lng": -73.9479385, "name": "Crown Heights Library", "accessibility": "full", "comment": "560 New York Ave. at Maple St. Brooklyn, NY 11225" },
-    { "lat": 40.6726682, "lng": -73.8740205, "name": "Cypress Hills Library", "accessibility": "full", "comment": "1197 Sutter Ave. at Crystal St. Brooklyn, NY 11208" },
-    { "lat": 40.6937519, "lng": -73.9296067, "name": "DeKalb Library", "accessibility": "partial", "comment": "790 Bushwick Ave. at DeKalb Ave. Brooklyn, NY 11221" },
-    { "lat": 40.6163466, "lng": -74.0120111, "name": "Dyker Library", "accessibility": "full", "comment": "8202 13th Ave. (@ 82nd St.) Brooklyn, NY 11228" },
-    { "lat": 40.6557119, "lng": -73.9149405, "name": "East Flatbush Library", "accessibility": "full", "comment": "9612 Church Ave Brooklyn, NY 11212" },
-    { "lat": 40.6685507, "lng": -73.9336564, "name": "Eastern Parkway Learning Center", "accessibility": "full", "comment": "1044 Eastern Parkway - 2nd Floor Brooklyn, NY 11213" },
-    { "lat": 40.6685507, "lng": -73.9336564, "name": "Eastern Parkway Library", "accessibility": "full", "comment": "1044 Eastern Pkwy. at Schenectady Ave. Brooklyn, NY 11213" },
-    { "lat": 40.6519737, "lng": -73.9582372, "name": "Flatbush Learning Center", "accessibility": "partial", "comment": "22 Linden Blvd. at Flatbush Ave. Brooklyn, NY 11226" },
-    { "lat": 40.6519737, "lng": -73.9582372, "name": "Flatbush Library", "accessibility": "full", "comment": "22 Linden Blvd. at Flatbush Ave. Brooklyn, NY 11226" },
-    { "lat": 40.6196604, "lng": -73.9333236, "name": "Flatlands Library", "accessibility": "full", "comment": "2065 Flatbush Ave. at Ave. P Brooklyn, NY 11234" },
-    { "lat": 40.6163589, "lng": -74.0313628, "name": "Fort Hamilton Library", "accessibility": "full", "comment": "9424 Fourth Ave. Brooklyn, NY 11209" },
-    { "lat": 40.5914716, "lng": -73.9238771, "name": "Gerritsen Beach Library", "accessibility": "full", "comment": "2808 Gerritsen Ave. Brooklyn, NY 11229" },
-    { "lat": 40.6269908, "lng": -73.9750264, "name": "Gravesend Library", "accessibility": "full", "comment": "303 Ave. X at West. 2nd St. Brooklyn, NY 11223" },
-    { "lat": 40.7241392, "lng": -73.9502164, "name": "Greenpoint Library", "accessibility": "full", "comment": "107 Norman Ave. at Leonard St. Brooklyn, NY 11222" },
-    { "lat": 40.6056946, "lng": -73.9862442, "name": "Highlawn Library", "accessibility": "full", "comment": "1664 W. 13th St. Brooklyn, NY 11223" },
-    { "lat": 40.5952068, "lng": -73.9605023, "name": "Homecrest Library", "accessibility": "full", "comment": "2525 Coney Island Ave. at Ave. V Brooklyn, NY 11223" },
-    { "lat": 40.6344803, "lng": -73.8893197, "name": "Jamaica Bay Library", "accessibility": "full", "comment": "9727 Seaview Ave. at E. 98th St. near Rockaway Pkwy. Brooklyn, NY 11236" },
-    { "lat": 40.6313515, "lng": -73.9755116, "name": "Kensington Library", "accessibility": "full", "comment": "4207 18th Avenue Brooklyn, NY 11218" },
-    { "lat": 40.5948765, "lng": -73.9411772, "name": "Kings Bay Library", "accessibility": "full", "comment": "3650 Nostrand Ave. (near Ave. W) Brooklyn, NY 11229" },
-    { "lat": 40.6102804, "lng": -73.9532511, "name": "Kings Highway Library", "accessibility": "full", "comment": "2115 Ocean Ave. Brooklyn, NY 11229" },
-    { "lat": 40.7114472, "lng": -73.9474944, "name": "Leonard Library", "accessibility": "partial", "comment": "81 Devoe St. at Leonard St. Brooklyn, NY 11211" },
-    { "lat": 40.6829969, "lng": -73.9348732, "name": "Macon Library", "accessibility": "full", "comment": "361 Lewis Ave. at Macon St. Brooklyn, NY 11233" },
-    { "lat": 40.6231593, "lng": -73.9894561, "name": "Mapleton Library", "accessibility": "full", "comment": "1702 60th Street Brooklyn, NY 11204" },
-    { "lat": 40.680755, "lng": -73.9494015, "name": "Marcy Library", "accessibility": "full", "comment": "617 DeKalb Ave. at Nostrand Ave. Brooklyn, NY 11216" },
-    { "lat": 40.6292287, "lng": -74.0118955, "name": "McKinley Park Library", "accessibility": "full", "comment": "6802 Fort Hamilton Pkwy (at 68th St.) Brooklyn, NY 11219" },
-    { "lat": 40.625907, "lng": -73.9604005, "name": "Midwood Library", "accessibility": "full", "comment": "975 East 16th St. at Avenue J Brooklyn, NY 11230" },
-    { "lat": 40.6198638, "lng": -73.9170083, "name": "Mill Basin Library", "accessibility": "full", "comment": "2385 Ralph Ave (near Ave N) Brooklyn, NY 11234" },
-    { "lat": 40.6659975, "lng": -73.8855675, "name": "New Lots Learning Center", "accessibility": "full", "comment": "665 New Lots Avenue at Barbey St. Brooklyn, NY 11207" },
-    { "lat": 40.6659975, "lng": -73.8855675, "name": "New Lots Library", "accessibility": "full", "comment": "665 New Lots Avenue at Barbey St. Brooklyn, NY 11207" },
-    { "lat": 40.5850653, "lng": -73.9510009, "name": "New Utrecht Library", "accessibility": "full", "comment": "1743 86th St. at Bay 17th St. Brooklyn, NY 11214" },
-    { "lat": 40.6521423, "lng": -73.9778355, "name": "Pacific Library", "accessibility": "partial", "comment": "25 Fourth Ave. at Pacific St. Brooklyn, NY 11217" },
-    { "lat": 40.6326274, "lng": -73.9199457, "name": "Paerdegat Library", "accessibility": "full", "comment": "850 E. 59th St. at Paerdegat Ave. South Brooklyn, NY 11234" },
-    { "lat": 40.6682239, "lng": -73.9834488, "name": "Park Slope Library", "accessibility": "full", "comment": "431 6th Ave Brooklyn, NY 11215" },
-    { "lat": 40.675242, "lng": -74.0103423, "name": "Red Hook Library", "accessibility": "full", "comment": "7 Wolcott St Brooklyn, NY 11231" },
-    { "lat": 40.6486123, "lng": -73.9303999, "name": "Rugby Library", "accessibility": "full", "comment": "1000 Utica Ave. Brooklyn, NY 11203" },
-    { "lat": 40.6159104, "lng": -73.9759322, "name": "Ryder Library", "accessibility": "full", "comment": "5902 23rd Ave. Brooklyn, NY 11204" },
-    { "lat": 40.6848144, "lng": -73.9152118, "name": "Saratoga Library", "accessibility": "full", "comment": "8 Thomas S. Boyland St. at Macon St. Brooklyn, NY 11233" },
-    { "lat": 40.586996, "lng": -73.9553979, "name": "Sheepshead Bay Library", "accessibility": "full", "comment": "2636 E. 14th St. at Ave. Z Brooklyn, NY 11235" },
-    { "lat": 40.6532694, "lng": -73.8857767, "name": "Spring Creek Library", "accessibility": "full", "comment": "12143 Flatlands Ave. at New Jersey Ave. Brooklyn, NY 11207" },
-    { "lat": 40.6645452, "lng": -73.9053547, "name": "Stone Avenue Library", "accessibility": "full", "comment": "581 Mother Gaston Boulevard Brooklyn, NY 11212" },
-    { "lat": 40.6504822, "lng": -74.0078969, "name": "Sunset Park Library", "accessibility": "partial", "comment": "4201 Fourth Avenue Brooklyn, NY 11232" },
-    { "lat": 40.5985344, "lng": -73.9976377, "name": "Ulmer Park Library", "accessibility": "full", "comment": "2602 Bath Avenue at 26th Ave Brooklyn, NY 11214" },
-    { "lat": 40.6944732, "lng": -73.9778261, "name": "Walt Whitman Library", "accessibility": "full", "comment": "93 Saint Edwards Street Brooklyn, NY 11205" },
-    { "lat": 40.6974978, "lng": -73.9122161, "name": "Washington Irving Library", "accessibility": "full", "comment": "360 Irving Ave. (at Woodbine St.) Brooklyn, NY 11237" },
-    { "lat": 40.7069891, "lng": -73.9575624, "name": "Williamsburgh Library", "accessibility": "full", "comment": "240 Division Ave. at Marcy Ave. Brooklyn, NY 11211" },
-    { "lat": 40.6486979, "lng": -73.9767751, "name": "Windsor Terrace Library", "accessibility": "partial", "comment": "160 E. 5th St. at Ft. Hamilton Pkwy. Brooklyn, NY 11218" }]
+    { "name": "Happy Warrior Playground Public Restroom", "id": "Public-Happy-Playground-Restroom-Warrior4743CB38-A1A4-46A7-8607-5933D3FE60BC", "lat": 40.7957, "lng": -73.9685, "accessibility": "unknown", "comment": "West 98 Street & Amsterdam Avenue" },
+    { "name": "Orchard Beach Nature Center", "id": "Beach-Center-Nature-Orchard07AB9936-A312-4CDC-AF67-17DB66328DAD", "lat": 40.8705, "lng": -73.7866, "accessibility": "unknown", "comment": "at Orchard Beach, near Twin Island Trail" },
+    { "name": "Auburndale Playground Public Restroom", "id": "Restroom-Auburndale-Playground-Public89D5F4C2-7C4F-4468-A5EE-57B602897FC0", "lat": 40.7659, "lng": -73.7945, "accessibility": "unknown", "comment": "170-171 Streets, 33-35 Avenues" },
+    { "name": "Orchard Beach Pavilion North Men's Public Restroom", "id": "Men's-Restroom-Public-Pavilion-Orchard-Beach-North396AE032-961E-42A1-A3B7-88740CB567C1", "lat": 40.8672, "lng": -73.7938, "accessibility": "unknown", "comment": "End of Orchard Beach Road, north side" },
+    { "name": "Bensonhurst Park Field House", "id": "Bensonhurst-Field-Park-HouseDE89E501-275B-44FE-90BF-DB67455BDB6F", "lat": 40.5979, "lng": -74.0, "accessibility": "unknown", "comment": "Cropsey Ave between Bay 28th St & Bay 29th St" },
+    { "name": "174 St Playground Public Restroom", "id": "Public-Playground-St-174-Restroom86621B99-C5E3-4AC9-A8ED-FBD7302E5AD5", "lat": 40.6934, "lng": -73.7781, "accessibility": "unknown", "comment": "174 Street & 113 Avenue" },
+    { "name": "Playground For All Children Public Restroom", "id": "Restroom-Children-Playground-All-For-PublicD4A7FF44-9CB6-4ED0-88BC-9DA6DE783776", "lat": 40.7409, "lng": -73.8495, "accessibility": "unknown", "comment": "111 Street and Corona Avenue" },
+    { "name": "Playground For All Children Public Restroom", "id": "Public-Restroom-Playground-For-All-ChildrenB9113665-8F7F-4055-9E9F-1F0A83FDB511", "lat": 40.8485, "lng": -73.8253, "accessibility": "unknown", "comment": "Bruckner Expressway & Buhre Avenue" },
+    { "name": "John Allen Payne Playground Public Restroom", "id": "Playground-Public-Allen-Restroom-John-PayneF048E68B-C809-46D0-B365-9EFA057CF774", "lat": 40.6398, "lng": -74.0236, "accessibility": "unknown", "comment": "3 Ave. bet. 64 St. and 65 St." },
+    { "name": "Loreto Playground Public Restroom", "id": "Restroom-Playground-Loreto-PublicCD451609-3AC1-4C8F-9636-2F571E7D7856", "lat": 40.8488, "lng": -73.852, "accessibility": "unknown", "comment": "Morris Park Avenue, Haight Avenue, Tomlinson Avenue, Van Nest Avenue" },
+    { "name": "Rev. T. Wendell Foster Recreation Center", "id": "T.-Rev.-Center-Wendell-Foster-Recreation66989D3D-E113-4C38-A41F-1624C7A247A9", "lat": 40.8318, "lng": -73.9252, "accessibility": "unknown", "comment": "1020 Jerome Ave" },
+    { "name": "Bushwick Inlet Park House", "id": "House-Inlet-Bushwick-ParkF5207BB3-EA55-4E01-B0DA-C6CBDA576ECD", "lat": 40.7219, "lng": -73.9606, "accessibility": "unknown", "comment": "Kent Ave. between N. 9 St. and N. 12 St." },
+    { "name": "Frontera Park Public Restroom", "id": "Park-Restroom-Frontera-PublicFA9BD03C-0F66-4B14-B2D3-819484044551", "lat": 40.7249, "lng": -73.8954, "accessibility": "unknown", "comment": "Between 55th Dr. & 58th Ave. and Between Brown Pl. & 69th St." },
+    { "name": "Bildersee Playground Public Restroom", "id": "Playground-Restroom-Bildersee-PublicBA12154A-E569-4010-AFC4-81FBFFD123A8", "lat": 40.6359, "lng": -73.9122, "accessibility": "unknown", "comment": "Flatlands Avenue between East 81 & East 82 Streets" },
+    { "name": "Harold Schneiderman Playground Public Restroom", "id": "Restroom-Public-Harold-Schneiderman-Playground5A8B8379-E038-44D5-A3E6-3AF5CAF34B61", "lat": 40.6647, "lng": -73.8504, "accessibility": "unknown", "comment": "155 Avenue & 83 Street" },
+    { "name": "Randall Playground Public Restroom", "id": "Randall-Playground-Public-RestroomB99E08CF-25C7-47D6-ADF8-99D1DBFE578A", "lat": 40.8193, "lng": -73.8497, "accessibility": "unknown", "comment": "Randall Avenue, Castle Hill Avenue" },
+    { "name": "Chelsea Park Public Restroom", "id": "Park-Chelsea-Restroom-Public0ADFEDF3-B415-49DF-8D47-DDCF7C58ED00", "lat": 40.7499, "lng": -74.0008, "accessibility": "unknown", "comment": "West 27 Street & 9 Avenue" },
+    { "name": "Greenwood Playground Public Restroom", "id": "Greenwood-Playground-Restroom-Public4D4EA817-FD08-49ED-A56C-110EBFFA4835", "lat": 40.6505, "lng": -73.9766, "accessibility": "unknown", "comment": "Fort Hamilton Parkway, Greenwood, East 5 Street" },
+    { "name": "Vleigh Playground Public Restroom", "id": "Public-Vleigh-Playground-Restroom974316EA-3979-4EE6-9F29-288B0FE9323E", "lat": 40.7299, "lng": -73.8162, "accessibility": "unknown", "comment": "70 Road to 71 Avenue" },
+    { "name": "Van Cortlandt Pool Public Restroom", "id": "Pool-Restroom-Public-Cortlandt-Van094EDD82-103E-49F6-AFA4-624AD98BF765", "lat": 40.8907, "lng": -73.8974, "accessibility": "unknown", "comment": "Broadway between West 242nd St. and Manhattan College Pkwy." },
+    { "name": "Victory Field Public Restroom", "id": "Public-Field-Victory-Restroom4E3E2972-97B7-4C93-AC92-CDFCE8B81C4C", "lat": 40.7013, "lng": -73.8545, "accessibility": "unknown", "comment": "Woodhaven Blvd., Myrtle Ave., Park Dr." },
+    { "name": "Harris Playground Public Restroom", "id": "Playground-Restroom-Public-Harris9986EEFD-0D87-44AA-8C81-B227F540B00A", "lat": 40.8753, "lng": -73.8927, "accessibility": "unknown", "comment": "Bedford Park Boulevard W between Goulden Avenue & Paul Avenue" },
+    { "name": "Midland Field Public Restroom", "id": "Field-Public-Restroom-Midland20505936-21A5-4ED0-80C4-6C90ADD9A935", "lat": 40.5766, "lng": -74.0995, "accessibility": "unknown", "comment": "Midland Avenue & Mason Avenue" },
+    { "name": "100% Playground Public Restroom", "id": "100%-Public-Restroom-Playground60ADBAE1-F085-4EA0-9062-2E767674004F", "lat": 40.6468, "lng": -73.8995, "accessibility": "unknown", "comment": "Glenwood Road, East 100 & East 101 Streets" },
+    { "name": "Parkside Playground Public Restroom", "id": "Public-Playground-Parkside-Restroom97F1648B-D4A9-45F7-9C3C-4D19F5C2B10A", "lat": 40.8684, "lng": -73.868, "accessibility": "unknown", "comment": "Arnow Avenue, Adee Avenue, Olinville Avenue" },
+    { "name": "Friends Field Public Restroom", "id": "Public-Restroom-Friends-Field81099A3A-8963-41B8-99CC-07B676713277", "lat": 40.6187, "lng": -73.972, "accessibility": "unknown", "comment": "Avenue L, East 4 Street, McDonald Avenue, Avenue M" },
+    { "name": "Fermi Playground Public Restroom", "id": "Fermi-Restroom-Public-Playground0323BB87-40F5-4B9B-9C5A-24029D8A71B2", "lat": 40.7003, "lng": -73.9285, "accessibility": "unknown", "comment": "Troutman Street & Central Avenue" },
+    { "name": "Kissena Corridor Park-Queens Botanical Garden-Roof Canopy/Auditorium", "id": "Corridor-Garden-Roof-Kissena-Canopy/Auditorium-Botanical-Park-QueensA21775D7-22AE-4F38-A148-831C31E66B0F", "lat": 40.7511, "lng": -73.8274, "accessibility": "unknown", "comment": "Dahlia Avenue" },
+    { "name": "Millbrook Playground Public Restroom", "id": "Millbrook-Playground-Restroom-Public98C6F257-C3AD-4625-A8D2-3590CAB31809", "lat": 40.8043, "lng": -73.917, "accessibility": "unknown", "comment": "East 135 Street, Cypress Avenue" },
+    { "name": "Potomac Playground Public Restroom", "id": "Potomac-Restroom-Public-PlaygroundDEF1B16C-6E5D-4C4F-BDD7-92B18EF23CB5", "lat": 40.682, "lng": -73.9442, "accessibility": "unknown", "comment": "Tompkins Avenue & Halsey Street" },
+    { "name": "Alley Pond Spring Public Restroom", "id": "Public-Spring-Pond-Alley-RestroomCF5E2A6F-9119-4D6D-B350-6EAD2A7FA69C", "lat": 40.7416, "lng": -73.7485, "accessibility": "unknown", "comment": "Springfield Boulevard, 73rd Avenue, 76th Avenue to tree line & natural area" },
+    { "name": "Eastchester Playground Public Restroom", "id": "Playground-Eastchester-Restroom-PublicABB7D9B2-F62D-4266-A053-9981F371FFC1", "lat": 40.8698, "lng": -73.8527, "accessibility": "unknown", "comment": "Adee Avenue & Tenbroeck Avenue" },
+    { "name": "Millennium Playground Public Restroom", "id": "Restroom-Millennium-Playground-Public7EC3486D-F4DE-4FBE-B6CF-EE44FCD4C356", "lat": 40.6355, "lng": -74.0193, "accessibility": "unknown", "comment": "5th Ave. between 66th St. & 67th St." },
+    { "name": "Fire Boat House Public Restroom", "id": "Public-Boat-Restroom-House-Fire25E5E2A8-A861-4FD2-82AD-618643E30792", "lat": 40.7128, "lng": -73.9761, "accessibility": "unknown", "comment": "East River Park at Grand Street" },
+    { "name": "St Mary's Playground East Public Restroom", "id": "East-St-Playground-Public-Mary's-Restroom946D50A8-6217-4ECA-966C-FEBD41F570B1", "lat": 40.8099, "lng": -73.9105, "accessibility": "unknown", "comment": "Jackson Avenue between East 144 and 145 Streets" },
+    { "name": "Raymond O'Connor Park Public Restroom", "id": "Public-Park-Raymond-Restroom-O'Connor07C3B44A-D7AC-48D1-BEC5-0DBD6FB55921", "lat": 40.771, "lng": -73.779, "accessibility": "unknown", "comment": "Corp. Kennedy Street & 33 Avenue" },
+    { "name": "173rd St Playground Public Restroom", "id": "Restroom-Public-173rd-St-PlaygroundB70D095E-B87A-4736-A17A-CE3F36981CC3", "lat": 40.704, "lng": -73.7851, "accessibility": "unknown", "comment": "173rd St. & 106th Ave." },
+    { "name": "Cherry Tree Park Public Restroom", "id": "Cherry-Restroom-Tree-Public-ParkA6AA1180-8760-42AA-882F-6679BD39E17C", "lat": 40.7872, "lng": -73.9472, "accessibility": "unknown", "comment": "99 to 100 Streets, 3 Avenue" },
+    { "name": "Willoughby Playground Public Restroom", "id": "Playground-Restroom-Willoughby-Public34352E37-C022-4C46-B7AD-9BE7062844CD", "lat": 40.6945, "lng": -73.9467, "accessibility": "unknown", "comment": "Tompkins & Willoughby Avenues" },
+    { "name": "Underhill Playground Public Restroom", "id": "Restroom-Underhill-Public-Playground8C1A74D3-A67D-414C-80C4-9F9D75469F86", "lat": 40.6766, "lng": -73.9655, "accessibility": "unknown", "comment": "Underhill Avenue & Prospect Place" },
+    { "name": "Underhill Playground Public Restroom", "id": "Playground-Restroom-Public-UnderhillD3729C84-5C28-4C04-808D-CDE201EBB963", "lat": 40.7447, "lng": -73.7875, "accessibility": "unknown", "comment": "Peck Avenue & 188 Street" },
+    { "name": "Jerome Playground Public Restroom", "id": "Restroom-Playground-Public-Jerome850AE554-F8FF-4ADF-9098-F210F6F93178", "lat": 40.6589, "lng": -73.8794, "accessibility": "unknown", "comment": "Wortman Ave between Jerome St & Warwick St" },
+    { "name": "Randall's Island Golf Center Public Restroom", "id": "Golf-Randall's-Restroom-Island-Public-Center9B470B14-26D6-4150-974F-EA83FA8AB6D3", "lat": 40.796, "lng": -73.9235, "accessibility": "unknown", "comment": "Central Road & Bronx Shore Road" },
+    { "name": "Spirit Playground Public Restroom", "id": "Restroom-Spirit-Playground-Public311662A3-1523-4A3F-86C5-5358B9CFCC35", "lat": 40.7614, "lng": -73.9413, "accessibility": "unknown", "comment": "36 Avenue between 9 & 10 Streets" },
+    { "name": "Brevoort Playground Public Restroom", "id": "Brevoort-Public-Restroom-Playground0F0DF4AF-F2F8-4A1F-8CAC-DE7AC23CD4B9", "lat": 40.6807, "lng": -73.9227, "accessibility": "unknown", "comment": "Ralph Ave. bet. Chauncey St. and Sumpter St." },
+    { "name": "Baisley Pond Park House Public Restroom", "id": "Park-Baisley-Restroom-Pond-House-Public710FBB41-4CD2-4198-96DB-72A6C49929CE", "lat": 40.6778, "lng": -73.7841, "accessibility": "unknown", "comment": "Lakeview Blvd E. & 122nd Ave" },
+    { "name": "Washington Hall Park Public Restroom", "id": "Public-Hall-Restroom-Park-Washington46E89392-57FF-4AC3-8FD1-764B879AC2EF", "lat": 40.6954, "lng": -73.9666, "accessibility": "unknown", "comment": "Park, Washington Avenues to Hall Street" },
+    { "name": "Crotona Park Nature Center", "id": "Crotona-Center-Nature-Park7C2B639F-9F35-4F38-8DDF-404CE17142E3", "lat": 40.8381, "lng": -73.8934, "accessibility": "unknown", "comment": "Crotona Park East & Charlotte Street" },
+    { "name": "Alice Kornegay Triangle Public Restroom", "id": "Alice-Kornegay-Triangle-Public-RestroomECC7E02B-C12A-4B2A-A8DE-327E71E26A2B", "lat": 40.8065, "lng": -73.9356, "accessibility": "unknown", "comment": "Lexington Avenue, East 128 & East 129 Streets" },
+    { "name": "Washington Market Park Public Restroom", "id": "Washington-Restroom-Market-Public-ParkCBA9A717-F62C-44C2-AB24-4092B2E1CA59", "lat": 40.7175, "lng": -74.0115, "accessibility": "unknown", "comment": "Greenwich St. & Chambers St." },
+    { "name": "Rufus King Park Public Restroom", "id": "Rufus-Restroom-Park-King-Public959FC83A-0AA6-4907-BB2F-73A42864489E", "lat": 40.7033, "lng": -73.8034, "accessibility": "unknown", "comment": "Jamaica Avenue, 153 Street, 89 Avenue, 150 Street" },
+    { "name": "Stockton Playground Public Restroom", "id": "Stockton-Restroom-Playground-PublicBF99C72C-B267-4207-97BC-4B592B8EF64C", "lat": 40.6971, "lng": -73.9486, "accessibility": "unknown", "comment": "Marcy & Park Avenues" },
+    { "name": "Brady Playground Public Restroom", "id": "Brady-Public-Restroom-Playground8C3FED62-C52C-4023-9077-A09478514816", "lat": 40.8514, "lng": -73.8686, "accessibility": "unknown", "comment": "Bronx Park East between Bronxdale Avenue and Unionport Road" },
+    { "name": "136 St Playground Public Restroom", "id": "St-136-Restroom-Playground-Public47D7FBE4-2B91-4F22-A280-F759FDB08823", "lat": 40.785, "lng": -73.8328, "accessibility": "unknown", "comment": "132 to 138 Streets, 14 Road" },
+    { "name": "Mazzei Playground Public Restroom", "id": "Restroom-Playground-Mazzei-PublicF9A10CF2-B236-4162-9D39-46870EBB2F49", "lat": 40.8625, "lng": -73.8582, "accessibility": "unknown", "comment": "Mace Avenue, Williamsbridge Road" },
+    { "name": "East Elmhurst Playground Public Restroom", "id": "Public-Elmhurst-Restroom-East-Playground7EA56D8F-B9FC-496A-8863-3D7E7528E007", "lat": 40.7655, "lng": -73.8714, "accessibility": "unknown", "comment": "25 Avenue & 98 Street" },
+    { "name": "Evelyn's Playground Public Restroom", "id": "Evelyn's-Public-Playground-RestroomE61AA581-D3A1-4651-9212-BA00B72CCCAB", "lat": 40.7363, "lng": -73.9896, "accessibility": "unknown", "comment": "Union Square West Between E. 16th & E. 17th St." },
+    { "name": "Sachkerah Woods Playground Public Restroom", "id": "Woods-Restroom-Playground-Sachkerah-PublicFCF89FBC-2D1E-4887-A794-57496F83BCD8", "lat": 40.8837, "lng": -73.8816, "accessibility": "unknown", "comment": "East 212 Street and Jerome Avenue" },
+    { "name": "Wolfe's Pond Modular Public Restroom - Men's", "id": "--Men's-Pond-Modular-Restroom-Wolfe's-Public4200CDD3-B6B4-45A9-85E7-07168E89048E", "lat": 40.5161, "lng": -74.1894, "accessibility": "unknown", "comment": "Prefab CS near beach, East structure" },
+    { "name": "Breininger Park Public Restroom", "id": "Public-Park-Breininger-Restroom843A1BD5-206E-4DE3-BE1D-EA7322FAA191", "lat": 40.726, "lng": -73.7289, "accessibility": "unknown", "comment": "Braddock Avenue & 240 Street" },
+    { "name": "MacArthur Playground Public Restroom", "id": "Playground-MacArthur-Restroom-PublicCAA45070-8B1D-4C43-9AB3-6F8FB38AEF6F", "lat": 40.7524, "lng": -73.965, "accessibility": "unknown", "comment": "East 49 Street & East River Drive" },
+    { "name": "Wingate Park Public Restroom", "id": "Park-Wingate-Public-Restroom946927A5-4A66-4E2F-BD91-4AB9E7BF868E", "lat": 40.6593, "lng": -73.9446, "accessibility": "unknown", "comment": "Brooklyn Avenue & Rutland Road" },
+    { "name": "Visitors Center at Fort Greene Park", "id": "Park-Greene-Fort-Center-Visitors-at0D8CE2BE-F062-4419-BF18-FE957A84B40E", "lat": 40.6922, "lng": -73.9747, "accessibility": "unknown", "comment": "Visitors Center at Fort Greene Park" },
+    { "name": "Canarsie Park Public Restroom", "id": "Park-Canarsie-Public-Restroom0885F2F4-D99E-4AC7-ACE7-A161914D8A21", "lat": 40.629, "lng": -73.896, "accessibility": "unknown", "comment": "Seaview Ave. & East 88th St." },
+    { "name": "Barretto Point Park Public Restroom", "id": "Park-Public-Restroom-Point-Barretto20C70248-0313-4212-9986-90491EE59F9A", "lat": 40.8059, "lng": -73.8886, "accessibility": "unknown", "comment": "Tiffany Street & Viele Avenue" },
+    { "name": "Beach 9 Playground Public Restroom", "id": "9-Restroom-Public-Beach-PlaygroundE3BAAB8A-2052-4B21-967C-551D1A8332A0", "lat": 40.5956, "lng": -73.7446, "accessibility": "unknown", "comment": "Beach 9th Street, North of the Boardwalk" },
+    { "name": "Marcus Garvey Park Public Restroom", "id": "Restroom-Park-Garvey-Public-MarcusA7E29092-3D59-4BA4-B437-C8925667AFCA", "lat": 40.8046, "lng": -73.9448, "accessibility": "unknown", "comment": "18 Mount Morris Park West" },
+    { "name": "Redwood Playground Public Restroom", "id": "Public-Restroom-Playground-Redwood6E06E31E-F078-4DE0-A8F3-DFFCEAA35F2E", "lat": 40.7267, "lng": -73.7754, "accessibility": "unknown", "comment": "193 Street and Aberdeen Road" },
+    { "name": "Captain Mario Fajardo Park Public Restroom", "id": "Park-Captain-Public-Fajardo-Restroom-Mario2865CBA8-1045-4569-BE60-0D7A367D0FF6", "lat": 40.7435, "lng": -73.8148, "accessibility": "unknown", "comment": "Kissena Boulevard & Booth Memorial Avenue" },
+    { "name": "Dry Harbor Playground Public Restroom", "id": "Dry-Harbor-Restroom-Public-PlaygroundE878930A-124E-42D3-94E5-A7144919ED9D", "lat": 40.7023, "lng": -73.8681, "accessibility": "unknown", "comment": "80 Street & Myrtle Avenue" },
+    { "name": "Sperandeo Brothers Playground Public Restroom", "id": "Sperandeo-Playground-Restroom-Brothers-PublicB4FEA08C-4135-4864-93E0-A12C8EFC960C", "lat": 40.6776, "lng": -73.8842, "accessibility": "unknown", "comment": "Atlantic Avenue & Elton Street" },
+    { "name": "The Battery Public Restroom", "id": "Public-Battery-Restroom-The37C394FF-6960-4E1B-8D47-D0A8D7F8A260", "lat": 40.7044, "lng": -74.0159, "accessibility": "unknown", "comment": "Battery Pl. & Washington St." },
+    { "name": "Van Cortlandt Nature Center", "id": "Van-Nature-Center-CortlandtD38DFF85-EFB0-4FEB-9A83-D9EABF2F8ECC", "lat": 40.8911, "lng": -73.8939, "accessibility": "unknown", "comment": "246th Street and Broadway" },
+    { "name": "Grover Cleveland Playground Public Restroom", "id": "Playground-Grover-Restroom-Cleveland-PublicECC67252-D7B0-455A-8CAD-B4A407034C24", "lat": 40.7109, "lng": -73.9109, "accessibility": "unknown", "comment": "Rene Court, Grandview Avenue, Stanjope Street & Fairview Avenue" },
+    { "name": "Rockaway Playground M Public Restroom", "id": "M-Rockaway-Restroom-Playground-PublicD61B6179-2CA7-4AA0-8D51-DA48F15E50F9", "lat": 40.5846, "lng": -73.8108, "accessibility": "unknown", "comment": "Boardwalk between Beach 84th St and Beach 90th St" },
+    { "name": "Ocean Hill Playground Public Restroom", "id": "Hill-Restroom-Ocean-Playground-Public234FE3AD-78F0-422A-A1B2-36B684A6D8F2", "lat": 40.6746, "lng": -73.912, "accessibility": "unknown", "comment": "Bergen Street, Rockaway Avenue, Dean Street" },
+    { "name": "Margaret I. Carman Green - Weeping Beech Public Restroom", "id": "--Public-Carman-Restroom-Weeping-Green-Beech-Margaret-I.81B2B8DA-BAF8-4DCE-B1C6-244578DEF394", "lat": 40.7635, "lng": -73.8247, "accessibility": "unknown", "comment": "37 Avenue & Bowne Street" },
+    { "name": "Bailey Playground Public Restroom", "id": "Playground-Public-Restroom-BaileyED926472-0A69-4CD6-B5AE-ECC5B1E21E8A", "lat": 40.8811, "lng": -73.9008, "accessibility": "unknown", "comment": "W. 234th St. between Bailey Ave. & Major Deegan Expwy." },
+    { "name": "Mellett Playground Public Restroom", "id": "Mellett-Restroom-Public-PlaygroundDFC31441-B6DB-4262-BC9D-AFE08459A401", "lat": 40.5971, "lng": -73.9574, "accessibility": "unknown", "comment": "Avenue V between East 13 & East 14 Streets" },
+    { "name": "St Mary's Playground West Public Restroom", "id": "Restroom-Public-St-West-Mary's-Playground7C870E5D-D3F6-45BE-A023-20EF45EF5B0F", "lat": 40.8129, "lng": -73.9134, "accessibility": "unknown", "comment": "St. Ann's Avenue & East 147 Street" },
+    { "name": "Hattie Carthan Playground Public Restroom", "id": "Carthan-Public-Playground-Hattie-RestroomBA137222-28E5-4F94-A41A-ACC64FF12BE0", "lat": 40.6856, "lng": -73.9464, "accessibility": "unknown", "comment": "East of Marcy Street" },
+    { "name": "Linden Park Public Restroom", "id": "Park-Linden-Restroom-Public715FE261-6296-44FD-8038-78E18B3885D5", "lat": 40.6583, "lng": -73.8875, "accessibility": "unknown", "comment": "Stanley Avenue, Linden Boulevard" },
+    { "name": "Wolfe's Pond Modular Public Restroom - Women's", "id": "Wolfe's-Modular-Restroom-Public-Pond-Women's--E1AE6FFC-6A00-4BA0-A7C5-C9C836C1BA4A", "lat": 40.5161, "lng": -74.1895, "accessibility": "unknown", "comment": "Prefab CS near beach, West structure" },
+    { "name": "Oracle Playground Public Restroom", "id": "Restroom-Public-Oracle-Playground39217F18-A477-497A-B4C3-06A34F99D5B7", "lat": 40.6938, "lng": -73.9716, "accessibility": "unknown", "comment": "Adelphi & Myrtle Avenues" },
+    { "name": "John Jay Park Pool Building", "id": "Building-John-Jay-Pool-ParkF476B943-EB8A-43C1-B6B2-BE5602560F14", "lat": 40.7691, "lng": -73.9491, "accessibility": "unknown", "comment": "East of York Avenue on 77th St." },
+    { "name": "Leonardo Ingravallo Playground Public Restroom", "id": "Leonardo-Public-Restroom-Ingravallo-Playground27B3D6B7-51F5-4DD2-A8B0-5752A15FDFFC", "lat": 40.776, "lng": -73.8172, "accessibility": "unknown", "comment": "Bayside Avenue, 25 Avenue, 149 to 150 Streets" },
+    { "name": "Great Kills Park-New Dorp Beach Modular Public Restroom - Women's", "id": "Restroom-Public-Great---Modular-Dorp-Women's-Kills-Park-New-Beach631704AE-6206-4C03-948E-205A0A5F41D4", "lat": 40.5586, "lng": -74.1025, "accessibility": "unknown", "comment": "Prefab CS near beach, South structure" },
+    { "name": "Rainey Park Public Restroom", "id": "Restroom-Park-Public-Rainey1B8CDA96-DA78-4CD6-82D0-183B5BE11C4D", "lat": 40.8188, "lng": -73.8983, "accessibility": "unknown", "comment": "Dawson Street between Polite Ave & Rogers Pl." },
+    { "name": "Lieutenant John H. Martinson Playground Public Restroom", "id": "Playground-John-Martinson-Restroom-Lieutenant-Public-H.48FEA356-3D23-4781-B333-07E5E836CB3E", "lat": 40.5372, "lng": -74.1624, "accessibility": "unknown", "comment": "Osborne Street and Preston Avenue" },
+    { "name": "Lyons Square Playground Public Restroom", "id": "Square-Restroom-Playground-Lyons-PublicD68E9F31-F1E0-44D6-9C98-605B39C19B48", "lat": 40.8226, "lng": -73.8883, "accessibility": "unknown", "comment": "Aldus St. between Bryant Ave. & Longfellow Ave." },
+    { "name": "Bill Brown Playground Public Restroom", "id": "Restroom-Bill-Brown-Playground-Public6FFF55BA-BCF9-4CA4-8CF5-95A043573928", "lat": 40.5918, "lng": -73.9456, "accessibility": "unknown", "comment": "Bedford Avenue, Avenue X to Avenue Y, E 24 Street" },
+    { "name": "Kissena Park- Boathouse Public Restroom", "id": "Park--Restroom-Public-Kissena-BoathouseAF74E18B-B8CE-4D00-97B0-5124E48AE82F", "lat": 40.7492, "lng": -73.8038, "accessibility": "unknown", "comment": "Oak Avenue & 164th Street" },
+    { "name": "Detective Keith L Williams Park-Field House", "id": "Williams-L-Park-Field-Keith-House-DetectiveEFB0B90C-2C12-46E2-A4CB-1324C7CB5C94", "lat": 40.7019, "lng": -73.7835, "accessibility": "unknown", "comment": "106-16 173rd Street between 106 Av and 107 Av" },
+    { "name": "Langston Hughes Playground Public Restroom", "id": "Hughes-Langston-Public-Restroom-Playground24FBD573-91CC-4159-8E8B-B84F00564E9D", "lat": 40.8122, "lng": -73.9464, "accessibility": "unknown", "comment": "Adam Clayton Powell Jr. Blvd & W. 130th St" },
+    { "name": "Arcilla Playground Public Restroom", "id": "Playground-Restroom-Public-ArcillaE1966D40-FEE1-48A7-A160-6F9B940FED4F", "lat": 40.8272, "lng": -73.9146, "accessibility": "unknown", "comment": "Teller Avenue, Park Avenue, Clay Avenue, East 64 Street" },
+    { "name": "St. Catherine's Park Public Restroom", "id": "Park-St.-Public-Catherine's-Restroom315ACD51-D9C1-4844-B7D8-D8E7AEC6563F", "lat": 40.7653, "lng": -73.9586, "accessibility": "unknown", "comment": "1st Avenue between E. 67th St & E. 68th St." },
+    { "name": "City Line Park Public Restroom", "id": "Public-Park-Line-Restroom-City5B877C88-2D90-40D1-AEFE-77FD789220CC", "lat": 40.6795, "lng": -73.8762, "accessibility": "unknown", "comment": "Atlantic & Fountain Avenues" },
+    { "name": "Coney Island Beach & Boardwalk-Building", "id": "Boardwalk-Building-&-Island-Beach-ConeyDFEDCB62-60FD-4399-B38A-350D4F614DEE", "lat": 40.5749, "lng": -73.9598, "accessibility": "unknown", "comment": "Coney Island Boardwalk East Between Brighton 1 Rd. and Brighton 2 St." },
+    { "name": "Children's Corner Public Restroom", "id": "Corner-Public-Children's-Restroom289F6B67-CCFD-42D3-8B55-790732873C5D", "lat": 40.6629, "lng": -73.9635, "accessibility": "unknown", "comment": "Willink Hill, Ocean Ave. & Flatbush Ave." },
+    { "name": "Tilden Playground Public Restroom", "id": "Restroom-Public-Tilden-Playground3F7A14CA-DA26-4264-BB87-5909FB1730E4", "lat": 40.6479, "lng": -73.9314, "accessibility": "unknown", "comment": "Tilden Avenue, East 48 to East 49 Streets" },
+    { "name": "Edenwald Playground Public Restroom", "id": "Edenwald-Playground-Public-Restroom03319157-A595-4ACE-9FEF-3B11EB97E7E8", "lat": 40.8841, "lng": -73.8452, "accessibility": "unknown", "comment": "East 226 Drive, Schieffelin Avenue" },
+    { "name": "Ampere Playground Public Restroom", "id": "Ampere-Playground-Public-RestroomEE4B7748-2961-4B2B-81E3-43226C0C0A1A", "lat": 40.6814, "lng": -73.8568, "accessibility": "unknown", "comment": "101 Avenue & 82 Street" },
+    { "name": "Allerton Playground Public Restroom", "id": "Allerton-Restroom-Playground-Public38236E3F-A254-4492-B801-AA02941AD71F", "lat": 40.8657, "lng": -73.8505, "accessibility": "unknown", "comment": "Allerton Avenue between Throop Avenue & Stedman Place" },
+    { "name": "Anne Loftus Playground Public Restroom", "id": "Anne-Playground-Loftus-Public-RestroomC45C1787-7972-40AD-B8A9-CD280FFF7785", "lat": 40.8651, "lng": -73.9295, "accessibility": "unknown", "comment": "Broadway & Dyckman Street" },
+    { "name": "FMCP-Carousel Loop Public Restroom", "id": "FMCP-Carousel-Restroom-Loop-PublicBE344CEE-AC50-4600-AB3F-9B629FCF5F45", "lat": 40.7419, "lng": -73.848, "accessibility": "unknown", "comment": "23 Carousel Loop" },
+    { "name": "Ancient Playground Public Restroom", "id": "Playground-Public-Ancient-Restroom5F900301-F76B-4CEF-9D36-87326B29063C", "lat": 40.781, "lng": -73.9616, "accessibility": "unknown", "comment": "85th St. & 5th Ave." },
+    { "name": "Newtown Playground Public Restroom", "id": "Newtown-Restroom-Playground-PublicC9122AE0-23E6-4783-8292-13ADCBC73A29", "lat": 40.7362, "lng": -73.8698, "accessibility": "unknown", "comment": "92nd St. & 56th Ave." },
+    { "name": "Phil 'Scooter' Rizzuto Park Public Restroom", "id": "Restroom-Public-'Scooter'-Park-Phil-Rizzuto0BEFF7E5-3350-4F52-909A-25E9293F4C64", "lat": 40.6947, "lng": -73.8215, "accessibility": "unknown", "comment": "125 Street & Atlantic Avenue" },
+    { "name": "Charles A. Dana Discovery Center", "id": "A.-Discovery-Dana-Center-Charles91F89EC3-54ED-4412-92DD-BFEB84F9E538", "lat": 40.7971, "lng": -73.9515, "accessibility": "unknown", "comment": "Inside the Park at 110th Street between Fifth and Lenox Avenues" },
+    { "name": "Luther Gulick Park Public Restroom", "id": "Luther-Public-Restroom-Gulick-ParkE5100281-BB1A-4D36-A37D-6EC5490EF94A", "lat": 40.7159, "lng": -73.9816, "accessibility": "unknown", "comment": "Broome Street between Bialystoker Pl. & Columbia St." },
+    { "name": "Richman (Echo) Park Upper Level Public Restroom", "id": "(Echo)-Public-Upper-Restroom-Park-Level-Richman0303CADE-A494-407B-BAF1-C3B96043655B", "lat": 40.8496, "lng": -73.9021, "accessibility": "unknown", "comment": "East 178 Street & Ryer Avenue, Upper Level" },
+    { "name": "Orchard Beach Pavilion North Women's Public Restroom", "id": "North-Women's-Beach-Restroom-Pavilion-Orchard-Public6A7CE631-7856-4705-B00A-8103D59C794B", "lat": 40.8674, "lng": -73.7937, "accessibility": "unknown", "comment": "End of Orchard Beach Road, north side" },
+    { "name": "McCarren Park Public Restroom", "id": "Park-McCarren-Restroom-PublicF285CA56-9A82-4F23-9135-49A21FCA5ADA", "lat": 40.722, "lng": -73.9518, "accessibility": "unknown", "comment": "903 Lorimer St" },
+    { "name": "Dugan Playground Public Restroom", "id": "Dugan-Public-Playground-Restroom81066C6B-C746-447D-9EC5-DE5327155217", "lat": 40.5616, "lng": -74.1115, "accessibility": "unknown", "comment": "Mill Road & Tysens Lane" },
+    { "name": "Beach 115th Street Public Restroom", "id": "Restroom-115th-Public-Street-BeachC079189F-5643-4720-B411-797E851828D1", "lat": 40.5779, "lng": -73.8352, "accessibility": "unknown", "comment": "Beach 115th St. & Rockaway Boardwalk" },
+    { "name": "East River Playground Public Restroom", "id": "Restroom-East-Public-Playground-River6DF2AC89-ECFE-4DB9-AAED-F5B66E744F9D", "lat": 40.7239, "lng": -73.9728, "accessibility": "unknown", "comment": "Northern end of park at East 10th Street." },
+    { "name": "East River Playground Public Restroom", "id": "Playground-Public-River-East-Restroom862BE124-A890-49FF-8D2E-3CF279E03966", "lat": 40.7892, "lng": -73.9379, "accessibility": "unknown", "comment": "FDR Drive, East 106 to East 107 Streets" },
+    { "name": "Imagination Playground Public Restroom", "id": "Restroom-Imagination-Public-Playground86C8B5CC-06EA-4AFD-A01F-01F439EF2C3B", "lat": 40.7062, "lng": -74.004, "accessibility": "unknown", "comment": "Front St., John St., and South St." },
+    { "name": "St. Andrew's Playground Public Restroom", "id": "Public-St.-Playground-Andrew's-Restroom8461EBD7-27BB-4D70-932E-3592E4491CD8", "lat": 40.6788, "lng": -73.942, "accessibility": "unknown", "comment": "Atlantic Avenue & Herkimer Street" },
+    { "name": "Hunter's Point South Park Pavilion", "id": "South-Pavilion-Point-Hunter's-Park2D26C128-602E-421C-8260-61A444740D65", "lat": 40.742, "lng": -73.9608, "accessibility": "unknown", "comment": "Center Blvd. & Borden Ave." },
+    { "name": "Structure north of W 102nd St soccer field stairs", "id": "St-north-W-Structure-field-of-stairs-102nd-soccer24E4C35D-0935-4A10-9ECC-4BFB51196978", "lat": 40.8005, "lng": -73.9733, "accessibility": "unknown", "comment": "North of W 102nd St soccer field stairs" },
+    { "name": "Williamsbridge Oval Recreation Center", "id": "Center-Oval-Recreation-Williamsbridge17241710-B339-4B11-8783-B0933D34F7DA", "lat": 40.8767, "lng": -73.8786, "accessibility": "unknown", "comment": "Reservoir Oval East & Van Cortlandt Avenue East" },
+    { "name": "Silver Lake Park Field House", "id": "Park-House-Field-Lake-SilverF350539F-7657-4101-B209-95DA1EDBAB66", "lat": 40.6283, "lng": -74.099, "accessibility": "unknown", "comment": "Victory Boulevard, Clove Road, Forest Avenue" },
+    { "name": "South Beach Public Restroom", "id": "Public-Restroom-Beach-SouthE60CC202-22C9-4411-9659-EB10D91861D2", "lat": 40.5798, "lng": -74.0759, "accessibility": "unknown", "comment": "Boardwalk, near Seaview Ave." },
+    { "name": "Kolbert Playground Public Restroom", "id": "Playground-Kolbert-Public-RestroomCA998398-8132-4BAC-A50B-A42D7F614E89", "lat": 40.6203, "lng": -73.958, "accessibility": "unknown", "comment": "Avenue L, East 17 to East 18 Streets" },
+    { "name": "Gun Hill Playground Public Restroom", "id": "Restroom-Public-Hill-Playground-Gun8B1F36FB-B6A8-4D1A-B2D7-ECA96EC79C5D", "lat": 40.8747, "lng": -73.8654, "accessibility": "unknown", "comment": "Holland Avenue, Magenta Street, Cueger Avenue" },
+    { "name": "Rosewood Playground Public Restroom", "id": "Rosewood-Public-Restroom-Playground00C47E5D-CE78-4BD7-9B8B-0E06259E5445", "lat": 40.873, "lng": -73.8711, "accessibility": "unknown", "comment": "Bronx River Parkway & Rosewood Street" },
+    { "name": "Horseshoe Playground Public Restroom", "id": "Playground-Restroom-Horseshoe-PublicC2D27A95-1760-480C-8070-FA2EFBB74F30", "lat": 40.8242, "lng": -73.8978, "accessibility": "unknown", "comment": "Hall Place, Rogers Place, East 165 Street" },
+    { "name": "St. Nicholas Playground South Public Restroom", "id": "Nicholas-South-Public-St.-Restroom-Playground1561ABA0-2428-4E1E-8579-70BA84A48CC8", "lat": 40.8111, "lng": -73.9472, "accessibility": "unknown", "comment": "West 129 & 7 Avenue" },
+    { "name": "Saratoga Park Public Restroom", "id": "Restroom-Public-Saratoga-ParkD51E921E-1ECA-4384-9008-6AAE4BB44484", "lat": 40.6851, "lng": -73.919, "accessibility": "unknown", "comment": "Howard Avenue, Halsey, Macon Streets" },
+    { "name": "Audubon Playground Public Restroom", "id": "Public-Restroom-Playground-Audubon132277DD-F7EF-49BA-8ED6-899F9A40B6A7", "lat": 40.8417, "lng": -73.9379, "accessibility": "unknown", "comment": "West 170 Street & Audubon Avenue" },
+    { "name": "Star Spangled Playground Public Restroom", "id": "Star-Public-Restroom-Playground-Spangled08E05DE0-899A-4C37-BB6C-DF1D1FAED5DB", "lat": 40.6917, "lng": -73.9578, "accessibility": "unknown", "comment": "Franklin & Willoughby Avenues" },
+    { "name": "Greeley Square Park Public Restroom", "id": "Restroom-Public-Park-Greeley-SquareD736B5CD-4173-4BF3-883A-2E71ABCAEA93", "lat": 40.7485, "lng": -73.9885, "accessibility": "unknown", "comment": "Ave. of the Americas & W. 32nd St." },
+    { "name": "Loeb Boathouse", "id": "Boathouse-LoebA0AB5BB6-1095-49A6-A1EE-C0D4F5EBAF4E", "lat": 40.7754, "lng": -73.9688, "accessibility": "unknown", "comment": "East Side between 74th and 75th Streets" },
+    { "name": "Robert Bendheim Playground Public Restroom", "id": "Public-Playground-Bendheim-Robert-Restroom4A4CD73C-9A6C-422F-9174-62A9987C6F53", "lat": 40.7904, "lng": -73.9546, "accessibility": "unknown", "comment": "100th Street and Fifth Ave" },
+    { "name": "Sunken Meadow Public Restroom", "id": "Meadow-Public-Restroom-Sunken34298834-B24F-4CC8-B3A9-5147277F26A7", "lat": 40.7955, "lng": -73.9189, "accessibility": "unknown", "comment": "Sunken Meadow Loop, Between Fields 13 and 19" },
+    { "name": "West 8th Street Public Restroom", "id": "Street-Public-West-8th-Restroom729F5E0E-0207-4677-BF9C-EEA9AB22D2D7", "lat": 40.5734, "lng": -73.9759, "accessibility": "unknown", "comment": "Boardwalk, near West. 8th Street Entrance" },
+    { "name": "P.O. Reinaldo Salgado Playground Public Restroom", "id": "Public-Reinaldo-Playground-Restroom-Salgado-P.O.98C3703D-E5AF-4D30-A306-BE3F8150E917", "lat": 40.6879, "lng": -73.9255, "accessibility": "unknown", "comment": "Madison Street & Patchen Avenue" },
+    { "name": "Martin Van Buren Playground Public Restroom", "id": "Martin-Public-Playground-Van-Restroom-BurenA661EB5D-2A5E-45F5-B74D-AA6505427964", "lat": 40.8351, "lng": -73.8962, "accessibility": "unknown", "comment": "Crotona East & Claremont Parkway" },
+    { "name": "Berriman Playground Public Restroom", "id": "Restroom-Public-Playground-BerrimanA48E4471-BAAB-44B7-8719-8C20F826D98B", "lat": 40.657, "lng": -73.8695, "accessibility": "unknown", "comment": "Berriman St between Vandalia Ave & Schroeders Ave" },
+    { "name": "Rosemary's Playground Public Restroom", "id": "Public-Restroom-Playground-Rosemary'sD4A677B1-F6B0-4274-9A75-FE95E0F01A0E", "lat": 40.7046, "lng": -73.9044, "accessibility": "unknown", "comment": "Woodward Avenue, Woodbine Street, Fairview Avenue" },
+    { "name": "Moore Homestead Playground Public Restroom", "id": "Public-Playground-Homestead-Moore-Restroom04698E71-8B69-4A0A-AD4F-9A3FE8C698B6", "lat": 40.7423, "lng": -73.8824, "accessibility": "unknown", "comment": "Broadway & 83 Street" },
+    { "name": "Albemarle Playground Public Restroom", "id": "Albemarle-Playground-Public-Restroom0BA03BD1-41FA-47A3-9876-BAE462BFD7B1", "lat": 40.646, "lng": -73.9805, "accessibility": "unknown", "comment": "Albermarle Road & Dahill Road" },
+    { "name": "Story Playground Public Restroom", "id": "Playground-Public-Restroom-Story6BEEA4B6-12F5-4254-AC00-7880D341A3C5", "lat": 40.823, "lng": -73.8631, "accessibility": "unknown", "comment": "Story Avenue, Thieriot Avenue, Taylor Avenue" },
+    { "name": "Marconi Park Public Restroom", "id": "Restroom-Marconi-Park-Public3D7DF2AB-B0C5-4260-A084-288C5AAB44EA", "lat": 40.6933, "lng": -73.7956, "accessibility": "unknown", "comment": "109 Avenue & 155 Street" },
+    { "name": "Russell Pedersen Playground Public Restroom", "id": "Pedersen-Restroom-Public-Russell-Playground8DEE5E70-A7A2-4F61-A4B4-E216F6FA40C1", "lat": 40.6264, "lng": -74.0363, "accessibility": "unknown", "comment": "Colonial Road, 83 to 85 Streets" },
+    { "name": "Beach 17 Playground Public Restroom", "id": "17-Restroom-Public-Beach-Playground05B081E2-CDAB-45CA-9E57-7DE611B88D2A", "lat": 40.5942, "lng": -73.7506, "accessibility": "unknown", "comment": "Beach 17th St. & Seagirt Blvd." },
+    { "name": "Burns Playground Public Restroom", "id": "Public-Burns-Playground-Restroom22C521C9-7D05-4ECD-B459-02B5928C38E0", "lat": 40.8629, "lng": -73.8366, "accessibility": "unknown", "comment": "Mace Ave. between Lodovick Ave. & Gunther Ave." },
+    { "name": "Tavern on the Green", "id": "Green-the-on-TavernBC7219ED-FA0E-4498-82CD-631951B995C8", "lat": 40.7722, "lng": -73.9776, "accessibility": "unknown", "comment": "West Side between 66th and 67th Streets" },
+    { "name": "Russell Sage Playground Public Restroom", "id": "Sage-Russell-Public-Restroom-Playground7C21ABD5-93EF-4A36-B0ED-16AEA341525F", "lat": 40.724, "lng": -73.8516, "accessibility": "unknown", "comment": "68 Avenue, Booth to Austin Streets" },
+    { "name": "Dimattina Playground Public Restroom", "id": "Restroom-Dimattina-Playground-Public3B7850AD-035C-4AEF-81EC-A6B2F985EAE6", "lat": 40.6805, "lng": -74.0019, "accessibility": "unknown", "comment": "Hicks & Rapelye Streets" },
+    { "name": "Howard Bennett Playground Public Restroom", "id": "Playground-Bennett-Public-Howard-RestroomF80B39ED-3121-44A8-8B88-10F3D0B88311", "lat": 40.8137, "lng": -73.939, "accessibility": "unknown", "comment": "West 135 to West 136 Streets, Lenox to 5 Avenues" },
+    { "name": "Martin Luther King Jr. Playground Public Restroom", "id": "Playground-Public-Restroom-Jr.-Martin-King-Luther95B63DD8-D0F7-47FE-90D5-426FF7DC0045", "lat": 40.6674, "lng": -73.8902, "accessibility": "unknown", "comment": "Dumont, Blake, Miller Avenues" },
+    { "name": "Guggenheim Bandshell", "id": "Bandshell-Guggenheim2FF60ADD-FA37-4023-BBF5-08B61AB14595", "lat": 40.7725, "lng": -73.9857, "accessibility": "unknown", "comment": "Amsterdam Ave. and W. 62 St." },
+    { "name": "Glenwood Playground Public Restroom", "id": "Restroom-Public-Glenwood-Playground2760790C-08FF-4C30-849F-617E5203961D", "lat": 40.6367, "lng": -73.9201, "accessibility": "unknown", "comment": "Ralph Avenue & Farragut Road" },
+    { "name": "Breukelen Playground Public Restroom", "id": "Restroom-Breukelen-Public-Playground526C65F5-0B5A-4A23-8DF7-CEDF19736647", "lat": 40.6537, "lng": -73.894, "accessibility": "unknown", "comment": "Louisiana & Flatlands Avenue" },
+    { "name": "PFC Norton Playground Public Restroom", "id": "Norton-Restroom-Playground-Public-PFC77EDBBAC-F9DA-43FE-ACDE-0DD9D5F5DB68", "lat": 40.6146, "lng": -73.9448, "accessibility": "unknown", "comment": "Nostrand Avenue & Marine Parkway" },
+    { "name": "Playground 286 Public Restroom", "id": "Playground-Public-286-Restroom9BF5CA93-B1D0-4064-896F-177AEA96B2DE", "lat": 40.5906, "lng": -73.9385, "accessibility": "unknown", "comment": "Avenue Y, between Brown & Haring Streets" },
+    { "name": "Sol Lain Playground Public Restroom", "id": "Lain-Restroom-Playground-Public-Sol66273852-4146-41EF-978F-93C0597C917A", "lat": 40.7144, "lng": -73.984, "accessibility": "unknown", "comment": "Broadway, Henry Street, Samuel Dickstein Place" },
+    { "name": "Prospect Park Audubon Center", "id": "Audubon-Prospect-Center-Park6FF408F8-8B2D-4E3B-BBD5-B6EAF8E38DA6", "lat": 40.6608, "lng": -73.9653, "accessibility": "unknown", "comment": "101 East Dr" },
+    { "name": "District 1 Headquarters", "id": "Headquarters-1-District34643488-1714-483A-A68C-BAE28B95317C", "lat": 40.6182, "lng": -74.1072, "accessibility": "unknown", "comment": "Park Drive, South of Parking Lot" },
+    { "name": "Holy Cow Playground Public Restroom", "id": "Holy-Cow-Restroom-Playground-Public977747AD-3C6D-487C-BD5C-A591415095DF", "lat": 40.7414, "lng": -73.7764, "accessibility": "unknown", "comment": "Peck Avenue Between 64th Ave. & 67th Ave." },
+    { "name": "Sarsfield Playground Public Restroom", "id": "Public-Restroom-Playground-Sarsfield1C9378B7-374D-4120-8AD7-C3048AB338B5", "lat": 40.6203, "lng": -73.9372, "accessibility": "unknown", "comment": "East 38 Street & Ryder Street, Avenue M" },
+    { "name": "Sol Bloom Playground Public Restroom", "id": "Public-Playground-Bloom-Restroom-Sol98BBE1AB-0E68-4D24-95FE-3CE5FF229C23", "lat": 40.7898, "lng": -73.9687, "accessibility": "unknown", "comment": "Columbus Avenue, West 91 to West 92 Streets, Central Park West" },
+    { "name": "The Great Hill Public Restroom", "id": "Public-Great-Restroom-The-Hill5C4A7C27-86BA-41B7-974E-87353E5B0391", "lat": 40.7973, "lng": -73.9591, "accessibility": "unknown", "comment": "West Side from 103rd to 107th Streets" },
+    { "name": "Ellington in the Park", "id": "in-Park-the-EllingtonCB62EB9A-92A9-430C-9910-826FF5ED3565", "lat": 40.8026, "lng": -73.9719, "accessibility": "unknown", "comment": "Riverside Dr & W 105th St" },
+    { "name": "Garibaldi Playground Public Restroom", "id": "Restroom-Garibaldi-Public-Playground892B8629-78B2-4174-9E34-A22461E89B99", "lat": 40.6089, "lng": -74.0, "accessibility": "unknown", "comment": "82 to 83 Street at 18 Avenue" },
+    { "name": "Austin J. McDonald Playground Public Restroom", "id": "Restroom-Public-McDonald-J.-Austin-Playground7B367F3D-EFAD-4B3F-A40C-F46973AB019B", "lat": 40.6295, "lng": -74.1151, "accessibility": "unknown", "comment": "Forest Avenue, Myrtle Avenue between Broadway & Burgher" },
+    { "name": "Great Kills Park-New Dorp Beach Modular Public Restroom - Men's", "id": "Restroom-Men's-Park-New-Great-Kills-Dorp-Public-Beach---ModularECC4D9F4-C0F0-45E1-956C-4054401FE2DB", "lat": 40.5586, "lng": -74.1024, "accessibility": "unknown", "comment": "Prefab CS near beach, North structure" },
+    { "name": "Bushwick Playground Public Restroom", "id": "Restroom-Bushwick-Playground-PublicCF59F3AA-A84F-4DD2-8034-49EE73275A4E", "lat": 40.6961, "lng": -73.912, "accessibility": "unknown", "comment": "Knickerbocker Ave between Putnam Ave & Woodbine St" },
+    { "name": "Bushwick Playground Public Restroom", "id": "Restroom-Public-Playground-BushwickCD280C69-D8F7-4DF7-B047-702B7CE07E94", "lat": 40.7017, "lng": -73.9395, "accessibility": "unknown", "comment": "Flushing Avenue, Bushwick Avenue & Humboldt Street" },
+    { "name": "Sgt. William Dougherty Playground Public Restroom", "id": "Sgt.-Restroom-Dougherty-Public-Playground-William0A3476A9-C0F0-430C-ACD8-5291677CB854", "lat": 40.7235, "lng": -73.937, "accessibility": "unknown", "comment": "Anthony St. & Vandervoort Ave." },
+    { "name": "Riverside Clay Tennis Courts Public Restroom", "id": "Public-Clay-Tennis-Riverside-Restroom-Courts00144C64-B773-44B2-B5D8-B82F0EDF7B03", "lat": 40.8113, "lng": -73.9657, "accessibility": "unknown", "comment": "96th Street at the river" },
+    { "name": "Tompkins Square Park Public Restroom", "id": "Public-Square-Restroom-Park-Tompkins109A35AA-8236-4BC0-AEFC-B0148FE2DCFD", "lat": 40.7268, "lng": -73.9814, "accessibility": "unknown", "comment": "Avenues A to B, East 7 to East 10 Streets" },
+    { "name": "Chester Playground Public Restroom", "id": "Public-Playground-Restroom-ChesterFDABE913-420B-42F9-8C73-67F460AEBE9C", "lat": 40.669, "lng": -73.9119, "accessibility": "unknown", "comment": "Chester Street, Sutter Avenue" },
+    { "name": "Corlears Hook Park Public Restroom", "id": "Public-Corlears-Park-Restroom-HookC65A9BB1-D407-4432-B585-DEFD9118BBCB", "lat": 40.7117, "lng": -73.9798, "accessibility": "unknown", "comment": "Cherry St. & Jackson St." },
+    { "name": "McDonald Playground Public Restroom", "id": "Restroom-McDonald-Public-PlaygroundE3BFABBE-6CC1-4E90-A988-7F192725037C", "lat": 40.6011, "lng": -73.9722, "accessibility": "unknown", "comment": "McDonald Avenue, between Avenues S & T" },
+    { "name": "Redfern Playground Public Restroom", "id": "Playground-Redfern-Public-RestroomCB8B0DD0-6BCA-44D8-BB38-FC1C3A110E7A", "lat": 40.611, "lng": -73.7491, "accessibility": "unknown", "comment": "B 12 Street & Redfern Avenue" },
+    { "name": "Columbus Park Playground Public Restroom", "id": "Park-Columbus-Restroom-Public-PlaygroundB5A7BA81-F0A6-4AC2-A0DD-1A83969EA4C1", "lat": 40.7149, "lng": -74.0001, "accessibility": "unknown", "comment": "Mid-Park between Baxter and Mulberry Streets" },
+    { "name": "Downing Street Playground Public Restroom", "id": "Public-Restroom-Street-Playground-Downing849CDA51-2093-4E47-8A24-E9B862B4FCDA", "lat": 40.73, "lng": -74.0029, "accessibility": "unknown", "comment": "Downing to Carmine Streets, Avenue of the Americas" },
+    { "name": "Rudd Playground Public Restroom", "id": "Restroom-Public-Rudd-PlaygroundE7BD1247-5AD7-43BD-8300-4914BC4887B6", "lat": 40.6833, "lng": -73.905, "accessibility": "unknown", "comment": "Aberdeen Street & Bushwick Avenue" },
+    { "name": "Conservatory Garden Men's Public Restroom", "id": "Garden-Conservatory-Restroom-Men's-PublicA21558BE-0353-4D0F-B7C6-5C690FDC4F2A", "lat": 40.7937, "lng": -73.9531, "accessibility": "unknown", "comment": "5th Avenue, 103rd Street to 106th Street" },
+    { "name": "Hilton White Playground Public Restroom", "id": "White-Public-Restroom-Hilton-Playground776CD59B-3A88-4A97-B977-3DB972B41821", "lat": 40.8229, "lng": -73.9075, "accessibility": "unknown", "comment": "Caldwell Avenue, East 163 Street, East 161 Street" },
+    { "name": "Astoria Park Field House", "id": "Field-Park-Astoria-HouseE32D1447-36BC-4BDE-980F-F7CBD03EEAA6", "lat": 40.7759, "lng": -73.9252, "accessibility": "unknown", "comment": "Near the track and tennis courts at Astoria Park South and 18th Street" },
+    { "name": "Roy Wilkins Playground Public Restroom", "id": "Restroom-Wilkins-Roy-Playground-Public3246A644-DE2A-4052-9C93-D06B8BF7A7D6", "lat": 40.6857, "lng": -73.7701, "accessibility": "unknown", "comment": "Enter at Baisley Blvd. & 177th St." },
+    { "name": "Newport Playground Public Restroom", "id": "Restroom-Playground-Newport-Public23D8097F-3733-4D9F-8A53-25B66A1286B6", "lat": 40.6609, "lng": -73.9069, "accessibility": "unknown", "comment": "Newport Avenue & Osborn Street" },
+    { "name": "Corporal John A. Seravalli Playground Public Restroom", "id": "Corporal-Restroom-Seravalli-A.-John-Playground-Public7520832B-D89D-45EA-9987-2A93589F0852", "lat": 40.7389, "lng": -74.0047, "accessibility": "unknown", "comment": "Hudson & Horatio Streets" },
+    { "name": "Jackson Pond Playground Public Restroom", "id": "Restroom-Playground-Public-Jackson-Pond0591B16B-A768-4AB0-9D6C-06693DD1D76B", "lat": 40.7011, "lng": -73.843, "accessibility": "unknown", "comment": "108 Street and Park Lane South" },
+    { "name": "Devoe Park Public Restroom", "id": "Public-Restroom-Devoe-ParkDF589F65-A744-44CA-8B39-658365A3B6CB", "lat": 40.8637, "lng": -73.9049, "accessibility": "unknown", "comment": "West Fordham Road, University Avenue, Sedgwick Avenue, Father Zeiser Place" },
+    { "name": "Nautilus Playground Public Restroom", "id": "Playground-Nautilus-Restroom-PublicB750E147-5860-4C17-9135-C6447DF32DCB", "lat": 40.5717, "lng": -73.9959, "accessibility": "unknown", "comment": "West 30 Street at Boardwalk" },
+    { "name": "Dr. Green Playground Public Restroom", "id": "Restroom-Green-Dr.-Public-PlaygroundBE9ACD0B-D258-44AC-8D15-168137BD3A89", "lat": 40.6674, "lng": -73.9074, "accessibility": "unknown", "comment": "Mother Gaston Boulevard (Stone Avenue) & Sutter Avenues" },
+    { "name": "Haggerty Park Public Restroom", "id": "Park-Public-Haggerty-Restroom6E1CBC96-47A3-48E2-ABCA-9538D7B76745", "lat": 40.7131, "lng": -73.7581, "accessibility": "unknown", "comment": "202 Street & Jamaica Avenue" },
+    { "name": "Herbert Von King Cultural Arts Center", "id": "Arts-King-Herbert-Von-Cultural-Center823E36B5-9579-4948-8BA2-6390A4EB6378", "lat": 40.6898, "lng": -73.9465, "accessibility": "unknown", "comment": "Greene, Marcy, Lafayette, Tompkins Avenues" },
+    { "name": "4th Avenue Entrance Public Restroom", "id": "4th-Restroom-Avenue-Entrance-PublicB416FC95-4CC2-448C-A5FA-D9FDC50F3318", "lat": 40.612, "lng": -74.0357, "accessibility": "unknown", "comment": "Shore Road between 3rd Ave. & 4th Ave." },
+    { "name": "Wards Meadow Fields Public Restroom", "id": "Restroom-Fields-Meadow-Public-Wards8591117A-5C39-4273-8A48-D153148EEA56", "lat": 40.7831, "lng": -73.9308, "accessibility": "unknown", "comment": "Wards Meadow Loop, near Field 71" },
+    { "name": "227th Street Playground Public Restroom", "id": "227th-Street-Restroom-Playground-Public798BD183-AD2A-4B04-8511-C4DD0B035A9E", "lat": 40.8908, "lng": -73.8641, "accessibility": "unknown", "comment": "Bronx Boulevard between East 226 and East 228 Streets" },
+    { "name": "Wayanda Park Public Restroom", "id": "Public-Restroom-Wayanda-ParkF42F3FDC-731C-43BF-A0A0-06A45CEB1792", "lat": 40.7109, "lng": -73.739, "accessibility": "unknown", "comment": "Robard Lane & 217 Street" },
+    { "name": "Willis Playground Public Restroom", "id": "Playground-Restroom-Public-WillisFD23363A-84E5-45A9-B2FB-BAD3365EC1C2", "lat": 40.8113, "lng": -73.9227, "accessibility": "unknown", "comment": "East 139 Street, East 140 Street, Willis & Alexander Avenues" },
+    { "name": "Sumner Playground Public Restroom", "id": "Restroom-Playground-Sumner-Public2838AFC7-0AC6-477D-8E55-D379008596F5", "lat": 40.6971, "lng": -73.9428, "accessibility": "unknown", "comment": "Throop, Park, Mytrle Avenues" },
+    { "name": "Sheep Meadow at Mineral Springs Pavilion", "id": "Sheep-Springs-Meadow-Pavilion-Mineral-at1DD800AE-3CFF-44B1-B750-C921263008BD", "lat": 40.773, "lng": -73.9744, "accessibility": "unknown", "comment": "Mid-park at 69th Street" },
+    { "name": "Challenge Playground Public Restroom", "id": "Restroom-Public-Challenge-Playground85F9C060-1DC2-45E9-AA5D-73F11904E40D", "lat": 40.7569, "lng": -73.7281, "accessibility": "unknown", "comment": "251 Street & 63 Avenue" },
+    { "name": "Midland Beach Lot 8 Modular Public Restroom - Men's", "id": "Men's-Midland-Restroom-Lot-Public-8---Modular-Beach6145BE58-4E9D-4081-A8BE-206611BF6AF7", "lat": 40.5724, "lng": -74.086, "accessibility": "unknown", "comment": "Father Capodonno Blvd at Hunter Avenue" },
+    { "name": "Midland Beach Lot 8 Modular Public Restroom - Women's", "id": "Modular---Women's-Public-8-Lot-Restroom-Beach-Midland54CC85E6-8513-42C7-ACD6-61F84E2EEDDD", "lat": 40.5725, "lng": -74.0859, "accessibility": "unknown", "comment": "FR Capodanno Blvd at Hunter Avenue" },
+    { "name": "McLaughlin Park Public Restroom", "id": "Restroom-Park-Public-McLaughlin4CF41AB7-0AAB-4A44-A960-7A25DCDED79B", "lat": 40.6967, "lng": -73.986, "accessibility": "unknown", "comment": "Tillary Street, Jay Street, Cathedral Place, Bridge Street" },
+    { "name": "St. Nicholas Playground at West 129th St. Public Restroom", "id": "St.-St.-at-Nicholas-129th-West-Public-Playground-Restroom06679F67-5D62-47C7-BE8A-EC9D325462F1", "lat": 40.8137, "lng": -73.9509, "accessibility": "unknown", "comment": "St. Nicholas Terrace and West 129th Street" },
+    { "name": "Underwood Park Public Restroom", "id": "Park-Underwood-Public-RestroomCF80D306-5213-4447-832C-5CB0BA605206", "lat": 40.6886, "lng": -73.9667, "accessibility": "unknown", "comment": "Lafayette & Waverly Avenues" },
+    { "name": "P.S. 133 / Moore Playground Public Restroom", "id": "Moore-133-/-Restroom-P.S.-Playground-Public4452E199-A292-4EE4-BE0F-0D01AF41740E", "lat": 40.8097, "lng": -73.9392, "accessibility": "unknown", "comment": "Madison Ave. between E. 130 St. and E. 131 St." },
+    { "name": "Payson Nature Center", "id": "Payson-Nature-Center56EE9604-7972-45F4-AAD8-9C752408CCA3", "lat": 40.8674, "lng": -73.9291, "accessibility": "unknown", "comment": "Gaelic Field and Area around Salt Marsh West of Indian Road (at 218th Street)" },
+    { "name": "Bedford Playground Public Restroom", "id": "Playground-Public-Bedford-Restroom1B0B6538-D9EE-4D3B-9CBC-A70FB4FA3F66", "lat": 40.7081, "lng": -73.9641, "accessibility": "unknown", "comment": "Bedford Avenue & South 9 Street, Division Avenue" },
+    { "name": "Ten Eyck Playground Public Restroom", "id": "Playground-Eyck-Ten-Public-RestroomF46978CF-914A-41CB-9210-757F27C3F5AA", "lat": 40.709, "lng": -73.9389, "accessibility": "unknown", "comment": "Meserole St. & Bushwick Pl." },
+    { "name": "College Point Fields Public Restroom", "id": "Fields-Point-College-Restroom-PublicD234A409-22C2-471F-B151-9F11D2EC903D", "lat": 40.7758, "lng": -73.8373, "accessibility": "unknown", "comment": "130th Street & 23rd Avenue" },
+    { "name": "Dongan Playground Public Restroom", "id": "Restroom-Playground-Dongan-Public88B52825-E6B3-4B55-A718-79F1C3476417", "lat": 40.5828, "lng": -74.0898, "accessibility": "unknown", "comment": "Mason Ave. between Buel Ave. and Dongan Hills Ave." },
+    { "name": "L/CPL Thomas P. Noonan Jr. Playground Public Restroom", "id": "Public-Jr.-P.-Restroom-L/CPL-Thomas-Playground-Noonan61AE7BE1-8458-4AF5-B105-9B9547E75B1A", "lat": 40.7411, "lng": -73.9224, "accessibility": "unknown", "comment": "Greenpoint & 47 Avenues, 43 Street" },
+    { "name": "Angelo Campanaro Playground Public Restroom", "id": "Angelo-Playground-Restroom-Campanaro-PublicB4C8F319-4B21-40B2-BE90-749B9D7CED93", "lat": 40.8679, "lng": -73.8424, "accessibility": "unknown", "comment": "Eastchester Rd., E. Gun Hill Rd., and Arrow Ave." },
+    { "name": "Big Bush Playground Public Restroom", "id": "Bush-Restroom-Big-Playground-Public8A113C12-2A44-48C6-9C1C-2D09FC8FA802", "lat": 40.7402, "lng": -73.9027, "accessibility": "unknown", "comment": "61 Street, north and south of Brooklyn-Queens Expressway" },
+    { "name": "Rodney Playground South Public Restroom", "id": "Rodney-Restroom-Playground-South-PublicBEFD036D-B695-45D7-9417-0D4F1674C013", "lat": 40.7097, "lng": -73.9559, "accessibility": "unknown", "comment": "Rodney St. Between S. 3rd St. & S. 4th St." },
+    { "name": "Telephone Playground Public Restroom", "id": "Restroom-Playground-Telephone-PublicF2E2ACE5-2148-4EBA-9522-67ABCF538DF2", "lat": 40.7386, "lng": -73.7566, "accessibility": "unknown", "comment": "Bell Boulevard, 75 Avenue & 217 Street" },
+    { "name": "Rev J Polite Playground Public Restroom", "id": "Rev-Playground-Restroom-Polite-Public-J3F91C3DE-2FB1-4F86-8D29-A782BF3E0761", "lat": 40.8269, "lng": -73.8978, "accessibility": "unknown", "comment": "Rev. James Polite Avenue, Intervale Avenue, East 167 Street" },
+    { "name": "Indian Field Public Restroom", "id": "Field-Public-Indian-Restroom169408B2-16AB-4FD7-BCA4-06E085A29DC7", "lat": 40.8959, "lng": -73.879, "accessibility": "unknown", "comment": "East 233rd Street and Van Cortlandt Park East" },
+    { "name": "Parade Ground Public Restroom", "id": "Ground-Restroom-Public-ParadeB519725C-1226-43D0-8CC4-B9C8F38B46A6", "lat": 40.6508, "lng": -73.9682, "accessibility": "unknown", "comment": "Between Parkside Ave. & Caton Ave, and Rugby Rd. & Argyle Rd." },
+    { "name": "Peters Field Public Restroom", "id": "Restroom-Field-Peters-Public67C64DEF-310E-4B2D-98FC-00C75A3029F1", "lat": 40.7064, "lng": -73.7747, "accessibility": "unknown", "comment": "183 Place & Henderson Avenue" },
+    { "name": "Grove Hill Playground Public Restroom", "id": "Hill-Public-Grove-Playground-Restroom1C4CD158-4491-45E8-9E8A-01114B103554", "lat": 40.8199, "lng": -73.9085, "accessibility": "unknown", "comment": "East 158 Street, Caldwell Avenue, Eagle Avenue" },
+    { "name": "Stars & Stripes Playground Public Restroom", "id": "Public-&-Stripes-Stars-Playground-RestroomF0A590D5-07BA-4EE9-9316-DC5B2B64ACB1", "lat": 40.8856, "lng": -73.8392, "accessibility": "unknown", "comment": "Baychester Avenue, Crawford Avenue" },
+    { "name": "Greencroft Playground Public Restroom", "id": "Public-Restroom-Greencroft-PlaygroundC5A74081-F83C-4177-A8EA-9B55216F7DE3", "lat": 40.5521, "lng": -74.1361, "accessibility": "unknown", "comment": "Redgrave, Ainsworth & Durant Avenues" },
+    { "name": "John Golden Park Public Restroom", "id": "Public-John-Golden-Park-RestroomAFA5B58F-38DB-4162-A706-FC5E7062E98E", "lat": 40.7741, "lng": -73.7677, "accessibility": "unknown", "comment": "215 Place, south of 32 Avenue" },
+    { "name": "Astoria Heights Playground Public Restroom", "id": "Playground-Astoria-Heights-Restroom-PublicA3AA5242-35F3-45D1-AFB0-9A1C601105C5", "lat": 40.761, "lng": -73.9113, "accessibility": "unknown", "comment": "30 Road, 45 to 46 Streets" },
+    { "name": "High Rock Visitors Center", "id": "High-Center-Visitors-RockC35C5022-E5B2-4127-923E-E0E7BC22639F", "lat": 40.5828, "lng": -74.1225, "accessibility": "unknown", "comment": "Paw Trail & Red Dot Trail" },
+    { "name": "Morningside Playground Public Restroom", "id": "Morningside-Restroom-Playground-Public35FD21AE-5B30-4A0B-85B2-8806E6263046", "lat": 40.8068, "lng": -73.9578, "accessibility": "unknown", "comment": "West 117th Street & Morningside Avenue" },
+    { "name": "Levy Playground Field House", "id": "Playground-Field-House-Levy3306BBE3-7236-4EAD-9EAE-81BD5A348D4B", "lat": 40.6338, "lng": -74.1291, "accessibility": "unknown", "comment": "Jewett & Castleton Avenues" },
+    { "name": "Mount Prospect Park Public Restroom", "id": "Mount-Park-Prospect-Public-Restroom703995E0-012E-4127-B4A6-57D54498E617", "lat": 40.6721, "lng": -73.9659, "accessibility": "unknown", "comment": "Eastern Parkway, Underhill Avenue" },
+    { "name": "Parque De Los Ninos Public Restroom", "id": "Los-De-Ninos-Public-Parque-Restroom792F2185-86FD-4FF5-95E9-F5A74CA139EA", "lat": 40.8271, "lng": -73.8737, "accessibility": "unknown", "comment": "Morrison Avenue & Watson Street" },
+    { "name": "Forest Parkway Tennis House Public Restroom", "id": "House-Restroom-Public-Forest-Parkway-Tennis2216DFAC-614F-4C9F-B177-2BF1D5D127C5", "lat": 40.6972, "lng": -73.8581, "accessibility": "unknown", "comment": "Park Lane South to north of tennis courts" },
+    { "name": "Luna Playground Public Restroom", "id": "Restroom-Public-Luna-Playground50B7450E-9D4C-4123-B6CB-5C9A33D7AAAC", "lat": 40.5761, "lng": -73.9788, "accessibility": "unknown", "comment": "W. 12th St. & Surf Ave." },
+    { "name": "St. John's Park Public Restroom", "id": "Public-Restroom-Park-John's-St.37E9771F-2814-4C43-B2D8-E32FE7AA8660", "lat": 40.6738, "lng": -73.9353, "accessibility": "unknown", "comment": "1251 Prospect Place" },
+    { "name": "Alexander Hamilton Playground Public Restroom", "id": "Playground-Hamilton-Restroom-Alexander-PublicE8BF9A1B-6E8E-4076-BCCB-2AE08F37D541", "lat": 40.823, "lng": -73.9511, "accessibility": "unknown", "comment": "Hamilton Place, West 140 to West 141 Streets" },
+    { "name": "West 16th Street Public Restroom", "id": "Public-Restroom-Street-West-16thBE4017F4-B240-4747-831A-67A9323D6367", "lat": 40.5726, "lng": -73.9831, "accessibility": "unknown", "comment": "Boardwalk at West 16th Street" },
+    { "name": "Sutphin Playground Public Restroom", "id": "Sutphin-Playground-Restroom-Public041E255A-A5EF-4906-BD6C-83FD57A275AA", "lat": 40.6746, "lng": -73.7878, "accessibility": "unknown", "comment": "Sutphin Blvd & 125 Avenue" },
+    { "name": "Prospect Park-Lookout Hill-Wellhouse", "id": "Prospect-Hill-Wellhouse-Park-LookoutB852B092-FEEC-47CA-B62E-C7140ACFB7BE", "lat": 40.6569, "lng": -73.9704, "accessibility": "unknown", "comment": "" },
+    { "name": "Slattery Playground Public Restroom", "id": "Public-Slattery-Playground-Restroom082AFE25-A2D0-410B-8CE6-6EF4FF64F834", "lat": 40.8571, "lng": -73.8982, "accessibility": "unknown", "comment": "East 183 Street, Ryer Avenue, Valentine Avenue" },
+    { "name": "Bayview Playground Public Restroom", "id": "Public-Bayview-Restroom-PlaygroundB8672175-ED57-4A5A-BDE5-D7F3779934C9", "lat": 40.6349, "lng": -73.8872, "accessibility": "unknown", "comment": "Seaview Avenue & East 99 Street" },
+    { "name": "Triassic Playground Public Restroom", "id": "Public-Restroom-Triassic-Playground1AC851DD-C026-4903-8738-16407696D165", "lat": 40.73, "lng": -73.8351, "accessibility": "unknown", "comment": "Jewel Ave. & Van Wyck Expwy." },
+    { "name": "Isham St. Entrance Public Restroom", "id": "St.-Entrance-Public-Restroom-IshamDAE9AFDE-D2BF-40D3-82FD-F8BB812803EF", "lat": 40.8703, "lng": -73.9214, "accessibility": "unknown", "comment": "Seaman Ave. & Isham St." },
+    { "name": "Dyker Beach Park-District HQ", "id": "Park-District-Dyker-HQ-Beach1CD56AC1-10C2-40AA-907A-5C02C95F5C3A", "lat": 40.6057, "lng": -74.0178, "accessibility": "unknown", "comment": "Bay 8th Street & Independence Ave." },
+    { "name": "Woodlawn Playground Public Restroom", "id": "Public-Playground-Restroom-WoodlawnA7754F87-9E48-42D6-9AA9-2BDFFA16F05A", "lat": 40.8999, "lng": -73.8722, "accessibility": "unknown", "comment": "West 239 Street & Van Cortlandt East" },
+    { "name": "Betsy Head Park Public Restroom", "id": "Public-Betsy-Restroom-Park-Head4F032C1D-C52F-445C-A254-7019DA6E2280", "lat": 40.6619, "lng": -73.9144, "accessibility": "unknown", "comment": "Livonia Ave & Strauss St" },
+    { "name": "Virginia Playground Public Restroom", "id": "Virginia-Public-Playground-Restroom7166ECA1-409B-4BF1-A021-E936C7DB97E7", "lat": 40.8343, "lng": -73.8622, "accessibility": "unknown", "comment": "Virginia Avenue, McGraw Avenue, Cross Bronx Expressway, White Plains Road" },
+    { "name": "Morningside Park Ball Fields Public Restroom", "id": "Fields-Public-Morningside-Park-Restroom-Ball8A26144E-A1B6-4DF7-B806-BBE4B93CFD33", "lat": 40.8025, "lng": -73.959, "accessibility": "unknown", "comment": "West 112th Street & Manhattan Avenue" },
+    { "name": "Green Central Knoll Public Restroom", "id": "Public-Green-Knoll-Restroom-Central28EE1C27-E543-4EC3-A39C-5FFB450A4A9C", "lat": 40.7021, "lng": -73.9335, "accessibility": "unknown", "comment": "49 Evergreen Avenue" },
+    { "name": "Conservatory Garden Women's Public Restroom", "id": "Conservatory-Women's-Public-Restroom-GardenFD4F9F3D-6D6C-42BA-8756-755668916BE3", "lat": 40.7942, "lng": -73.9527, "accessibility": "unknown", "comment": "5th Avenue, 103rd Street to 106th Street" },
+    { "name": "Riverbend Playground Public Restroom", "id": "Riverbend-Public-Playground-RestroomD7335F5B-9619-42B5-9481-067EAF936032", "lat": 40.8719, "lng": -73.906, "accessibility": "unknown", "comment": "Bailey Avenue, West Kingsbridge Road" },
+    { "name": "Ditmars Playground Public Restroom", "id": "Public-Ditmars-Restroom-PlaygroundD48F7755-6974-4064-825C-D219ED479AB7", "lat": 40.7716, "lng": -73.9073, "accessibility": "unknown", "comment": "23 Avenue to Ditmars Boulevard" },
+    { "name": "Soundview Park Playground Public Restroom", "id": "Restroom-Park-Soundview-Playground-Public77FB2225-9C64-46DC-AE8B-CC52634AD231", "lat": 40.818, "lng": -73.8704, "accessibility": "unknown", "comment": "Metcalf Avenue between Seward and Randall Avenues" },
+    { "name": "High Rock Park Men's Public Restroom", "id": "Restroom-Rock-Men's-Park-High-Public1F0C1A2E-2AEF-4251-8815-C153D0CD5664", "lat": 40.5828, "lng": -74.1232, "accessibility": "unknown", "comment": "Paw Trail near Blue Trail" },
+    { "name": "Rev. Dr. Maggie Howard Playground Public Restroom", "id": "Restroom-Dr.-Howard-Playground-Maggie-Rev.-PublicB59906DB-7D8B-4B5C-B632-5EC1755B2C1E", "lat": 40.6227, "lng": -74.0792, "accessibility": "unknown", "comment": "Tompkins Avenue & Broad Street" },
+    { "name": "Lozada Playground Public Restroom", "id": "Restroom-Lozada-Public-Playground7199235F-AD52-4069-A02F-762EF7BE9B84", "lat": 40.8078, "lng": -73.9251, "accessibility": "unknown", "comment": "East 135 Street, Willis Avenue, Alexander Avenue" },
+    { "name": "Playground Seventy Five Public Restroom", "id": "Playground-Seventy-Public-Five-Restroom4EA0C672-4619-42AB-AD61-C792383F0B1D", "lat": 40.7264, "lng": -73.8084, "accessibility": "unknown", "comment": "160 Street & 75 Avenue" },
+    { "name": "Watson Gleason Playground Public Restroom", "id": "Public-Playground-Gleason-Watson-Restroom8E021319-726B-4AB2-9398-EE4708207B6A", "lat": 40.829, "lng": -73.8691, "accessibility": "unknown", "comment": "Gleason Avenue, Rosedale Avenue, Watson Avenue, Nobel Avenue" },
+    { "name": "Eleanor Roosevelt Playground Public Restroom", "id": "Playground-Eleanor-Roosevelt-Restroom-Public770DFAC3-F1C5-4BE6-A612-6C000BB2D570", "lat": 40.6927, "lng": -73.9358, "accessibility": "unknown", "comment": "Lewis & DeKalb Avenues" },
+    { "name": "Maria Hernandez Park Public Restroom", "id": "Public-Restroom-Park-Hernandez-Maria1C74B488-4EEA-4BF6-99A5-0A62DA5C3B80", "lat": 40.703, "lng": -73.924, "accessibility": "unknown", "comment": "Knickerbocker to Irving Avenues, Starr to Suydam Streets" },
+    { "name": "La Guardia Playground Public Restroom", "id": "La-Restroom-Public-Playground-GuardiaB330C828-D266-4D14-AC66-A9EF450778F7", "lat": 40.7106, "lng": -73.9598, "accessibility": "unknown", "comment": "Havemeyer, Roebling Streets & South 4" },
+    { "name": "Torsney Playground Public Restroom", "id": "Torsney-Restroom-Public-Playground08FB5059-90C6-44A3-8C4C-01ECB61EDF7D", "lat": 40.7473, "lng": -73.922, "accessibility": "unknown", "comment": "Skillman Avenue & 43 Street" },
+    { "name": "Markham Playground Public Restroom", "id": "Restroom-Playground-Markham-PublicCF24C5B2-E176-4923-9593-4DBF81EB793F", "lat": 40.6231, "lng": -74.1463, "accessibility": "unknown", "comment": "Willowbrook Parkway, Forest Avenue & Houston Street" },
+    { "name": "Upper Highland Playground Public Restroom", "id": "Public-Upper-Highland-Playground-Restroom1274054A-D972-4189-9282-DD366D45581C", "lat": 40.6832, "lng": -73.8929, "accessibility": "unknown", "comment": "Heath Pl & Highland Blvd" },
+    { "name": "Vinmont Veteran Park Public Restroom", "id": "Restroom-Public-Vinmont-Veteran-ParkD89F4F65-0E2A-4D5B-9284-58239ABB0DC1", "lat": 40.9021, "lng": -73.9049, "accessibility": "unknown", "comment": "Mosholu Avenue, West 254 Street, Riverdale Avenue, West 256 Street" },
+    { "name": "Bath Beach Park Public Restroom", "id": "Park-Restroom-Public-Beach-BathE15F8EAF-EDAE-4E05-887D-B5AEB62D08DB", "lat": 40.6023, "lng": -74.0116, "accessibility": "unknown", "comment": "Shore Pkwy. bet. Bay 14 St. and Bay 16 St." },
+    { "name": "Vernon Playground Public Restroom", "id": "Playground-Public-Restroom-VernonE6EC7514-3DE8-46D9-8181-E63E33AC3769", "lat": 40.757, "lng": -73.9474, "accessibility": "unknown", "comment": "21 Street, Bridge Plaza, Vernon Boulevard, East River" },
+    { "name": "Ferry Point Park West Public Restroom", "id": "West-Ferry-Restroom-Point-Park-Public8ECF7D44-DB35-4EAE-81A6-E8FFE2232F86", "lat": 40.812, "lng": -73.8386, "accessibility": "unknown", "comment": "mid-park, at Hutchinson River Parkway parking lot" },
+    { "name": "Space Time Playground Public Restroom", "id": "Playground-Time-Space-Public-RestroomF21204F0-C549-4DC0-BB12-B561B1F22E6A", "lat": 40.8221, "lng": -73.8599, "accessibility": "unknown", "comment": "Streetory Avenue, Bolton Avenue, Lafayette Avenue, Underhill Avenue" },
+    { "name": "Seton Park Public Restroom", "id": "Restroom-Seton-Public-ParkA526D4C6-933C-49F1-BE51-8B3FD044CA43", "lat": 40.8862, "lng": -73.9171, "accessibility": "unknown", "comment": "West 135 Street, Independence Avenue, West 232 Street" },
+    { "name": "Crotona Park Pool House", "id": "Park-Crotona-Pool-House6DE627DB-9CE9-4680-89F0-26204F3D43CA", "lat": 40.8405, "lng": -73.8978, "accessibility": "unknown", "comment": "1700 Fulton Avenue" },
+    { "name": "Kissena Park -Tennis Courts Public Restroom", "id": "Kissena--Tennis-Courts-Public-Restroom-Park1889B096-550B-4D2D-92D5-58246ABA4CC2", "lat": 40.7473, "lng": -73.8086, "accessibility": "unknown", "comment": "mid-Park, enter at Rose & Oak Avenues" },
+    { "name": "Bryant Park Public Restroom", "id": "Bryant-Park-Restroom-Public0F78A5C6-EC36-4E95-A71D-90F86F1F7D5C", "lat": 40.754, "lng": -73.9827, "accessibility": "unknown", "comment": "W. 42nd St. & Ave. of the Americas" },
+    { "name": "River Run Playground Public Restroom", "id": "River-Playground-Restroom-Public-Run093B2A33-589A-48FF-8184-318C92A2E104", "lat": 40.7873, "lng": -73.9821, "accessibility": "unknown", "comment": "83rd Street near Riverside Drive" },
+    { "name": "Colucci Playground Public Restroom", "id": "Restroom-Colucci-Playground-PublicA7D111A1-1FEC-461F-BFF1-8F44E5EE3F3C", "lat": 40.8525, "lng": -73.8347, "accessibility": "unknown", "comment": "Hutchinson River Parkway, Wilkinson Avenue, Mayflower Avenue" },
+    { "name": "Lannett Playground Public Restroom", "id": "Playground-Lannett-Restroom-PublicFE1AA14B-7EE3-42EE-935C-126B60B910FD", "lat": 40.5993, "lng": -73.7442, "accessibility": "unknown", "comment": "Lanett Ave. between Beach 8th St. & Beach 9th St." },
+    { "name": "Crocheron Park Public Restroom", "id": "Restroom-Public-Crocheron-Park7BD59124-715E-41AC-8F34-8E2449C122F6", "lat": 40.772, "lng": -73.7694, "accessibility": "unknown", "comment": "33rd Rd. & 215th Pl." },
+    { "name": "Poppenhusen Playground Public Restroom", "id": "Poppenhusen-Playground-Public-RestroomE76D76FF-5246-44EE-B56A-97B401ED7C62", "lat": 40.7814, "lng": -73.8445, "accessibility": "unknown", "comment": "20 Avenue between 123 & 124 Streets" },
+    { "name": "Houston St. Playground Public Restroom", "id": "Houston-Public-St.-Playground-RestroomF578035A-9DAC-4997-BB37-1CAA931FCD79", "lat": 40.7224, "lng": -73.9912, "accessibility": "unknown", "comment": "Stanton St. between Chrystie St. & Forsyth St." },
+    { "name": "Tennis House Public Restroom", "id": "Restroom-Public-House-Tennis17A1F07E-0CE6-458F-BF53-0E0B844B1191", "lat": 40.7894, "lng": -73.9619, "accessibility": "unknown", "comment": "West Side between 94th and 96th Streets near the West Drive" },
+    { "name": "Corporal Thompson Playground Public Restroom", "id": "Corporal-Playground-Public-Restroom-ThompsonA681205D-CCD9-4701-B9CA-28B60FC31514", "lat": 40.6385, "lng": -74.1179, "accessibility": "unknown", "comment": "Broadway, Henderson Avenue" },
+    { "name": "Bayside Fields Public Restroom", "id": "Restroom-Public-Bayside-Fields7160D03C-F171-4933-9228-AFC9E802F35C", "lat": 40.773, "lng": -73.785, "accessibility": "unknown", "comment": "204 Street & 29 Avenue, Clearview Expressway" },
+    { "name": "Golconda Playground  Public Restroom", "id": "Playground-Public-Golconda-Restroom691CAA54-8501-4BE1-8DD7-CF09D4EDC23D", "lat": 40.698, "lng": -73.9828, "accessibility": "unknown", "comment": "Gold St & Concord St" },
+    { "name": "Mathews-Palmer Playground Public Restroom", "id": "Public-Restroom-Mathews-Palmer-Playground6416F7CC-9BC8-423E-B940-A4E6D348D8CE", "lat": 40.7612, "lng": -73.9929, "accessibility": "unknown", "comment": "West 45 Street between 9 & 10 Avenues" },
+    { "name": "Laurelton West Playground Public Restroom", "id": "Playground-West-Public-Laurelton-Restroom7F7A9AF0-6F0B-4B85-B731-799E77C5503C", "lat": 40.685, "lng": -73.727, "accessibility": "unknown", "comment": "238th St. & 120th Ave." },
+    { "name": "Marc And Jason's Playground Public Restroom", "id": "Playground-Public-Restroom-And-Marc-Jason's66857BB9-0FC3-457C-80B9-37778D333F52", "lat": 40.6635, "lng": -73.9499, "accessibility": "unknown", "comment": "Sterling Street & Empire Boulevard" },
+    { "name": "Bowne Playground Public Restroom", "id": "Playground-Public-Restroom-Bowne31B89361-5563-4629-AA16-F996785F0B16", "lat": 40.758, "lng": -73.8247, "accessibility": "unknown", "comment": "Union Street and Sanford Avenue" },
+    { "name": "Bush Terminal Park Public Restroom", "id": "Public-Terminal-Park-Restroom-Bush5AABEA24-23E5-4169-99D6-B89DBF916FF5", "lat": 40.6533, "lng": -74.0192, "accessibility": "unknown", "comment": "Marginal St. & 43rd St" },
+    { "name": "Playground Sixty Two LXII Public Restroom", "id": "Restroom-LXII-Playground-Public-Two-Sixty6331CB76-C524-486E-AB94-C2C53CC56838", "lat": 40.7361, "lng": -73.8527, "accessibility": "unknown", "comment": "Yellowstone Boulevard between 62 Avenue & 62 Road" },
+    { "name": "Bennett Park Public Restroom", "id": "Restroom-Public-Bennett-ParkF0F0DD04-D0A7-480F-B475-D016FB0476AB", "lat": 40.8532, "lng": -73.938, "accessibility": "unknown", "comment": "West 185 Street, Ft Washington Avenue" },
+    { "name": "Seuffert Bandshell Public Restroom", "id": "Public-Bandshell-Restroom-Seuffert96443ED9-5608-45A2-9B57-B9CD48A57527", "lat": 40.6989, "lng": -73.8585, "accessibility": "unknown", "comment": "West Main Drive to eastern side of golf course" },
+    { "name": "Travers Park Public Restroom", "id": "Restroom-Public-Travers-Park6BFD4B4F-8692-4564-B07A-CEE1BD0307D8", "lat": 40.7544, "lng": -73.8895, "accessibility": "unknown", "comment": "78 Street, south of Northern Boulevard" },
+    { "name": "Slope Park Playground Public Restroom", "id": "Public-Restroom-Playground-Slope-ParkA4EA9293-2E08-4191-9C64-ACA9858EB5F5", "lat": 40.6613, "lng": -73.9893, "accessibility": "unknown", "comment": "6th Avenue Between 18th & 19th Sts" },
+    { "name": "Winthrop Playground Public Restroom", "id": "Playground-Winthrop-Restroom-Public0EE8005D-25E9-4FEE-91DB-8EA3704FE3C9", "lat": 40.6565, "lng": -73.9548, "accessibility": "unknown", "comment": "Winthrop St between Bedford Ave & Rogers Ave" },
+    { "name": "Bloomingdale Playground Public Restroom", "id": "Bloomingdale-Restroom-Public-Playground1C04B739-2020-4F51-9450-D4AD2D2A010D", "lat": 40.7994, "lng": -73.9662, "accessibility": "unknown", "comment": "Amsterdam Avenue, West 104 & West 105 Streets" },
+    { "name": "Bloomingdale Playground Public Restroom", "id": "Playground-Restroom-Public-BloomingdaleCB957655-3A6D-4F13-B8DA-AD128BB35512", "lat": 40.535, "lng": -74.2085, "accessibility": "unknown", "comment": "Richmond Pkwy, Bloomingdale Rd., Lenevar Ave" },
+    { "name": "Whitestone Playground Public Restroom", "id": "Whitestone-Public-Playground-Restroom5CFC2F71-A392-4633-ADB9-E85226B509B3", "lat": 40.7919, "lng": -73.8083, "accessibility": "unknown", "comment": "12 Avenue & 153 Street" },
+    { "name": "Charybdis Playground Public Restroom", "id": "Playground-Charybdis-Restroom-Public9856FA4A-D830-4015-95C4-5BC1E95D0565", "lat": 40.7796, "lng": -73.9227, "accessibility": "unknown", "comment": "Shore Boulevard opposite 23 Road" },
+    { "name": "Carmansville Playground Public Restroom", "id": "Playground-Restroom-Public-Carmansville5A2566E6-8786-4119-9C61-0D37A11358F7", "lat": 40.8291, "lng": -73.9443, "accessibility": "unknown", "comment": "Amsterdam Avenue, West 151 to West 152 Streets" },
+    { "name": "Little Flower Playground Public Restroom", "id": "Public-Restroom-Flower-Playground-LittleE08F9696-3EFD-44D9-ACAF-87C8D0A3746E", "lat": 40.7126, "lng": -73.9886, "accessibility": "unknown", "comment": "Madison Street opposite Jefferson Street" },
+    { "name": "Admiral Playground Public Restroom", "id": "Playground-Public-Restroom-Admiral82660E3A-1FB5-44CC-A253-EF265B8A4353", "lat": 40.7709, "lng": -73.7376, "accessibility": "unknown", "comment": "Little Neck Parkway, 42 to 43 Avenues" },
+    { "name": "Howard Von Dohlen Playground Public Restroom", "id": "Howard-Dohlen-Von-Public-Restroom-Playground0BDAE94E-367D-43AC-9748-B2339FD28BDD", "lat": 40.6996, "lng": -73.8131, "accessibility": "unknown", "comment": "Howard Von Dohlen Playground" },
+    { "name": "Cunningham Park Fields Public Restroom", "id": "Fields-Park-Cunningham-Restroom-Public59538139-4F40-4958-8209-12E1DFA1EDBB", "lat": 40.7366, "lng": -73.7707, "accessibility": "unknown", "comment": "mid-Park on 73rd Ave. near Fields 15 and 16" },
+    { "name": "Juniper Valley Park Running Track Public Restroom", "id": "Valley-Running-Restroom-Park-Track-Public-Juniper153FD433-A804-4009-B661-CCEF8B5B07FE", "lat": 40.7188, "lng": -73.8846, "accessibility": "unknown", "comment": "Enter at 71st Street and Juniper Blvd. South" },
+    { "name": "Lincoln Road Playground Public Restroom", "id": "Playground-Restroom-Road-Public-Lincoln867514A2-BB59-44B7-BCEE-04C94880C4BA", "lat": 40.6605, "lng": -73.9636, "accessibility": "unknown", "comment": "Lincoln Rd. & Ocean Ave." },
+    { "name": "Claremont Park North Public Restroom", "id": "North-Restroom-Claremont-Public-Park64FFDF5B-775B-4780-9AFD-65A9C5C5326A", "lat": 40.8415, "lng": -73.9068, "accessibility": "unknown", "comment": "mid-park, E. Mt. Eden Ave between Monroe Ave & Topping Ave" },
+    { "name": "Catbird Playground Public Restroom", "id": "Restroom-Public-Playground-CatbirdCC686C6E-07A5-4CBB-9ACD-299BC84F189D", "lat": 40.7736, "lng": -73.945, "accessibility": "unknown", "comment": "Gracie Square & East End Avenue" },
+    { "name": "Lincoln Terrace Park / Arthur S. Somers Park Public Restroom", "id": "Restroom-Lincoln-S.-Arthur-Somers-Park-Park-/-Terrace-PublicE21C8D36-720A-4676-920B-0E7A03D775F4", "lat": 40.6664, "lng": -73.9276, "accessibility": "unknown", "comment": "Rochester Avenue between President Street and Carroll Street" },
+    { "name": "Police Officer Nicholas Demutiis Park Public Restroom", "id": "Demutiis-Park-Public-Police-Nicholas-Restroom-OfficerEE0D41A1-8122-45F3-BE9A-750542F2AA2E", "lat": 40.6818, "lng": -73.8397, "accessibility": "unknown", "comment": "102 Street & Liberty Avenue" },
+    { "name": "E.M.T. Christopher J. Prescott Playground Public Restroom", "id": "Prescott-Christopher-Public-E.M.T.-J.-Restroom-Playground7CC0A8BF-D9C9-46F0-9C80-C2E246BB01A5", "lat": 40.5225, "lng": -74.1858, "accessibility": "unknown", "comment": "Hylan Boulevard & Huguenot Avenue" },
+    { "name": "Dyker Playground Public Restroom", "id": "Dyker-Playground-Public-Restroom8F8CA005-5EBE-4E49-93D8-8D6B100C2D66", "lat": 40.6131, "lng": -74.0132, "accessibility": "unknown", "comment": "86th Street & 14th Avenue" },
+    { "name": "East Springfield Playground Public Restroom", "id": "East-Restroom-Public-Springfield-Playground36D5E0EF-C12E-4215-B75C-B0078BE64C4E", "lat": 40.6987, "lng": -73.7399, "accessibility": "unknown", "comment": "115 Road between 218 & 219 Streets" },
+    { "name": "Seba Playground Public Restroom", "id": "Playground-Restroom-Public-SebaE2EC1C53-2A3F-4E32-B5B0-8CDA1DE95524", "lat": 40.5896, "lng": -73.921, "accessibility": "unknown", "comment": "Gerritsen Ave. & Seba Ave." },
+    { "name": "Gorman Playground Public Restroom", "id": "Gorman-Playground-Restroom-Public05626B38-4A72-42DE-A5D5-68E525AF3BCE", "lat": 40.7619, "lng": -73.8842, "accessibility": "unknown", "comment": "30 Avenue between 84 & 85 Streets" },
+    { "name": "Columbus Park Pavilion", "id": "Park-Columbus-Pavilion0FC03202-8D2A-46F6-A9E8-8F2736A94268", "lat": 40.7159, "lng": -73.9998, "accessibility": "unknown", "comment": "Bayard Street between Baxter and Mulberry Streets" },
+    { "name": "Bay Terrace Playground Public Restroom", "id": "Bay-Playground-Terrace-Restroom-PublicC0AE2D25-C4D1-4419-ADC0-838C1EA2EAEF", "lat": 40.7824, "lng": -73.7773, "accessibility": "unknown", "comment": "23 Avenue & 212 Street" },
+    { "name": "Robert Moses Playground Public Restroom", "id": "Public-Playground-Moses-Robert-Restroom5BFF835B-2772-47E0-A01F-50DBE2FAADA8", "lat": 40.7481, "lng": -73.9687, "accessibility": "unknown", "comment": "1 Avenue, East 41 to East 42 Streets" },
+    { "name": "Louis Armstrong Playground Public Restroom", "id": "Armstrong-Louis-Public-Restroom-Playground95268B64-4094-41BF-8320-628ACD29124C", "lat": 40.7549, "lng": -73.8552, "accessibility": "unknown", "comment": "37 Avenue between 112 & 113 Streets" },
+    { "name": "Christopher J. Igneri Playground Public Restroom", "id": "Restroom-J.-Igneri-Public-Christopher-Playground8D45251F-3498-49E8-8D84-154EDB60C3AC", "lat": 40.6087, "lng": -74.1195, "accessibility": "unknown", "comment": "Schmidts Lane & Manor Road" },
+    { "name": "McCarren Park Play Center PR", "id": "Park-McCarren-PR-Center-Play4AE07E41-E7DD-4DEA-93CE-13847E1FB84D", "lat": 40.7208, "lng": -73.9501, "accessibility": "unknown", "comment": "McCarren Pool & Play Center" },
+    { "name": "Van Voorhees Playground Public Restroom", "id": "Voorhees-Restroom-Playground-Van-Public9E38119A-5519-4E6D-A011-2FD778F1B288", "lat": 40.6897, "lng": -73.9996, "accessibility": "unknown", "comment": "Congress, Columbia, West/South BQE" },
+    { "name": "Carl Schurz Promenade Public Restroom", "id": "Schurz-Public-Carl-Promenade-Restroom4C484EE2-B9C2-48C7-B392-0CCD09C4646F", "lat": 40.7757, "lng": -73.9439, "accessibility": "unknown", "comment": "East 87th Street & East End Avenue" },
+    { "name": "Rose Hill Park Public Restroom", "id": "Restroom-Rose-Public-Park-Hill7C7387C3-9A4E-4360-9053-D07B28744475", "lat": 40.8617, "lng": -73.8908, "accessibility": "unknown", "comment": "Webster Avenue, Harlem River, East Fordham Road" },
+    { "name": "Claremont Park South Public Restroom", "id": "South-Park-Claremont-Public-Restroom21EE3C25-7B22-4191-BD47-B3D7E2D99926", "lat": 40.8377, "lng": -73.908, "accessibility": "unknown", "comment": "Mount Eden Parkway & Morris Avenue" },
+    { "name": "Marie Curie Playground Public Restroom", "id": "Playground-Curie-Public-Marie-RestroomF148A790-7D6F-4C9A-88DF-D25C9B5EF3B1", "lat": 40.7571, "lng": -73.7715, "accessibility": "unknown", "comment": "211 & Oceana Streets, 46 Avenue" },
+    { "name": "Brower Park Public Restroom", "id": "Public-Brower-Park-RestroomAD8A16F0-670B-4663-AB9B-1FBF37241353", "lat": 40.6738, "lng": -73.9438, "accessibility": "unknown", "comment": "Brooklyn Ave & Prospect Pl" },
+    { "name": "Gouverneur Playground Public Restroom", "id": "Restroom-Public-Playground-Gouverneur8001B8B5-DDC3-455B-A4F6-7445C3E578DA", "lat": 40.8358, "lng": -73.9034, "accessibility": "unknown", "comment": "3rd Avenue, St. Paul's Place, East 170 Street" },
+    { "name": "Pelham Bay Nature Center", "id": "Center-Nature-Pelham-BayA64B29C9-9E87-45E1-AB8B-2E37C8B596C2", "lat": 40.8517, "lng": -73.8247, "accessibility": "unknown", "comment": "Bruckner Blvd. and Wilkinson Avenue" },
+    { "name": "Park Slope Playground Public Restroom", "id": "Public-Restroom-Playground-Park-SlopeD606A1E0-0703-4275-8B47-3A0964F17C72", "lat": 40.677, "lng": -73.9785, "accessibility": "unknown", "comment": "Berkeley Street & Lincoln Place" },
+    { "name": "French Charley's Playground Public Restroom", "id": "Restroom-Playground-French-Charley's-Public912250FC-9300-4A8F-8E62-E25613FA6CDE", "lat": 40.8695, "lng": -73.8766, "accessibility": "unknown", "comment": "East 204 Street & Webster Avenue entrance; south of playground" },
+    { "name": "Abigail Playground Public Restroom", "id": "Abigail-Public-Playground-Restroom6004D5B1-D86E-495B-B5F0-03592BD679B2", "lat": 40.8173, "lng": -73.9048, "accessibility": "unknown", "comment": "East 156 Street, Tinton Avenue" },
+    { "name": "Pelham Bay Park-ORCHARD BEACH/HQ", "id": "Park-ORCHARD-Bay-BEACH/HQ-PelhamE38141EC-5149-4928-9F5B-3BEE7F035561", "lat": 40.8663, "lng": -73.7947, "accessibility": "unknown", "comment": "Park Dr cul de sac, Orchard Beach " },
+    { "name": "Pomonok Playground Public Restroom", "id": "Restroom-Playground-Pomonok-PublicEA28ED9F-78AC-46A5-888A-9FC6EFC907AE", "lat": 40.7362, "lng": -73.8141, "accessibility": "unknown", "comment": "Kissena Boulevard, 65 Avenue" },
+    { "name": "Playground Eighty LXXX Public Restroom", "id": "Eighty-Public-Restroom-LXXX-Playground5A3A7304-091C-4A41-AE85-0555BE18ADEC", "lat": 40.7449, "lng": -73.7096, "accessibility": "unknown", "comment": "80th Ave. between 261st St. & 262nd. St." },
+    { "name": "Lily Brown Playground Public Restroom", "id": "Public-Lily-Playground-Restroom-Brown9B22806F-9485-4CED-9090-0A9408B108A6", "lat": 40.8389, "lng": -73.946, "accessibility": "unknown", "comment": "West 162 Street, east of Riverside Drive" },
+    { "name": "Jennifer's Playground Field House", "id": "Field-Jennifer's-House-PlaygroundB074EEBE-51A6-4BA3-B57F-08DC7C5D5186", "lat": 40.6203, "lng": -74.1635, "accessibility": "unknown", "comment": "Regis Dr between Farragut Ave & Elson Ct" },
+    { "name": "Alfred E. Smith Playground Public Restroom", "id": "E.-Alfred-Restroom-Smith-Public-PlaygroundE8EB1CC8-C20F-4920-91CE-56E04954E8FA", "lat": 40.711, "lng": -73.9974, "accessibility": "unknown", "comment": "Monroe Street & Catherine Street" },
+    { "name": "Fort Washington Park Dyckman St. Public Restroom", "id": "Fort-Restroom-Public-St.-Washington-Park-Dyckman8603386C-CB02-4A06-AC1F-E6165F25DE8A", "lat": 40.8685, "lng": -73.9313, "accessibility": "unknown", "comment": "338 Dyckman Street" },
+    { "name": "West 33rd Street Public Restroom", "id": "33rd-Restroom-Public-West-StreetD5EF82F8-5636-415D-8E25-BF7AD15FDA14", "lat": 40.5718, "lng": -73.9988, "accessibility": "unknown", "comment": "Boardwalk at West 33rd Street" },
+    { "name": "Alley Pond Park Public Restroom", "id": "Restroom-Pond-Alley-Public-ParkDD0177BA-581F-4FD4-962D-BD4AAC54D187", "lat": 40.7419, "lng": -73.74, "accessibility": "unknown", "comment": "Entrance off Grand Central Parkway, includes athletic fields and picnic areas" },
+    { "name": "Cary Leeds Tennis Center", "id": "Center-Cary-Tennis-LeedsE7D8814F-28D3-47A5-9D57-9A78AC48D194", "lat": 40.84, "lng": -73.8953, "accessibility": "unknown", "comment": "Crotona Avenue & Crotona Park North" },
+    { "name": "79th Street Entrance Public Restroom", "id": "Street-Public-Entrance-79th-Restroom9C31CCC7-2F4F-49A8-9164-302A6479EC5F", "lat": 40.6321, "lng": -74.0387, "accessibility": "unknown", "comment": "Shore Road & 78th Street" },
+    { "name": "River Park Playground Public Restroom", "id": "Park-River-Restroom-Public-PlaygroundE408451E-8A9A-48F2-9264-A012A545F854", "lat": 40.8432, "lng": -73.8773, "accessibility": "unknown", "comment": "East 180th Street, Boston Road" },
+    { "name": "Classic Playground Men", "id": "Playground-Men-Classic6B028EB6-DFB5-4DFC-9268-7FF6C3F9949A", "lat": 40.7833, "lng": -73.9867, "accessibility": "unknown", "comment": "Along Hudson River, b/w W 75th & W 76th St." },
+    { "name": "Sara D. Roosevelt Park Track Public Restroom", "id": "D.-Track-Park-Restroom-Sara-Roosevelt-Public1FABD11F-5AE6-4B96-86D4-84189A1C31E9", "lat": 40.7167, "lng": -73.9941, "accessibility": "unknown", "comment": "Hester Street between Forsyth St. & Christie St." },
+    { "name": "St. Michael's Playground Public Restroom", "id": "Restroom-Playground-Michael's-St.-PublicC703933D-7F57-4837-A31F-E94F6232A04C", "lat": 40.7583, "lng": -73.9003, "accessibility": "unknown", "comment": "30 - 31 Avenues, Boody Street and BQE" },
+    { "name": "Walter Gladwin Park Playground Public Restroom", "id": "Walter-Restroom-Gladwin-Public-Park-Playground0FA0E9A5-A5BF-458B-AA90-84C53CB11B7F", "lat": 40.8445, "lng": -73.8947, "accessibility": "unknown", "comment": "Corner of East 175 Street & Arthur Avenue" },
+    { "name": "Triborough Bridge Playground B Public Restroom", "id": "Restroom-Playground-Public-B-Bridge-TriboroughA112487D-C7CE-411A-B24E-0A03BC85A95F", "lat": 40.7747, "lng": -73.9235, "accessibility": "unknown", "comment": "Hoyt Avenue, 21 to 23 Streets" },
+    { "name": "Clark Playground Public Restroom", "id": "Public-Restroom-Playground-Clark04B80B9D-8622-4C27-9190-EBDB0066AE00", "lat": 40.814, "lng": -73.9212, "accessibility": "unknown", "comment": "3 Avenue, East 144 Street, East 146 Street" },
+    { "name": "Tall Oak Playground Public Restroom", "id": "Playground-Oak-Restroom-Tall-PublicBFD138DE-A1AF-4131-9DA6-170338C5690A", "lat": 40.7463, "lng": -73.7583, "accessibility": "unknown", "comment": "64 Avenue, 218 & 219 Streets" },
+    { "name": "South Of Fountain Of The Planets Public Restroom", "id": "Of-The-Public-Fountain-South-Restroom-Of-PlanetsEEE80892-96AC-4710-BFCB-1C560E9C4D7B", "lat": 40.7467, "lng": -73.8386, "accessibility": "unknown", "comment": "mid-Park, between Avenue of Commerce & Avenue of Progress" },
+    { "name": "Brian Watkins Tennis Center Public Restroom", "id": "Restroom-Tennis-Public-Watkins-Center-Brian3805AC90-439D-4CDB-8E74-CFAA40473D21", "lat": 40.7159, "lng": -73.9752, "accessibility": "unknown", "comment": "East River Park at Broome Street" },
+    { "name": "Vidalia Park Public Restroom", "id": "Public-Vidalia-Restroom-ParkD30346B3-1A27-46A3-9A97-C24166B5C0E0", "lat": 40.8441, "lng": -73.8814, "accessibility": "unknown", "comment": "Vyse & Daly Avenues between West 179-180 Streets" },
+    { "name": "Forest Park Visitor Center", "id": "Forest-Visitor-Center-Park145A2E52-A490-4173-ACAB-DB4D0E4342C6", "lat": 40.7007, "lng": -73.8552, "accessibility": "unknown", "comment": "Woodhaven Boulevard and Forest Park Drive" },
+    { "name": "Schmul Park Public Restroom", "id": "Schmul-Park-Public-Restroom0EE41E48-CAC7-4CFC-94FB-7C745395AD91", "lat": 40.5901, "lng": -74.1879, "accessibility": "unknown", "comment": "Wild Avenue, Pearson Street" },
+    { "name": "Greenpoint Playground Public Restroom", "id": "Public-Greenpoint-Restroom-Playground289D74E2-EDEB-4435-B204-6865B6460231", "lat": 40.7356, "lng": -73.9593, "accessibility": "unknown", "comment": "Franklin St. bet. Commercial St. and Dupont St." },
+    { "name": "J. Hood Wright Recreation Center", "id": "Wright-Hood-J.-Recreation-CenterC5D92FA5-4707-4004-9876-06966400199E", "lat": 40.8464, "lng": -73.9408, "accessibility": "unknown", "comment": "Ft. Washington & Haven Avenues, West 173 Street" },
+    { "name": "Clintonville Playground Public Restroom", "id": "Restroom-Public-Clintonville-PlaygroundBE745DE2-D71C-4E41-BFE1-685B34CF65CE", "lat": 40.783, "lng": -73.8068, "accessibility": "unknown", "comment": "Clintonville Street, 17 Road & 17 Avenue" },
+    { "name": "Sixteen Sycamores Playground Public Restroom", "id": "Sycamores-Playground-Sixteen-Public-Restroom3910CCB4-673A-407E-B53B-9DD88996E523", "lat": 40.6867, "lng": -73.981, "accessibility": "unknown", "comment": "Schermerhorn & Nevins Street" },
+    { "name": "Drew Playground Public Restroom", "id": "Drew-Playground-Restroom-Public500980A3-549C-492B-9E71-18368B86CB6B", "lat": 40.833, "lng": -73.9033, "accessibility": "unknown", "comment": "Fulton Avenue, East 169 Street" },
+    { "name": "Gen. Douglas MacArthur Park Public Restroom", "id": "Park-Douglas-Restroom-Gen.-MacArthur-Public24163E6B-580E-4712-81E6-9D78B0D96FF5", "lat": 40.5859, "lng": -74.1008, "accessibility": "unknown", "comment": "254 JEFFERSON STREET" },
+    { "name": "Jacob H. Schiff Playground Public Restroom", "id": "Jacob-Restroom-Schiff-H.-Public-PlaygroundCFBB1EEC-4BDE-4B99-8E35-A41F0F8FC2FE", "lat": 40.8204, "lng": -73.9521, "accessibility": "unknown", "comment": "Amsterdam Avenue, West 136 Street" },
+    { "name": "QueensBridge Park-Field House", "id": "Park-Field-QueensBridge-House7AF8EE96-2833-4CE1-AA4D-9AEA32D4830D", "lat": 40.7551, "lng": -73.9496, "accessibility": "unknown", "comment": "QueensBridge Park" },
+    { "name": "West 2nd Street Public Restroom", "id": "2nd-Public-West-Street-Restroom9CF7E40C-AEF5-4369-AB8D-DF69AA51C98B", "lat": 40.5743, "lng": -73.9716, "accessibility": "unknown", "comment": "" },
+    { "name": "Osborn Playground Public Restroom", "id": "Restroom-Playground-Osborn-Public0D937E80-2A73-419D-866C-38CF0A52E9F7", "lat": 40.6561, "lng": -73.9062, "accessibility": "unknown", "comment": "Linden Boulevard & Osborn Street" },
+    { "name": "Manhattan Beach Bathhouse Public Restroom", "id": "Public-Bathhouse-Manhattan-Beach-Restroom1BF60907-3948-4C8F-8737-AC9AAE4A331B", "lat": 40.577, "lng": -73.9441, "accessibility": "unknown", "comment": "Oriental Blvd. & Hastings St." },
+    { "name": "Soundview Park Dog Run Public Restroom", "id": "Run-Park-Public-Soundview-Restroom-Dog8C6A3C7B-616A-4B51-B1AA-9AA1947C4259", "lat": 40.8191, "lng": -73.8783, "accessibility": "unknown", "comment": "Lafayette Avenue between Colgate and Boynton Avenues" },
+    { "name": "Equity Playground Public Restroom", "id": "Playground-Public-Equity-Restroom3C242697-3D3F-4B52-A81F-6EFD7ABB607C", "lat": 40.6914, "lng": -73.8536, "accessibility": "unknown", "comment": "90 Street, 88 & 89 Avenues" },
+    { "name": "Raymond Bush Playground Public Restroom", "id": "Bush-Raymond-Public-Playground-Restroom5F6A0619-A640-4107-BE5A-DC2A1350F241", "lat": 40.6866, "lng": -73.9394, "accessibility": "unknown", "comment": "Sumner Avenue, Madison Street" },
+    { "name": "De Witt Clinton Park Public Restroom", "id": "Park-Witt-Clinton-Restroom-Public-DeF4A9A365-8A8C-482F-94FD-A3DE992C87D8", "lat": 40.7682, "lng": -73.9946, "accessibility": "unknown", "comment": "West 52 to West 54 Streets, 11 to 12 Avenues" },
+    { "name": "Century Playground Public Restroom", "id": "Public-Restroom-Century-Playground3782CDD1-1164-45D1-B48F-54C9B94C8436", "lat": 40.577, "lng": -73.9702, "accessibility": "unknown", "comment": "Brighton Beach Avenue & West 2 Street" },
+    { "name": "The Picnic House", "id": "The-House-Picnic1F23CFB7-5696-4813-B980-657077655E73", "lat": 40.6656, "lng": -73.9716, "accessibility": "unknown", "comment": "Long Meadow at West Dr. & 5th St." },
+    { "name": "Juniper North Playground Tennis Public Restroom", "id": "Restroom-Playground-Public-North-Juniper-Tennis17FD0314-C8FD-4296-AA66-90C096429C74", "lat": 40.7207, "lng": -73.8774, "accessibility": "unknown", "comment": "62nd Avenue & 80th Street" },
+    { "name": "Matthews Muliner Playground Public Restroom", "id": "Muliner-Public-Restroom-Matthews-PlaygroundBB5D4CAD-F1DF-41F5-8346-B3AD1B02708E", "lat": 40.8469, "lng": -73.8615, "accessibility": "unknown", "comment": "Delancy Place, Muliner Avenue, Matthews Avenue" },
+    { "name": "Arlington 'Ollie' Edinboro Playground Public Restroom", "id": "Restroom-Public-Edinboro-Arlington-'Ollie'-PlaygroundD9F93E6F-8881-4EE4-A767-3A29D7E1C542", "lat": 40.8209, "lng": -73.9467, "accessibility": "unknown", "comment": "West 140 Street & St. Nicholas Avenue" },
+    { "name": "Real Good Playground Public Restroom", "id": "Public-Playground-Real-Good-Restroom9F771C8A-FA64-4916-8E19-352A07588707", "lat": 40.7355, "lng": -73.8572, "accessibility": "unknown", "comment": "LIE, 99 Street & 62 Avenue" },
+    { "name": "Joseph Yancey Track & Field Public Restroom", "id": "Field-Track-Yancey-&-Public-Restroom-Joseph346269C3-CC1A-435B-BCB2-31A013D4A4C1", "lat": 40.8284, "lng": -73.9297, "accessibility": "unknown", "comment": "East 161st Street, near Major Deegan Expwy." },
+    { "name": "Kerbs Boathouse (Model Boat Pond)", "id": "Boat-Boathouse-(Model-Pond)-KerbsC43B5826-60F6-4543-967C-101847EEA2B9", "lat": 40.774, "lng": -73.9665, "accessibility": "unknown", "comment": "Conservatory Water, East Side at 74th Street." },
+    { "name": "Flynn Playground Public Restroom", "id": "Playground-Flynn-Public-RestroomBB06CE30-3638-40B4-B341-C2D6A2BE1BAC", "lat": 40.8209, "lng": -73.9119, "accessibility": "unknown", "comment": "3 Avenue, East 158 Street, Brook Avenue, East 157 Street" },
+    { "name": "North Rochdale Playground Public Restroom", "id": "Rochdale-North-Restroom-Public-PlaygroundA3075330-E7CD-4313-8C24-6CB000772CA1", "lat": 40.6801, "lng": -73.7751, "accessibility": "unknown", "comment": "Baisley Boulevard & Bedell Street" },
+    { "name": "Calvert Vaux Playground Public Restroom", "id": "Vaux-Restroom-Calvert-Playground-PublicF08852FF-EEE2-4C19-84B2-C1CE06F18981", "lat": 40.5881, "lng": -73.9903, "accessibility": "unknown", "comment": "Cropsey Ave. Between 27th Ave. & Bay 46th St." },
+    { "name": "Railroad Playground Public Restroom", "id": "Playground-Restroom-Public-RailroadA5EAC81D-3477-4A42-BB03-8A1BB450D4BB", "lat": 40.6492, "lng": -73.914, "accessibility": "unknown", "comment": "Ditmas Avenue between East 91 & East 92 Streets" },
+    { "name": "McKinley Park Public Restroom", "id": "Restroom-McKinley-Park-Public64A834A1-6CA3-4369-994D-444DBA577286", "lat": 40.6266, "lng": -74.0167, "accessibility": "unknown", "comment": "Fort Hamilton Parkway, 73 to 78 Streets, 7 Avenue" },
+    { "name": "Nicholas Naquan Heyward Jr. Park Public Restroom", "id": "Heyward-Restroom-Nicholas-Public-Naquan-Park-Jr.207E242D-DB81-4CBE-A75D-E3070BB0CD38", "lat": 40.6847, "lng": -73.9878, "accessibility": "unknown", "comment": "Wyckoff Street between Bond & Hoyt Streets" },
+    { "name": "Athens Square Public Restroom", "id": "Square-Public-Restroom-Athens57D76EBF-2C31-4D31-B61B-C9A8D5AB1AAB", "lat": 40.768, "lng": -73.9219, "accessibility": "unknown", "comment": "29 Street, 30 Street, 30 Avenue, Newtown Avenue" },
+    { "name": "World's Fair Playground Public Restroom", "id": "Public-Playground-Restroom-World's-FairAA9099FE-88CA-4AEE-940E-4D1598F2CD49", "lat": 40.7372, "lng": -73.8457, "accessibility": "unknown", "comment": "62nd Drive And Grand Central Pkwy Service Rd" },
+    { "name": "Conference House Park-Visitor Center & Lenape Gallery", "id": "Center-Gallery-House-Lenape-Conference-Park-Visitor-&58CF1EE9-80A9-48FE-8DC4-68DD6C60A7B8", "lat": 40.5023, "lng": -74.2517, "accessibility": "unknown", "comment": "7455 Hylan Blvd" },
+    { "name": "Jesse Owens Playground Public Restroom", "id": "Playground-Restroom-Jesse-Owens-Public943E18E3-CF2D-406E-8315-D3D87767CEE2", "lat": 40.6916, "lng": -73.9325, "accessibility": "unknown", "comment": "Stuyvesant & Lafayette Avenues" },
+    { "name": "Behagen Playground Public Restroom", "id": "Behagen-Playground-Restroom-PublicE5DABC6B-03D9-46A9-BB1E-CCBA4BDA1A9F", "lat": 40.8255, "lng": -73.9009, "accessibility": "unknown", "comment": "Tinton Avenue, East 165 Street, Union Avenue, East 166 Street" },
+    { "name": "Dutch Kills Playground Public Restroom", "id": "Dutch-Playground-Restroom-Public-KillsCEE8D21C-31A3-45AE-8329-947443952512", "lat": 40.7577, "lng": -73.9335, "accessibility": "unknown", "comment": "Crescent Street between 36 Avenue & 37 Avenue" },
+    { "name": "Aqueduct Walk Public Restroom", "id": "Public-Aqueduct-Walk-Restroom64293AA1-DE16-425D-A741-64266EF647F1", "lat": 40.8584, "lng": -73.908, "accessibility": "unknown", "comment": "Aqueduct Ave. E & W. 182nd St." },
+    { "name": "McCaffrey Playground Public Restroom", "id": "Playground-Public-Restroom-McCaffrey301242FF-635E-4277-B230-2FA519AF0007", "lat": 40.7592, "lng": -73.9914, "accessibility": "unknown", "comment": "West 43 Street, 8 & 9 Avenues" },
+    { "name": "St. James Park Golden Age Center", "id": "Golden-Age-Park-St.-Center-James5BC90BEC-B50E-4122-A76D-A606F72A252E", "lat": 40.8654, "lng": -73.8985, "accessibility": "unknown", "comment": "Jerome Avenue, Morris Avenue, East 191 Street, Creston Avenue, East 192 Street,*" },
+    { "name": "Fort Tryon Park Café", "id": "Tryon-Café-Fort-Park6544A7F9-5D68-42B5-B894-F88B306AD470", "lat": 40.8608, "lng": -73.9328, "accessibility": "unknown", "comment": "1 Margaret Corbin Drive" },
+    { "name": "McKinley Playground Public Restroom", "id": "Playground-Restroom-McKinley-Public385E6751-92E4-4F6F-A75E-2A5511E1E5D8", "lat": 40.7243, "lng": -73.9856, "accessibility": "unknown", "comment": "Avenue A, East 3-East 4 Streets" },
+    { "name": "Brigadier General Charles Young Playground Public Restroom", "id": "General-Playground-Restroom-Brigadier-Charles-Young-Public1E073B54-F1BF-4DF4-9473-3B746A891ECD", "lat": 40.8196, "lng": -73.9362, "accessibility": "unknown", "comment": "West 144 Street & Lenox Avenue" },
+    { "name": "Colonel David Marcus Playground Public Restroom", "id": "Marcus-Colonel-Restroom-Public-David-Playground3DA8766A-D37A-4B0B-A504-B1EF14057C22", "lat": 40.61, "lng": -73.9696, "accessibility": "unknown", "comment": "Ocean Parkway, Avenue P, East 3 Street" },
+    { "name": "Playground One Fifty Two CLII Public Restroom", "id": "One-CLII-Playground-Two-Public-Fifty-Restroom1CFDEB26-5561-4F04-9FCF-B2EB1C013F5F", "lat": 40.8279, "lng": -73.9399, "accessibility": "unknown", "comment": "West 152 Street & Bradhurst Avenue" },
+    { "name": "High Rock Park Women’s Public Restroom", "id": "Rock-Women’s-High-Restroom-Public-ParkE5316E2F-7679-4C5B-B00C-0602365B2E3F", "lat": 40.5829, "lng": -74.1243, "accessibility": "unknown", "comment": "" },
+    { "name": "Frank D. O'Connor Playground Public Restroom", "id": "Public-Restroom-O'Connor-Frank-Playground-D.FDE4C130-3952-44C6-A686-9178D81E77B5", "lat": 40.7444, "lng": -73.8869, "accessibility": "unknown", "comment": "Broadway & 78 Street" },
+    { "name": "Harvey Park Playground Public Restroom", "id": "Park-Public-Restroom-Harvey-PlaygroundFED32581-9928-45F5-A1A0-37D990724817", "lat": 40.7829, "lng": -73.8236, "accessibility": "unknown", "comment": "South of Park, near 144th St & 20th Ave" },
+    { "name": "Captain William Harry Thompson Public Restroom", "id": "Harry-Restroom-Captain-Thompson-William-Public6C18F433-3D21-4798-8881-E97E7FA4CDFD", "lat": 40.8343, "lng": -73.8779, "accessibility": "unknown", "comment": "East 174 Street, Stratford Avenue, Bronx River Avenue" },
+    { "name": "Saul Weprin Playground Public Restroom", "id": "Public-Restroom-Saul-Playground-WeprinE8197F94-040C-4159-8E4D-0110E5599EB2", "lat": 40.7479, "lng": -73.7762, "accessibility": "unknown", "comment": "53 Avenue between 201 & 202 Streets" },
+    { "name": "96th Street Entrance Public Restroom", "id": "Restroom-Entrance-96th-Street-Public0520A5DA-F13F-4DFE-96FF-08D6870149E4", "lat": 40.6162, "lng": -74.0395, "accessibility": "unknown", "comment": "Shore Road & 95th Street" },
+    { "name": "Quisqueya Playground Public Restroom", "id": "Public-Restroom-Playground-QuisqueyaD2E28AB2-CB79-42A8-9509-F9F42AB697A5", "lat": 40.8472, "lng": -73.9312, "accessibility": "unknown", "comment": "W. 180th St. & Amsterdam Ave." },
+    { "name": "Merchants' Gate Public Restroom", "id": "Restroom-Gate-Merchants'-Public4BA10768-C459-418A-BDC0-B59B5BB7A185", "lat": 40.7692, "lng": -73.9808, "accessibility": "unknown", "comment": "West 61st Street by Columbus Circle" },
+    { "name": "Vesuvio Playground Public Restroom", "id": "Playground-Vesuvio-Public-Restroom105F393E-4F05-4DF8-9455-521605A71DD2", "lat": 40.7256, "lng": -74.0025, "accessibility": "unknown", "comment": "Spring & Thompson Streets" },
+    { "name": "Locust Manor Playground Public Restroom", "id": "Manor-Playground-Locust-Restroom-Public05B0127B-F8AF-4D25-AFD6-F8C27CDE54AA", "lat": 40.6859, "lng": -73.7562, "accessibility": "unknown", "comment": "192 Street, 121 Avenue" },
+    { "name": "Albert H. Mauro Playground Public Restroom", "id": "H.-Restroom-Playground-Public-Mauro-AlbertA8C56D2A-034B-49C5-8EF7-C5824E31621B", "lat": 40.7229, "lng": -73.8271, "accessibility": "unknown", "comment": "Park Drive East & 73 Terrace" },
+    { "name": "Robert Acito Parkhouse", "id": "Acito-Parkhouse-Robert89F14E5E-E043-41AC-B334-2E9B5DD69B50", "lat": 40.6809, "lng": -73.9948, "accessibility": "unknown", "comment": "Court & Smith Streets" },
+    { "name": "Grady Playground Public Restroom", "id": "Restroom-Playground-Grady-PublicA4DB41C1-D94E-4EC7-94D4-F2E4672DB15A", "lat": 40.5825, "lng": -73.9644, "accessibility": "unknown", "comment": "Brighton 4th St. & Brighton 4th Rd." },
+    { "name": "College Point Blvd Soccer Fields Public Restroom", "id": "Blvd-Restroom-Point-Fields-Public-College-Soccer31B97665-2C9D-43F2-8C85-4BEEA929EBAA", "lat": 40.751, "lng": -73.8338, "accessibility": "unknown", "comment": "Fowler Avenue & College Point Blvd, behind Al Oerter Recreation Center" },
+    { "name": "Brighton 2nd Street Public Restroom", "id": "Restroom-Brighton-Public-2nd-StreetABC4B5A8-36D0-439B-B2EE-634BCEF64830", "lat": 40.5746, "lng": -73.9645, "accessibility": "unknown", "comment": "Brighton 2nd Street & Boardwalk" },
+    { "name": "Cypress Hills Playground Public Restroom", "id": "Cypress-Public-Hills-Restroom-PlaygroundA0B95302-5836-486D-94BE-A01BFA94B682", "lat": 40.6707, "lng": -73.8711, "accessibility": "unknown", "comment": "Blake & Euclid Avenues" },
+    { "name": "Murray Playground Public Restroom", "id": "Public-Restroom-Murray-Playground44B65A52-9CA8-42D3-98FA-88F03BB1AA5B", "lat": 40.7472, "lng": -73.9489, "accessibility": "unknown", "comment": "21 Street, 45 Avenue, 11 Street, 45 Road" },
+    { "name": "Rainey Park Playground Public Restroom", "id": "Public-Playground-Restroom-Park-RaineyEDD89CAF-E9CC-4031-8323-9811A5984D5B", "lat": 40.7653, "lng": -73.941, "accessibility": "unknown", "comment": "Vernon Boulevard, 33 Road, 34 Street, East River" },
+    { "name": "Crowley Playground Public Restroom", "id": "Crowley-Restroom-Public-Playground722506C0-82F7-4ADA-966C-E244DE578FD1", "lat": 40.7293, "lng": -73.8798, "accessibility": "unknown", "comment": "57 Avenue & 83 Street" },
+    { "name": "Curtis Playground Public Restroom", "id": "Playground-Restroom-Public-Curtis3877A70B-684F-4F0E-AA5C-145893510E81", "lat": 40.6408, "lng": -73.9176, "accessibility": "unknown", "comment": "Foster Avenue between East 81 and East 82 Streets" },
+    { "name": "Waring Playground Public Restroom", "id": "Waring-Playground-Public-RestroomE490F074-62EA-4E7E-B929-BA92F9AB0F93", "lat": 40.8606, "lng": -73.8712, "accessibility": "unknown", "comment": "Bronx Park East between Waring Avenure and Thwaites Place" },
+    { "name": "Crispus Attucks Playground Public Restroom", "id": "Playground-Public-Crispus-Restroom-Attucks1B50F86F-58F1-4652-9AC1-736B6B3294F6", "lat": 40.6816, "lng": -73.9592, "accessibility": "unknown", "comment": "Fulton Street & Classon Avenue" },
+    { "name": "Lena Horne Bandshell", "id": "Lena-Horne-BandshellC52121D0-7B09-41A4-9FE5-0129028D2F58", "lat": 40.6634, "lng": -73.9767, "accessibility": "unknown", "comment": "Prospect Park W & 11th St" },
+    { "name": "Maurice A Fitzgerald Playground Public Restroom", "id": "Restroom-Playground-Fitzgerald-A-Public-MauriceEA23CE92-3FE5-4DDE-B96C-6ECC5526C98C", "lat": 40.6903, "lng": -73.8395, "accessibility": "unknown", "comment": "Atlantic Avenue & 106 Street" },
+    { "name": "Willowbrook Park-Boathouse", "id": "Willowbrook-Park-Boathouse0D292A9D-1E52-4E31-BFDA-9CA5F69B2261", "lat": 40.6042, "lng": -74.1586, "accessibility": "unknown", "comment": "Eton Pl. at Willowbrook Lake" },
+    { "name": "Washington Square Park Public Restroom", "id": "Park-Restroom-Square-Washington-Public0084BA0E-A2EF-4F14-BA2E-2B45326B2F79", "lat": 40.7307, "lng": -73.9983, "accessibility": "unknown", "comment": "5 Avenue, Waverly Place, West 4 & MacDougal Streets." },
+    { "name": "Frederick Johnson Playground Public Restroom", "id": "Playground-Restroom-Public-Johnson-FrederickE10992B8-7D24-45CB-9AFB-2F60609D1BE4", "lat": 40.8247, "lng": -73.9348, "accessibility": "unknown", "comment": "7 Avenue, West 150-151 Streets" },
+    { "name": "MacNeil Playground Public Restroom", "id": "Public-MacNeil-Playground-Restroom99E1024B-9BE4-44DB-879D-3B7B511960AD", "lat": 40.7935, "lng": -73.8514, "accessibility": "unknown", "comment": "East of paved path running north from 119th Street" },
+    { "name": "Cunningham Park Tennis House Public Restroom", "id": "Park-Restroom-Public-Tennis-House-CunninghamD20D9BDF-5686-4E71-AF77-AEA542315D9E", "lat": 40.7296, "lng": -73.7736, "accessibility": "unknown", "comment": "196-00 Union Turnpike" },
+    { "name": "Hunter Island Picnic Area Public Restroom", "id": "Restroom-Island-Picnic-Hunter-Area-Public15FE9FBC-299F-4A16-BDCC-43CFE3D1E524", "lat": 40.8698, "lng": -73.7904, "accessibility": "unknown", "comment": "at Orchard Beach, near Kazimiroff Nature Trail" },
+    { "name": "Farm Playground Public Restroom", "id": "Restroom-Farm-Playground-Public2D551A92-8552-4509-8324-8DA98127E2FF", "lat": 40.7361, "lng": -73.7773, "accessibility": "unknown", "comment": "73 Avenue, 195 Street & 196 Place" },
+    { "name": "Hamilton Metz Field Public Restroom", "id": "Field-Public-Metz-Restroom-Hamilton57961AC6-F2DE-4D35-A1B1-E1B900F0696D", "lat": 40.6626, "lng": -73.9407, "accessibility": "unknown", "comment": "Albany, East New York, Lefferts Avenues" },
+    { "name": "Martin Luther King, Jr. Playground Public Restroom", "id": "Playground-Martin-Luther-Public-Restroom-Jr.-King,377258D5-5E70-4192-9D3B-7A52C89F3CB1", "lat": 40.8003, "lng": -73.9503, "accessibility": "unknown", "comment": "Lenox Avenue, West 113 to West 114 Streets" },
+    { "name": "Noble Playground Public Restroom", "id": "Public-Playground-Restroom-Noble99D63193-15A6-46E0-BF93-32E7F126CF99", "lat": 40.8368, "lng": -73.8718, "accessibility": "unknown", "comment": "Nobel Avenue, Bronx River Avenue, Bronx River Parkway, Cross Bronx Expressway" },
+    { "name": "Neufeld (Elephant) Playground Public Restroom", "id": "Restroom-(Elephant)-Neufeld-Public-Playground86EF3696-45F2-473E-A0D8-0B7F7A62F89B", "lat": 40.7834, "lng": -73.9848, "accessibility": "unknown", "comment": "76th Street & Riverside Drive" },
+    { "name": "Baisley Park South Playground Public Restroom", "id": "Park-Restroom-Playground-South-Baisley-Public1A104F0F-6807-41EC-86C6-7D3CDAB70DA3", "lat": 40.6691, "lng": -73.7887, "accessibility": "unknown", "comment": "150th Street & 130th Avenue" },
+    { "name": "Pink Playground Public Restroom", "id": "Playground-Restroom-Public-PinkC7AE34AA-8B6D-4988-8D09-B48E32627573", "lat": 40.6665, "lng": -73.8625, "accessibility": "unknown", "comment": "Stanley Avenue & Eldert Lane" },
+    { "name": "Yak Playground Public Restroom", "id": "Restroom-Playground-Yak-Public3D6D5B44-4AE5-4F95-9E98-2806661D2A31", "lat": 40.5924, "lng": -73.9358, "accessibility": "unknown", "comment": "Avenue Y between Coyle & Batchelder Streets" },
+    { "name": "Agnes Haywood Playground Public Restroom", "id": "Haywood-Agnes-Playground-Public-RestroomC1F13E2E-52C8-42D9-A36E-405E0E14BF16", "lat": 40.8805, "lng": -73.8617, "accessibility": "unknown", "comment": "East 215 Street, Barnes Avenue, East 216 Street" },
+    { "name": "Corona Golf Playground Public Restroom", "id": "Corona-Golf-Public-Restroom-Playground6173E06D-7D62-4CA2-954D-8A35A04B4860", "lat": 40.7477, "lng": -73.854, "accessibility": "unknown", "comment": "109 Street between 46-47 Avenues" },
+    { "name": "Squibb Park Public Restroom", "id": "Park-Restroom-Squibb-PublicB7585A03-931C-4D73-98D0-7F47C06BF286", "lat": 40.7011, "lng": -73.9954, "accessibility": "unknown", "comment": "Columbia Heights, Middagh Street" },
+    { "name": "Lawrence Playground Public Restroom", "id": "Playground-Restroom-Lawrence-PublicCDED1F38-2786-46CE-8BB8-25AB35CD8760", "lat": 40.7484, "lng": -73.8337, "accessibility": "unknown", "comment": "College Point Boulevard and Lawrence Street" },
+    { "name": "Westbourne Playground Public Restroom", "id": "Public-Restroom-Westbourne-Playground325AC3DE-EF9D-44ED-97DE-0DF67A4043BB", "lat": 40.6083, "lng": -73.7646, "accessibility": "unknown", "comment": "Mott Avenue & Bay 25 Street" },
+    { "name": "Jaime Campiz Playground Public Restroom", "id": "Restroom-Playground-Campiz-Public-Jaime53ACD052-DBD2-4803-9B57-CBAF98E57AAF", "lat": 40.7134, "lng": -73.9545, "accessibility": "unknown", "comment": "Hope Street & Metropolitan Avenue" },
+    { "name": "Poe Park Visitor Center", "id": "Poe-Park-Visitor-Center2B8723F5-3CCB-42BC-9B24-B32A4C0DD197", "lat": 40.865, "lng": -73.8947, "accessibility": "unknown", "comment": "Grand Concourse at E. 193rd St" },
+    { "name": "Baruch Playground Public Restroom", "id": "Public-Baruch-Restroom-Playground4A271280-1C87-4F8D-B840-1A0F57FF4E15", "lat": 40.7172, "lng": -73.9769, "accessibility": "unknown", "comment": "Stanton St. & Baruch Pl." },
+    { "name": "Matthew P. Sapolin Playground Public Restroom", "id": "Public-P.-Sapolin-Playground-Matthew-Restroom010E9968-0E28-4FCC-B11F-C07E25FA2706", "lat": 40.7777, "lng": -73.9841, "accessibility": "unknown", "comment": "West End Avenue & West 70 Street" },
+    { "name": "Twenty-Four Sycamores Park Public Restroom", "id": "Restroom-Park-Sycamores-Twenty-Four-Public54AD646F-A9AE-4046-9A17-949411137BD7", "lat": 40.7594, "lng": -73.9589, "accessibility": "unknown", "comment": "FDR Drive, East 60 to East 61 Streets & York Avenue" },
+    { "name": "Vic Hanson Field House-Building", "id": "Vic-Field-House-Building-Hanson44C5F112-0827-4F1A-A34F-C30729C489D1", "lat": 40.6741, "lng": -73.7744, "accessibility": "unknown", "comment": "133-39 Guy R. Brewer Boulevard" },
+    { "name": "William Sheridan Playground Public Restroom", "id": "Playground-Restroom-Public-Sheridan-WilliamEED0DBC6-6F85-4E49-BBFB-D1AF19967EFA", "lat": 40.7153, "lng": -73.964, "accessibility": "unknown", "comment": "Wythe Avenue, Berry & Grand Streets" },
+    { "name": "Seward Park Public Restroom", "id": "Public-Park-Seward-RestroomF40080BB-AEF5-4334-A567-DE0844697B36", "lat": 40.7147, "lng": -73.9891, "accessibility": "unknown", "comment": "Jefferson & Canal Streets" },
+    { "name": "Dean Playground Public Restroom", "id": "Restroom-Dean-Public-Playground829275BE-F6E9-4E17-8BA2-1DD8FCCF728C", "lat": 40.6805, "lng": -73.9728, "accessibility": "unknown", "comment": "Bergen St. Between 6th Ave. & Carlton Ave." },
+    { "name": "Beach 106th Street Public Restroom", "id": "Beach-Restroom-Public-Street-106thF94AE478-8E08-4A23-A6AB-30919E37F0EC", "lat": 40.5806, "lng": -73.8261, "accessibility": "unknown", "comment": "Boardwalk at Beach 106th Street" },
+    { "name": "Surf Playground Public Restroom", "id": "Playground-Public-Surf-RestroomC501B3F6-A61F-4A3A-B23A-ECBC01154450", "lat": 40.5737, "lng": -73.9927, "accessibility": "unknown", "comment": "West 27 Street & Surf Avenue" },
+    { "name": "Frederick Douglass Playground Public Restroom", "id": "Frederick-Douglass-Public-Playground-RestroomAD95B4B3-740E-4F14-9F35-DFFCB0112031", "lat": 40.797, "lng": -73.9677, "accessibility": "unknown", "comment": "West 100-101 Street Amsterdam Avenue" },
+    { "name": "El Shabazz Playground Public Restroom", "id": "Restroom-El-Public-Playground-ShabazzDAEFAE68-8E7B-4317-96A8-B7E7E041F5CE", "lat": 40.6827, "lng": -73.9307, "accessibility": "unknown", "comment": "Malcolm X Blvd between Mason St & Mac Donough St" },
+    { "name": "Playground 123 Public Restroom", "id": "Playground-123-Public-RestroomFF6EFA67-10DC-4C10-8102-08B11DE56301", "lat": 40.81, "lng": -73.9559, "accessibility": "unknown", "comment": "West 123rd Street & Morningside Avenue" },
+    { "name": "Stables Area Public Restroom", "id": "Public-Stables-Area-Restroom52ABA880-CDFF-4B6E-B43E-EA60411B7ABE", "lat": 40.9009, "lng": -73.8927, "accessibility": "unknown", "comment": "Rockwood Circle near John Muir Trailhead" },
+    { "name": "Renaissance Playground Public Restroom", "id": "Restroom-Renaissance-Public-PlaygroundEBE41668-8D53-4469-93AF-A446D6C22471", "lat": 40.8217, "lng": -73.9417, "accessibility": "unknown", "comment": "West 144 Street, between 7 & 8 Avenues" },
+    { "name": "Fresh Meadows Playground Public Restroom", "id": "Restroom-Public-Fresh-Meadows-PlaygroundCDD13D03-A318-4CD7-8B1D-7F8EF12CE5BE", "lat": 40.7344, "lng": -73.7962, "accessibility": "unknown", "comment": "67 Avenue & 173 Street" },
+    { "name": "Union Square Pavilion", "id": "Union-Pavilion-SquareDCAF3FAB-5DA0-4AD8-BFE1-863B36CA9362", "lat": 40.7364, "lng": -73.9899, "accessibility": "unknown", "comment": "20 Union Square W" },
+    { "name": "Sternberg Park Public Restroom", "id": "Restroom-Sternberg-Public-Park5964F37F-AA9C-4B60-AAF9-88C70DD38679", "lat": 40.7059, "lng": -73.9472, "accessibility": "unknown", "comment": "Montrose Avenue, Boerum, Lorimer, Leonard Streets" },
+    { "name": "Passerelle Building", "id": "Building-PasserelleFD84ED74-FBD8-4534-BDE8-93BDB68BC20F", "lat": 40.7517, "lng": -73.8432, "accessibility": "unknown", "comment": "across from outdoor Tennis Courts, at Meridian Road" },
+    { "name": "Queens Vietnam Veterans Memorial", "id": "Veterans-Vietnam-Memorial-Queens8ED92455-EB8E-4BF3-B60F-9585615DCD49", "lat": 40.7305, "lng": -73.8851, "accessibility": "unknown", "comment": "79th St. & Grand Ave." },
+    { "name": "Augustus St. Gaudens Playground Public Restroom", "id": "Public-Gaudens-St.-Augustus-Playground-Restroom5B7E113E-2997-49C6-AE89-37774D83A80A", "lat": 40.7356, "lng": -73.9821, "accessibility": "unknown", "comment": "East 19 to East 20 Streets, 2 Avenue" },
+    { "name": "Sherman Creek Park Public Restroom", "id": "Sherman-Restroom-Public-Creek-Park1469C5E0-4D64-47F0-BA01-10ABF4482F81", "lat": 40.8578, "lng": -73.922, "accessibility": "unknown", "comment": "Dyckman St., 10th Ave, and Harlem River Drive" },
+    { "name": "Fort Greene Playground Public Restroom", "id": "Greene-Fort-Public-Restroom-PlaygroundAE3B8929-F1B2-46E5-A916-A836309F5DAB", "lat": 40.6923, "lng": -73.9772, "accessibility": "unknown", "comment": "St. Edwards Street & Willoughby Street" },
+    { "name": "Northern Playground Public Restroom", "id": "Northern-Public-Playground-Restroom3F2284E5-9FB4-485E-9D8A-05F96CF5E23F", "lat": 40.7563, "lng": -73.8745, "accessibility": "unknown", "comment": "Northern Boulevard & 93 Street" },
+    { "name": "Beach 59th St Playground Public Restroom", "id": "Playground-St-Restroom-59th-Public-BeachE2D6F990-454E-41A1-BF73-42DA13FEF49F", "lat": 40.5889, "lng": -73.7891, "accessibility": "unknown", "comment": "Boardwalk & Beach 59-60 Streets" },
+    { "name": "Woodtree Playground Public Restroom", "id": "Playground-Woodtree-Restroom-PublicA0E7A0FD-3E11-4F8C-AD2A-6D8042EF0BDE", "lat": 40.7775, "lng": -73.9026, "accessibility": "unknown", "comment": "20 Avenue, 37 Street, 38 Street" },
+    { "name": "Stroud Playground Public Restroom", "id": "Restroom-Stroud-Playground-PublicD66FCA4E-AB67-4F58-9FBD-3FEB2AC7FE1E", "lat": 40.675, "lng": -73.9622, "accessibility": "unknown", "comment": "Classon Avenue & Sterling Place" },
+    { "name": "Jackie Robinson Park Playground Public Restroom", "id": "Playground-Restroom-Jackie-Park-Robinson-Public24878BAB-4E8E-4091-A955-00F905DF5815", "lat": 40.6802, "lng": -73.9273, "accessibility": "unknown", "comment": "Malcolm X Boulevard between Chauncey and Marion Streets" },
+    { "name": "Ederle Terrace Public Restroom", "id": "Public-Terrace-Restroom-EderleF900A9B4-0170-4DE5-B124-50EB57B3DC36", "lat": 40.7407, "lng": -73.8412, "accessibility": "unknown", "comment": "17 Ederle Promenade" },
+    { "name": "The Pearly Gates Public Restroom", "id": "Public-The-Gates-Restroom-Pearly495B56AE-7E84-4997-A323-5527F197E158", "lat": 40.8388, "lng": -73.8457, "accessibility": "unknown", "comment": "Tratman Avenue between St. Peter's Avenue & Rowland Street" },
+    { "name": "The Ramble Shed", "id": "Ramble-The-Shed9C33A4DE-2417-4023-90FA-E8D2A4DB341A", "lat": 40.7784, "lng": -73.9677, "accessibility": "unknown", "comment": "The Ramble Shed, Mid-Park south of 79th St Tranverse" },
+    { "name": "Hart Playground Public Restroom", "id": "Hart-Restroom-Public-Playground2F4D2AE8-A7CE-4E59-893A-BF702273EA20", "lat": 40.7488, "lng": -73.8972, "accessibility": "unknown", "comment": "37 Avenue, west of 69 Street" },
+    { "name": "Meadow Lake Boathouse", "id": "Lake-Meadow-Boathouse7E95FCE0-68BE-4CAE-81C8-133D5143DABA", "lat": 40.7358, "lng": -73.8385, "accessibility": "unknown", "comment": "Boathouse Bridge & Meadow Lake Dr" },
+    { "name": "Park Of The Americas Public Restroom", "id": "Of-The-Public-Americas-Park-Restroom8EBA014A-9893-42DF-94E6-E9CAFFAC6F15", "lat": 40.7489, "lng": -73.8618, "accessibility": "unknown", "comment": "104 Street & 41 Avenue" },
+    { "name": "Quarry Ballfields Public Restroom", "id": "Quarry-Public-Restroom-BallfieldsE1A5A9B5-62BB-40F7-B871-505578BB5586", "lat": 40.8502, "lng": -73.89, "accessibility": "unknown", "comment": "Quarry Road, East 181 Street, Oak Place & Hughes Avenue" },
+    { "name": "Baisley Pond Park Playground Public Restroom", "id": "Restroom-Public-Pond-Baisley-Park-Playground457CBD12-0E55-4992-BC62-A9C2F58566C6", "lat": 40.6814, "lng": -73.7872, "accessibility": "unknown", "comment": "119th Avenue and 155th Street" },
+    { "name": "Tecumseh Playground Public Restroom", "id": "Restroom-Public-Playground-Tecumseh7C1BF795-5D58-43D0-9F3C-76C307282449", "lat": 40.7819, "lng": -73.9787, "accessibility": "unknown", "comment": "West 77 Street & Amsterdam Avenue" },
+    { "name": "De Matti Park Field House", "id": "Field-De-Matti-Park-HouseECA16790-8FBA-4EE6-8006-53A892AB8786", "lat": 40.6147, "lng": -74.0739, "accessibility": "unknown", "comment": "Tompkins Avenue, Chestnut Avenue" },
+    { "name": "Classic Playground Public Restroom", "id": "Playground-Restroom-Public-Classic5F1C9D40-FE1C-4E96-97AF-EACCE6F8516A", "lat": 40.8852, "lng": -73.8906, "accessibility": "unknown", "comment": "Van Cortlandt Park South and Gouverneur Avenue" },
+    { "name": "Classic Playground Public Restroom", "id": "Classic-Playground-Public-Restroom9D532E86-6455-4FB6-9BB7-FAA15254D40F", "lat": 40.7837, "lng": -73.9864, "accessibility": "unknown", "comment": "75th Street near the river" },
+    { "name": "Virginia Principe Playground Public Restroom", "id": "Restroom-Public-Virginia-Playground-Principe24C71B7C-DA8E-40B9-9068-8DEE8E009EAA", "lat": 40.7272, "lng": -73.9043, "accessibility": "unknown", "comment": "Maurice, Borden, 54 Avenues, 63 Street" },
+    { "name": "210 St Playground Public Restroom", "id": "Public-210-Restroom-Playground-St7B54A773-EC98-4428-9317-0A44BFE93803", "lat": 40.7392, "lng": -73.7651, "accessibility": "unknown", "comment": "210 Street & 73 Avenue" },
+    { "name": "The Big Park Public Restroom", "id": "The-Big-Public-Park-RestroomD3E0EDEC-2D49-4EAF-83A8-2ECF07A6CC83", "lat": 40.631, "lng": -74.1651, "accessibility": "unknown", "comment": "Grandview Avenue, Continental Place" },
+    { "name": "Heckscher Playground Public Restroom", "id": "Public-Playground-Heckscher-RestroomF16B7889-EB77-4790-A9C0-2CCF0141488E", "lat": 40.6951, "lng": -73.9186, "accessibility": "unknown", "comment": "Grove Street to Linden Street" },
+    { "name": "Joseph Austin Playground Public Restroom", "id": "Austin-Joseph-Public-Playground-RestroomB735859E-25D8-4D25-B6D7-1A65DB9C115F", "lat": 40.7157, "lng": -73.8011, "accessibility": "unknown", "comment": "Grand Central Parkway & 164 Place" },
+    { "name": "Randall's Island Tennis Center", "id": "Randall's-Tennis-Island-Center634FA203-6855-4DCB-A72C-51F2127BD75C", "lat": 40.793, "lng": -73.919, "accessibility": "unknown", "comment": "Sunken Meadow Loop" },
+    { "name": "Asser Levy Park Public Restroom", "id": "Levy-Asser-Public-Park-Restroom413376B3-6F10-4F34-BF3F-E4F5F5B82C44", "lat": 40.5754, "lng": -73.9729, "accessibility": "unknown", "comment": "Boardwalk, Surf, Sea Breeze Avenues, Ocean Parkway" },
+    { "name": "Benson Playground Public Restroom", "id": "Playground-Public-Restroom-Benson78C1A3F8-9D54-4AB3-A420-8F2793A2C4AA", "lat": 40.6024, "lng": -74.0023, "accessibility": "unknown", "comment": "Bath Avenue between Bay 22 & Bay 23 Streets" },
+    { "name": "Webster Playground Public Restroom", "id": "Public-Restroom-Webster-PlaygroundE20D4800-B116-4F52-9D26-86E536D78898", "lat": 40.8595, "lng": -73.8929, "accessibility": "unknown", "comment": "E. 188 St. between Webster Ave. And Park Ave." },
+    { "name": "Louis Pasteur Park Public Restroom", "id": "Restroom-Pasteur-Park-Public-Louis2EA4C0EF-A3BF-4A9E-A8E2-B10C3F5BF2FA", "lat": 40.7618, "lng": -73.7354, "accessibility": "unknown", "comment": "248 Street & 51 Avenue" },
+    { "name": "Litchfield Villa", "id": "Villa-Litchfield9E6205D9-BA84-43DD-A1D9-6FF54E53B458", "lat": 40.6669, "lng": -73.9737, "accessibility": "unknown", "comment": "95 Prospect Park West" },
+    { "name": "Bufano Park Public Restroom", "id": "Bufano-Park-Restroom-Public2A80046E-C785-413D-A8E6-A3C4098A9923", "lat": 40.838, "lng": -73.831, "accessibility": "unknown", "comment": "La Salle Avenue, Edison Avenue, Bradford Avenue, Waterbury Avenue" },
+    { "name": "Hoover - Manton Playgrounds Public Restroom", "id": "--Restroom-Playgrounds-Manton-Public-Hoover4DA0FF86-9711-44B0-B5AD-F9CFFDDA2B3F", "lat": 40.7105, "lng": -73.8201, "accessibility": "unknown", "comment": "Manton Street & 83 Avenue" },
+    { "name": "North Meadow Recreation Center", "id": "Center-Recreation-North-Meadow9BD6CCB8-4BA0-428C-89E5-11062402F238", "lat": 40.7911, "lng": -73.9596, "accessibility": "unknown", "comment": "Mid-park at 97th Street" },
+    { "name": "Frederick B. Judge Playground Public Restroom", "id": "Judge-Playground-B.-Restroom-Frederick-Public634FC0F7-ADFB-41FB-9B69-355E9D9238DE", "lat": 40.6831, "lng": -73.8079, "accessibility": "unknown", "comment": "111 Avenue, 134 & 135 Streets, Lincoln Street" },
+    { "name": "Poor Richard's Playground Public Restroom", "id": "Poor-Playground-Public-Restroom-Richard's57EA3083-05BF-4724-BB8B-06D714C517BF", "lat": 40.793, "lng": -73.9431, "accessibility": "unknown", "comment": "East 109 Street between 2 & 3 Avenues" },
+    { "name": "Henry Hudson Park Public Restroom", "id": "Restroom-Public-Henry-Hudson-ParkF36D74E5-7CD7-4441-917A-3ECDBC7A683C", "lat": 40.881, "lng": -73.9206, "accessibility": "unknown", "comment": "Palisade Avenue, Kappock Street & Independence Avenue" },
+    { "name": "Senior Park Public Restroom", "id": "Restroom-Senior-Public-ParkED4FDA46-B998-481C-A2B8-4A4187822454", "lat": 40.6165, "lng": -74.1046, "accessibility": "unknown", "comment": "Clove Road and Victory Blvd." },
+    { "name": "Playground Ninety Public Restroom", "id": "Restroom-Ninety-Playground-Public15BBE0BB-D037-415B-942E-8CB6DF094B22", "lat": 40.7573, "lng": -73.8783, "accessibility": "unknown", "comment": "Northern Boulevard & 90 Street" },
+    { "name": "Emerald Playground Public Restroom", "id": "Public-Emerald-Restroom-Playground729F836E-2BC4-442C-9FEC-5D8A939B0A9E", "lat": 40.7308, "lng": -73.8061, "accessibility": "unknown", "comment": "164 Street between Jewel & 71 Avenues" },
+    { "name": "The Painter's Playground Public Restroom", "id": "Playground-Public-Painter's-Restroom-The58282FA8-92F2-41E0-9A55-34481DBD0D26", "lat": 40.7204, "lng": -73.8597, "accessibility": "unknown", "comment": "Alderton Street from Dieterle to Elwell Crescents" },
+    { "name": "Reiff Playground Public Restroom", "id": "Restroom-Playground-Public-ReiffD5A0A8AC-9777-461C-AA70-D2C0C88D3001", "lat": 40.7188, "lng": -73.9019, "accessibility": "unknown", "comment": "Fresh Pond Road, 63 Street, 59 Drive" },
+    { "name": "West 27th Street Public Restroom", "id": "West-27th-Restroom-Public-StreetCA17851C-278E-4711-936A-2DD97E08060E", "lat": 40.5716, "lng": -73.9923, "accessibility": "unknown", "comment": "Boardwalk at West 27th Street" },
+    { "name": "Central Park-Heckscher Public Restroom", "id": "Restroom-Central-Public-Park-Heckscher14EB4677-92E2-43F0-90E2-C9E1B93D2415", "lat": 40.7684, "lng": -73.9771, "accessibility": "unknown", "comment": "Heckscher Playground" },
+    { "name": "South Beach Playground Public Restroom", "id": "Public-Playground-South-Restroom-BeachD876B811-3474-444B-A87B-51CA4C979771", "lat": 40.5924, "lng": -74.0636, "accessibility": "unknown", "comment": "Doty Ave & Father Capodanno Blvd" },
+    { "name": "Old Town Playground Public Restroom", "id": "Old-Town-Restroom-Playground-PublicB30594DE-FDB7-4BEF-AA8D-F18BBD218372", "lat": 40.5955, "lng": -74.0815, "accessibility": "unknown", "comment": "Parkinson Avenue, Kramer Street" },
+    { "name": "Edmonds Playground Public Restroom", "id": "Restroom-Playground-Public-EdmondsD31B3126-517B-4A0A-8B15-DBCDFEE109CA", "lat": 40.6892, "lng": -73.9717, "accessibility": "unknown", "comment": "DeKalb Avenue, Adelphi Street" },
+    { "name": "Galapo Playground Public Restroom", "id": "Playground-Restroom-Galapo-Public7B34E4E6-42BC-4CF4-9438-FE4D9E45FD88", "lat": 40.5979, "lng": -73.9468, "accessibility": "unknown", "comment": "Bedford Avenue, Gravesend Neck Road" },
+    { "name": "Claremont (Dolphin) Playground Public Restroom", "id": "Playground-Restroom-Public-Claremont-(Dolphin)FEC6538B-83AE-4027-8EB7-5689AF001DEB", "lat": 40.8149, "lng": -73.9622, "accessibility": "unknown", "comment": "124th Street behind Grant's Tomb" },
+    { "name": "Seaside Playground Public Restroom", "id": "Seaside-Restroom-Public-PlaygroundA9E84CFB-2A66-4DF8-8D6B-590AD72CB5C8", "lat": 40.5807, "lng": -73.8305, "accessibility": "unknown", "comment": "Rockaway Beach Boulevard, B109-B110 Streets" },
+    { "name": "Samuel Seabury Playground Public Restroom", "id": "Playground-Restroom-Seabury-Public-SamuelC4DB66A3-F279-445A-BCC5-92D68F55D5F6", "lat": 40.7855, "lng": -73.951, "accessibility": "unknown", "comment": "Lexington Avenue, East 95 to East 96 Streets" },
+    { "name": "Delphin H. Greene Playground Public Restroom", "id": "Public-Greene-Restroom-H.-Delphin-PlaygroundCFF53210-D60D-4F0D-9C9A-0CC998719341", "lat": 40.6846, "lng": -73.7287, "accessibility": "unknown", "comment": "121 Avenue & 237 Street" },
+    { "name": "Elston Gene Howard Field Public Restroom", "id": "Elston-Howard-Public-Restroom-Gene-Field6335175E-85F6-4C9D-B668-E207BB30B349", "lat": 40.8275, "lng": -73.9284, "accessibility": "unknown", "comment": "mid-park, enter at East 161st Street & River Ave." },
+    { "name": "PIER 15", "id": "PIER-15884EFFF7-DFCE-44B0-BF26-CC2C127048EE", "lat": 40.7047, "lng": -74.0034, "accessibility": "unknown", "comment": "FDR Drive & Fletcher St." },
+    { "name": "8th Ave. & 66th St. Public Restroom", "id": "&-66th-Ave.-Public-8th-St.-RestroomCACC4091-1E2F-4686-AEE0-1ADB53D3F542", "lat": 40.6314, "lng": -74.0129, "accessibility": "unknown", "comment": "8th Ave. between 66th St. & 67th St." },
+    { "name": "Albert J. Parham Playground Public Restroom", "id": "Albert-Restroom-Public-J.-Playground-Parham57AD38A5-21E0-4102-947B-79F00E2C5A65", "lat": 40.6902, "lng": -73.9705, "accessibility": "unknown", "comment": "Between Adelphi St & Clermont Ave & between Willoughby Ave & Dekalb Ave" },
+    { "name": "Terrace Playground Public Restroom", "id": "Terrace-Restroom-Playground-PublicF12105F7-CCE9-47C8-BBFB-30A5751FD4AB", "lat": 40.6135, "lng": -74.0983, "accessibility": "unknown", "comment": "Howard Avenue & Martha Street" },
+    { "name": "West 22nd Street Public Restroom", "id": "22nd-Restroom-Street-Public-WestC40A3496-60A6-4FBF-B0C2-7BF46BE6EE35", "lat": 40.5724, "lng": -73.9885, "accessibility": "unknown", "comment": "Riegelmann Boardwalk, near W. 22nd St." },
+    { "name": "Evergreen Park Public Restroom", "id": "Evergreen-Restroom-Public-Park66B45DBE-4A9D-487B-8FA7-531F9E0E5769", "lat": 40.697, "lng": -73.8964, "accessibility": "unknown", "comment": "St Felix Ave. between Seneca Ave. and 60 Pl." },
+    { "name": "Carnegie Playground Public Restroom", "id": "Carnegie-Public-Restroom-Playground80810325-F54D-48F5-9D2B-3AA83A8F7039", "lat": 40.716, "lng": -73.9373, "accessibility": "unknown", "comment": "Sharon, Olive Streets, Maspeth & Morgan Avenues" },
+    { "name": "Playground of the Stars Public Restroom", "id": "Stars-Restroom-Public-Playground-of-the71F1CEF9-5467-4E5C-912F-7721A4ED6959", "lat": 40.8356, "lng": -73.8997, "accessibility": "unknown", "comment": "173rd Street and Fulton Avenue" },
+    { "name": "Allen Shandler Recreation Area Public Restroom", "id": "Recreation-Restroom-Shandler-Public-Area-Allen6C55AFC9-5D31-414B-AD1B-C18C5C311BD1", "lat": 40.8899, "lng": -73.8813, "accessibility": "unknown", "comment": "Jerome Avenue and East 233rd Street" },
+    { "name": "Willow Lake Playground Public Restroom", "id": "Willow-Restroom-Lake-Public-Playground56BD47BC-8D9A-425B-8999-9698E7744932", "lat": 40.7225, "lng": -73.8371, "accessibility": "unknown", "comment": "Grand Central Parkway between 71 & 72 Avenues" },
+    { "name": "Ferry Point Park East Public Restroom", "id": "Public-Restroom-Park-East-Ferry-PointB375F518-AB8A-4200-8724-EB08AAA10959", "lat": 40.8202, "lng": -73.8263, "accessibility": "unknown", "comment": "Balcom Avenue & Dewey Avenue" },
+    { "name": "Josephine Caminiti Playground Public Restroom", "id": "Josephine-Public-Restroom-Caminiti-Playground737FF31C-8E05-4852-A37B-742799EAA33F", "lat": 40.7438, "lng": -73.8615, "accessibility": "unknown", "comment": "Alystine Avenue & 102 Street" },
+    { "name": "Carmine Carro Community Center", "id": "Center-Carro-Community-Carmine1ED209EA-FD56-4FA1-A633-65A1696A64B9", "lat": 40.6079, "lng": -73.9374, "accessibility": "unknown", "comment": "3000 Fillmore Ave" },
+    { "name": "Paerdegat Park Public Restroom", "id": "Paerdegat-Park-Restroom-Public12494C5E-B6C9-43D4-B6B5-D6CC4B86676E", "lat": 40.6381, "lng": -73.9381, "accessibility": "unknown", "comment": "Foster Avenue, East 40-41 Streets" },
+    { "name": "Ethan Allen Playground Public Restroom", "id": "Allen-Restroom-Ethan-Playground-PublicB8E40AC0-F4B6-4452-B4A9-6692ED75460C", "lat": 40.6558, "lng": -73.8868, "accessibility": "unknown", "comment": "New Jersey Avenue & Vermont Street/Worthman" },
+    { "name": "DiGilio Playground Public Restroom", "id": "Playground-Public-DiGilio-Restroom9FD63390-B2A4-4B50-9D27-F98213118198", "lat": 40.6328, "lng": -73.9773, "accessibility": "unknown", "comment": "McDonald Avenue & Avenue F" },
+    { "name": "American Legion Liberty Post #1073", "id": "Legion-Liberty-#1073-Post-American38D125AF-4D40-48A9-B752-4FF6B9E0B7E7", "lat": 40.636, "lng": -73.8832, "accessibility": "unknown", "comment": "American Legion Ballfields near E. 102nd St. & Seaview Ave." },
+    { "name": "Hollis Playground Public Restroom", "id": "Restroom-Playground-Hollis-Public5703095A-2CB4-492D-8FC1-ED2D76299FA2", "lat": 40.7067, "lng": -73.7531, "accessibility": "unknown", "comment": "205 Street & Hollis Avenue" },
+    { "name": "Bronx Shore Fields Public Restroom", "id": "Shore-Fields-Bronx-Restroom-PublicF091FF7A-8814-41C8-BE2A-FBD2DA4F4D5B", "lat": 40.8005, "lng": -73.9239, "accessibility": "unknown", "comment": "Bronx Shore Road, Between Fields 3 & 4" },
+    { "name": "Franz Sigel Park Ballfields Public Restroom", "id": "Sigel-Franz-Restroom-Park-Public-BallfieldsC7E1A4B0-A52C-4396-87FC-C9FC81141E70", "lat": 40.8214, "lng": -73.926, "accessibility": "unknown", "comment": "Grand Concourse at East 153rd Street" },
+    { "name": "Commodore Barry Park Public Restroom", "id": "Restroom-Barry-Public-Commodore-ParkFA1BE6AF-ED5E-4906-B88C-5203713A9D3A", "lat": 40.6976, "lng": -73.9792, "accessibility": "unknown", "comment": "South of Flushing Avenue" },
+    { "name": "American Playground Public Restroom", "id": "Playground-Restroom-American-PublicC9749651-88BE-4227-B863-790C2DBF68B5", "lat": 40.7287, "lng": -73.9576, "accessibility": "unknown", "comment": "Franklin St between Noble St and Milton St" },
+    { "name": "Marion Hopkinson Playground Public Restroom", "id": "Restroom-Hopkinson-Playground-Public-Marion956175D5-98C8-493A-BA4B-F317E2E13775", "lat": 40.6818, "lng": -73.9134, "accessibility": "unknown", "comment": "Hopkinson Avenue & Marion Street" },
+    { "name": "Beach 67 Modular Public Restroom", "id": "67-Modular-Public-Beach-RestroomBC21F6F0-032F-4493-B751-1EF3BACA4B78", "lat": 40.5875, "lng": -73.7957, "accessibility": "unknown", "comment": "Boardwalk @ Beach 67 Street" },
+    { "name": "Seth Low Playground/Bealin Square Public Restroom", "id": "Low-Public-Playground/Bealin-Square-Seth-Restroom1FB2A92A-4476-4AD5-91BE-F7A6E7AE8795", "lat": 40.6083, "lng": -73.9865, "accessibility": "unknown", "comment": "Avenue P, Bay Parkway, West 12 Street" },
+    { "name": "London Planetree Playground Public Restroom", "id": "Restroom-Playground-Planetree-Public-LondonFC4AC751-9DC5-4626-9D66-60B0F8B09505", "lat": 40.6859, "lng": -73.8531, "accessibility": "unknown", "comment": "95th Ave between 88th St & 89th St" },
+    { "name": "Brookville Park Public Restroom", "id": "Restroom-Brookville-Public-Park17250D54-7ADA-4C48-AE3C-2793A64E53E4", "lat": 40.6622, "lng": -73.7422, "accessibility": "unknown", "comment": "Conduit Avenue, Brookville Boulevard, 144th Avenue, 233rd Street" },
+    { "name": "Harry Maze Playground Public Restroom", "id": "Playground-Harry-Maze-Restroom-Public41956CD3-98B4-4F18-8CF4-16F0FA9ED741", "lat": 40.6433, "lng": -73.9232, "accessibility": "unknown", "comment": "Avenue D between East 56 & East 57 Street" },
+    { "name": "Bowne Park Field House", "id": "Field-Park-House-Bowne871FEDFD-ADBD-43BA-9795-C0897055DB63", "lat": 40.7704, "lng": -73.8063, "accessibility": "unknown", "comment": "159 Street, 29 Avenue, 155 Street, 32 Avenue" },
+    { "name": "Hoffman Park Public Restroom", "id": "Hoffman-Park-Public-Restroom98C07244-982D-4A5A-BB4F-D899505CA51A", "lat": 40.733, "lng": -73.8715, "accessibility": "unknown", "comment": "Hoffman Drive west of Queens Boulevard" },
+    { "name": "Caserta Playground Public Restroom", "id": "Playground-Restroom-Caserta-Public4C931799-FF92-4DA6-9721-EF75B18E5117", "lat": 40.8375, "lng": -73.8538, "accessibility": "unknown", "comment": "St. Raymond Avenue, Purdy Street" },
+    { "name": "Kennedy King Playground Public Restroom", "id": "Restroom-Playground-King-Public-Kennedy8011E2FF-DA07-4BBF-9B51-619398CDF935", "lat": 40.6587, "lng": -73.9218, "accessibility": "unknown", "comment": "East 93 Street & Lenox Road" },
+    { "name": "Yellowstone Park Public Restroom", "id": "Park-Public-Restroom-Yellowstone0E569BDC-96D0-49FB-9071-2CC1CC1A8397", "lat": 40.7262, "lng": -73.8479, "accessibility": "unknown", "comment": "Yellowstone Boulevard between 68 Avenue & 68 Road" },
+    { "name": "Havemeyer Playground Public Restroom", "id": "Public-Playground-Restroom-Havemeyer1067D1C1-B8B5-4756-9D4D-6089D643892D", "lat": 40.83, "lng": -73.8479, "accessibility": "unknown", "comment": "Watson Avenue, Havemeyer Avenue, Cross Bronx Expressway" },
+    { "name": "Stewart Playground Public Restroom", "id": "Playground-Public-Restroom-Stewart9B0EF4AF-57F1-497F-AA26-33610F892600", "lat": 40.6519, "lng": -73.9657, "accessibility": "unknown", "comment": "Parade Pl. between Woodruff Ave. & Crooke Ave." },
+    { "name": "Queens Valley Playground Public Restroom", "id": "Restroom-Queens-Playground-Public-Valley4E2DBF6A-7E82-4BD3-912F-44255019BEC9", "lat": 40.7219, "lng": -73.8239, "accessibility": "unknown", "comment": "137 Street & 77 Avenue" },
+    { "name": "Walker Park Tennis House", "id": "Walker-Tennis-House-Park7E6FB02E-201C-4DC2-B2C1-4EB985E7389F", "lat": 40.6437, "lng": -74.1088, "accessibility": "unknown", "comment": "Delafield Pl. & Bard Ave." },
+    { "name": "Owl's Head Park Public Restroom", "id": "Restroom-Head-Park-Owl's-PublicBDDD64D7-596F-49B6-96B2-B96F9A90FA52", "lat": 40.6393, "lng": -74.032, "accessibility": "unknown", "comment": "68th St between Narrows Ave & Bliss Terr" },
+    { "name": "Highland Park Barbecue Area Public Restroom", "id": "Barbecue-Restroom-Area-Highland-Public-ParkF0136D82-DF97-4D20-95B5-F9CED1765AAF", "lat": 40.6875, "lng": -73.8901, "accessibility": "unknown", "comment": "mid-Park near Vermont Place" },
+    { "name": "Rev. T. Wendell Foster Skate Park Public Restroom", "id": "Foster-Skate-Public-Rev.-Restroom-T.-Park-Wendell273FAB72-A89A-4B37-B91D-ABCB89D503E8", "lat": 40.8312, "lng": -73.9247, "accessibility": "unknown", "comment": "East 164 Street near River Avenue" },
+    { "name": "Francis Lewis Park Public Restroom", "id": "Park-Francis-Public-Restroom-LewisAA04272C-481D-495F-9FB6-1317616D9C4C", "lat": 40.7963, "lng": -73.8257, "accessibility": "unknown", "comment": "3 Avenue and Bronx Whitestone Bridge" },
+    { "name": "Woods Playground Public Restroom", "id": "Restroom-Playground-Woods-Public2CFCE3D2-BAF3-466E-909D-CE955E5C2B4A", "lat": 40.6748, "lng": -73.9292, "accessibility": "unknown", "comment": "Bergen Street & Utica Avenue" },
+    { "name": "P.S. 155 Playground Public Restroom", "id": "155-Restroom-P.S.-Playground-PublicE8202799-56BA-43C7-BE59-66A74481CDF2", "lat": 40.7975, "lng": -73.9353, "accessibility": "unknown", "comment": "East 117 to East 118 Streets, 1 to 2 Avenues" },
+    { "name": "Spuyten Duyvil Playground Public Restroom", "id": "Restroom-Public-Playground-Spuyten-Duyvil4F16E51F-C2B5-4CEF-BA98-9CCC9C8A705E", "lat": 40.8871, "lng": -73.9162, "accessibility": "unknown", "comment": "Douglas Ave between West 235th St & West 236th St" },
+    { "name": "The View at Battery ", "id": "The-View-at-BatteryF428D733-8931-492E-BA49-12906CD0785F", "lat": 40.7014, "lng": -74.015, "accessibility": "unknown", "comment": "Battery Park Underpass at South St." },
+    { "name": "East River Park Track Public Restroom", "id": "River-Restroom-Park-East-Track-Public69C8D3F3-1323-4E76-ABE8-27DEE9BE47EF", "lat": 40.7218, "lng": -73.974, "accessibility": "unknown", "comment": "Near East 6th Street Entrance" },
+    { "name": "Vito Locascio Field Public Restroom", "id": "Public-Vito-Field-Restroom-Locascio511EC19E-44E6-4F0B-A028-6A452A425FFE", "lat": 40.6701, "lng": -73.8446, "accessibility": "unknown", "comment": "North Conduit & 149 Avenue" },
+    { "name": "Beach 30th Street Playground Public Restroom", "id": "30th-Playground-Street-Restroom-Beach-Public22EC3A1F-AA90-432B-B47C-B7C4CC0584BB", "lat": 40.5924, "lng": -73.7626, "accessibility": "unknown", "comment": "Boardwalk at Beach 32nd Street" },
+    { "name": "Midland Playground Public Restroom", "id": "Restroom-Playground-Public-Midland1800C201-A1B5-455E-8D4C-00B48590E933", "lat": 40.5748, "lng": -74.0984, "accessibility": "unknown", "comment": "Midland Avenue, South of Mason Avenue" },
+    { "name": "Gravesend Park Public Restroom", "id": "Public-Restroom-Park-Gravesend05DC62DC-4C04-4B23-8779-0114E67B1DED", "lat": 40.624, "lng": -73.9849, "accessibility": "unknown", "comment": "18 Avenue & 56 Street" },
+    { "name": "Midland Beach Playground Public Restroom", "id": "Public-Playground-Restroom-Midland-Beach42115161-3730-4B0E-883C-77E680910B17", "lat": 40.5683, "lng": -74.0908, "accessibility": "unknown", "comment": "Greeley Ave & Father Capodanno Blvd" },
+    { "name": "Fort Washington Park Tennis Courts Public Restroom", "id": "Tennis-Washington-Park-Courts-Fort-Restroom-Public1214165C-8CB5-4FF0-ADC4-3C0F5214EEE3", "lat": 40.8472, "lng": -73.9462, "accessibility": "unknown", "comment": "South of Little Red Lighthouse" },
+    { "name": "Rolph Henry Playground Public Restroom", "id": "Playground-Henry-Rolph-Restroom-PublicDD093E75-2A56-4E45-AD80-8D62ECB3D99A", "lat": 40.6557, "lng": -73.9475, "accessibility": "unknown", "comment": "New York & Clarkson Avenues" },
+    { "name": "Hammel Playground Public Restroom", "id": "Public-Playground-Restroom-Hammel27CCB60D-3D66-4472-A3E0-C88FE51A5754", "lat": 40.5882, "lng": -73.8094, "accessibility": "unknown", "comment": "B 83 Street & Rockaway Beach Boulevard" },
+    { "name": "Riverside South – Pier I Café", "id": "Café-South-Riverside-–-I-PierCF79B6A8-37E6-4ACC-BACF-9CF87AABA6E9", "lat": 40.7797, "lng": -73.9884, "accessibility": "unknown", "comment": "Riverside Drive bet.ween 65 St. and 72 St." },
+    { "name": "Mosholu Playground Public Restroom", "id": "Restroom-Public-Mosholu-PlaygroundB8E3E162-53EC-4F5F-B500-97B4C609AC38", "lat": 40.8726, "lng": -73.8829, "accessibility": "unknown", "comment": "Mosholu Pkwy, Bainbridge Avenue, Briggs Avenue" },
+    { "name": "Old Stone House of Brooklyn", "id": "House-Stone-Old-Brooklyn-of3B570D31-286C-498A-9A24-0AE84031893D", "lat": 40.673, "lng": -73.9846, "accessibility": "unknown", "comment": "336 3rd St" },
+    { "name": "Roy Wilkins Field House", "id": "House-Roy-Wilkins-FieldD65C2C45-1DF5-4D2E-A5AD-E65887571E36", "lat": 40.6877, "lng": -73.7725, "accessibility": "unknown", "comment": "south of track, enter at Foch Blvd. & Merrick Blvd." },
+    { "name": "Bleecker Playground Public Restroom", "id": "Public-Restroom-Bleecker-Playground097C8B7F-67AB-4DA3-851D-86165C724125", "lat": 40.7364, "lng": -74.0056, "accessibility": "unknown", "comment": "Hudson & West 11 Streets" },
+    { "name": "Cedar Playground Public Restroom", "id": "Cedar-Restroom-Playground-Public0C04DE3F-883B-44E2-8213-3645555C1EA0", "lat": 40.8553, "lng": -73.9175, "accessibility": "unknown", "comment": "Cedar Avenue, mid-park near W. 179th St." },
+    { "name": "Alley Athletic Playground Public Restroom", "id": "Playground-Alley-Athletic-Public-RestroomC7D7773F-5ACE-4653-A209-A928550F8195", "lat": 40.74, "lng": -73.7342, "accessibility": "unknown", "comment": "Grand Central Parkway, Winchester Boulevard, & Union Turnpike" },
+    { "name": "Captain Tilly Park Public Restroom", "id": "Public-Captain-Restroom-Tilly-Park2E54395C-F88F-424B-AD59-6327A35618C3", "lat": 40.7114, "lng": -73.7982, "accessibility": "unknown", "comment": "Highland Avenue, Upland Parkway, Gothic Parkway, 85 Avenue" },
+    { "name": "Magenta Playground Public Restroom", "id": "Playground-Restroom-Magenta-Public961A9BD4-7524-460E-8184-A9BA76343A84", "lat": 40.8735, "lng": -73.8678, "accessibility": "unknown", "comment": "Olinville Avenue, Rosewood Street" },
+    { "name": "Kissena Cricket Fields Public Restroom", "id": "Restroom-Public-Fields-Kissena-CricketA5430677-5AF3-42A6-B95A-BBD93E0E89D7", "lat": 40.745, "lng": -73.8173, "accessibility": "unknown", "comment": "56th Avenue & 151st Street" },
+    { "name": "Wolfe's Pond Park - District 3 HQ", "id": "3-Pond---HQ-Wolfe's-District-Park6B3BCD77-5C98-4801-9A36-C17F7E081260", "lat": 40.5174, "lng": -74.191, "accessibility": "unknown", "comment": "At beachfront, south of parking lot" },
+    { "name": "Wright Brothers Playground Public Restroom", "id": "Brothers-Public-Restroom-Playground-WrightF731415C-15F2-4733-8D39-A0FA9B9BE485", "lat": 40.8317, "lng": -73.9416, "accessibility": "unknown", "comment": "West 156 Street & St. Nicholas Avenue" },
+    { "name": "Playground One Forty Nine CIL Public Restroom", "id": "Restroom-Forty-Public-One-Playground-CIL-Nine465266C5-9FA1-4FF3-B460-92BAD0B6F391", "lat": 40.8259, "lng": -73.9413, "accessibility": "unknown", "comment": "West 149 Street & Bradhurst Avenue" },
+    { "name": "Pena Herrera Playground Public Restroom", "id": "Restroom-Public-Herrera-Pena-Playground1995C0E1-F67C-44C0-B4AF-EB32A5508889", "lat": 40.6494, "lng": -74.0121, "accessibility": "unknown", "comment": "46 & 47 Streets, 3 Avenue" },
+    { "name": "Ben Abrams Playground Public Restroom", "id": "Abrams-Playground-Ben-Public-Restroom71374FC5-CBA2-46F3-90D6-5F1A156A7DAA", "lat": 40.8544, "lng": -73.8697, "accessibility": "unknown", "comment": "Lydig Avenue & Bronx Park East" },
+    { "name": "Electric Playground Public Restroom", "id": "Electric-Restroom-Public-Playground22422DEE-E28D-4C26-B6DE-8E33A270FFF9", "lat": 40.7358, "lng": -73.8054, "accessibility": "unknown", "comment": "164 Street, south of 65 Avenue" },
+    { "name": "Marble Hill Playground Public Restroom", "id": "Public-Restroom-Marble-Playground-Hill0EB10720-9F4F-41F7-8069-0B4C6352FC9C", "lat": 40.8777, "lng": -73.9079, "accessibility": "unknown", "comment": "Marble Hill Avenue, West 230 Street, West 228 Street" },
+    { "name": "Bellaire Playground Public Restroom", "id": "Bellaire-Restroom-Playground-PublicFBA3537F-4320-402E-B987-E362803F20F2", "lat": 40.7217, "lng": -73.758, "accessibility": "unknown", "comment": "89 Avenue, 207 & 208 Streets" },
+    { "name": "St Nicholas Playground at West 133rd St. Public Restroom", "id": "133rd-at-St-Public-Nicholas-Playground-Restroom-St.-West3D98B73B-CEF7-4664-97D1-43078528C703", "lat": 40.8156, "lng": -73.949, "accessibility": "unknown", "comment": "St. Nicholas Avenue and W. 133rd Street" },
+    { "name": "Zimmerman Playground Public Restroom", "id": "Playground-Restroom-Zimmerman-Public8175CDA3-B78F-4E3D-9186-BD9D9B7BD751", "lat": 40.8661, "lng": -73.8687, "accessibility": "unknown", "comment": "Britton Street, Barker Avenue, Olinville Avenue" },
+    { "name": "Red Hook Park Public Restroom", "id": "Restroom-Hook-Red-Public-Park3DA850AD-2DE8-476C-A3B2-411A3C6759A9", "lat": 40.6728, "lng": -74.0078, "accessibility": "unknown", "comment": "Bay St. & Columbia St." },
+    { "name": "Saw Mill Playground Public Restroom", "id": "Public-Playground-Saw-Restroom-Mill7F411A26-1F94-4F34-8325-40C41728B8D5", "lat": 40.8089, "lng": -73.9193, "accessibility": "unknown", "comment": "Brook Avenue between E. 139th St. & E. 140th St." },
+    { "name": "Ehrenreich-Austin Playground Public Restroom", "id": "Ehrenreich-Austin-Playground-Restroom-Public65FC0E94-55D5-4CCD-B745-B2B24B0DB632", "lat": 40.7158, "lng": -73.837, "accessibility": "unknown", "comment": "Austin Street between 76 Avenue & 76 Drive" },
+    { "name": "Springfield Playground Public Restroom", "id": "Public-Springfield-Restroom-PlaygroundC9A8AED3-CA71-4787-AA5C-C65EAFEFDCA7", "lat": 40.6608, "lng": -73.7623, "accessibility": "unknown", "comment": "Near ballfields at 184th Street between 146 Rd & 146 Ter" },
+    { "name": "Scylla Playground Public Restroom", "id": "Restroom-Public-Scylla-Playground48FF6075-6AB0-4A79-9DED-6D2C6BA53015", "lat": 40.7837, "lng": -73.9262, "accessibility": "unknown", "comment": "Wards Meadow Loop & Hell Gate Circle" },
+    { "name": "People's Park Public Restroom", "id": "Public-People's-Park-Restroom29E6BC13-EDDC-4CA7-A870-8E44C36643B6", "lat": 40.8095, "lng": -73.917, "accessibility": "unknown", "comment": "Brook Avenue, East 141 Street" },
+    { "name": "Rienzi Playground Public Restroom", "id": "Rienzi-Playground-Public-RestroomB41E5F07-84A4-4C5D-9137-C80D3C59A756", "lat": 40.8876, "lng": -73.8588, "accessibility": "unknown", "comment": "East 226 Street, Barnes Avenue, East 225 Street" },
+    { "name": "Beach 97th Street Public Restroom", "id": "Beach-Public-Street-97th-Restroom1AA19F51-F34E-41A1-9E9C-A41FE8BCA71B", "lat": 40.583, "lng": -73.8176, "accessibility": "unknown", "comment": "Boardwalk at Beach 97th Street" },
+    { "name": "Pierrepont Playground Public Restroom", "id": "Playground-Pierrepont-Restroom-Public9085D716-2714-49F2-B23F-3271040DB841", "lat": 40.6963, "lng": -73.9976, "accessibility": "unknown", "comment": "Furman Street, Pierrepont Place" },
+    { "name": "Herman Dolgon Playground Public Restroom", "id": "Dolgon-Herman-Restroom-Playground-Public0408D2CA-A45D-43D1-BB4B-A6D0FB234DAB", "lat": 40.5982, "lng": -73.9396, "accessibility": "unknown", "comment": "Avenue V & Nostrand Avenue" },
+    { "name": "Mahoney Playground Public Restroom", "id": "Restroom-Mahoney-Playground-PublicE48340E5-030C-47D8-883C-53B09C0B3857", "lat": 40.6435, "lng": -74.0862, "accessibility": "unknown", "comment": "Beechwood & Cleveland Avenues" },
+    { "name": "Bayswater Playground Public Restroom", "id": "Bayswater-Playground-Restroom-Public33E4B752-16E2-4DB3-81C3-528AB625351E", "lat": 40.5988, "lng": -73.7675, "accessibility": "unknown", "comment": "Beach Channel Drive, B 32 Street, Dwight Avenue, Norton Avenue" },
+    { "name": "Daniel M. O'Connell Playground Public Restroom", "id": "Daniel-Playground-O'Connell-M.-Restroom-PublicF5928671-AEED-408C-A0A1-CEB375DC178C", "lat": 40.7002, "lng": -73.7582, "accessibility": "unknown", "comment": "113 Avenue & 196 Street" },
+    { "name": "Hudson Park Public Restroom", "id": "Public-Restroom-Hudson-Park2CC2D252-D080-4A43-B10D-5CCDFF43A27E", "lat": 40.7563, "lng": -73.9997, "accessibility": "unknown", "comment": "W. 36th St. & Hudson Blvd. E." },
+    { "name": "Riverbank Playground Public Restroom", "id": "Restroom-Public-Riverbank-Playground251921D5-CACA-4A98-BA45-C6FC59FE6814", "lat": 40.8256, "lng": -73.9539, "accessibility": "unknown", "comment": "West 142 Street & Riverside Drive" },
+    { "name": "Stanley Isaacs Playground Public Restroom", "id": "Playground-Restroom-Stanley-Public-Isaacs176ED1F7-7A4C-49E7-B965-0225ADD0D628", "lat": 40.7829, "lng": -73.9446, "accessibility": "unknown", "comment": "East 96-97 Streets & FDR Drive" },
+    { "name": "Coffey Park Public Restroom", "id": "Park-Restroom-Coffey-PublicC6FAAD53-7DBE-40F2-A5E2-FB0472B72037", "lat": 40.6772, "lng": -74.0087, "accessibility": "unknown", "comment": "King, Richards, & Dwight Streets" },
+    { "name": "Lindower Park Public Restroom", "id": "Park-Lindower-Restroom-Public698952D0-C234-477C-91ED-AFDF91EA5EBC", "lat": 40.6123, "lng": -73.9112, "accessibility": "unknown", "comment": "Mill & Strickland Avenues, 60 Street" },
+    { "name": "Ten Mile River Playground Public Restroom", "id": "Mile-River-Playground-Restroom-Ten-PublicEA651373-22A2-4E63-8DE8-997984DF5E26", "lat": 40.8298, "lng": -73.9527, "accessibility": "unknown", "comment": "West 148 Street & Hudson River" },
+    { "name": "Fox Park-Public Restroom", "id": "Park-Public-Fox-Restroom4E8726C5-9EC0-41D5-821A-D3193AC0D521", "lat": 40.8152, "lng": -73.8986, "accessibility": "unknown", "comment": "Fox Street and East 156 Street" },
+    { "name": "Olinville Playground Public Restroom", "id": "Public-Playground-Olinville-RestroomDC42FDAA-42D7-4ECB-BA9F-64520B46DB8B", "lat": 40.8843, "lng": -73.867, "accessibility": "unknown", "comment": "East 219 Street & Bronx River Parkway" },
+    { "name": "Hallets Cove Playground (area A) Public Restroom", "id": "A)-Hallets-Playground-Public-(area-Cove-Restroom0CBB830B-3F1F-4240-8620-4E3B8577668A", "lat": 40.7716, "lng": -73.9347, "accessibility": "unknown", "comment": "Hallets Cove, Vernon Boulevard" },
+    { "name": "P.O. Serrano Playground Public Restroom", "id": "Serrano-Restroom-P.O.-Playground-Public11EEFFF6-674A-4061-B460-09EBFDACB2C5", "lat": 40.8235, "lng": -73.8505, "accessibility": "unknown", "comment": "Turnbull Avenue, Olmstead Avenue, Lafayette Avenue" },
+    { "name": "Bridge Park Public Restroom", "id": "Bridge-Park-Public-Restroom4E496C68-1E45-49E3-B56B-9F3F45F61F1E", "lat": 40.7008, "lng": -73.9855, "accessibility": "unknown", "comment": "Jay Street, York Street, Bridge Street, Prospect Street" },
+    { "name": "Detective William T. Gunn Playground Public Restroom", "id": "Gunn-Detective-Playground-Restroom-Public-T.-William4BA557C8-353A-4334-8641-30279C586492", "lat": 40.7323, "lng": -73.7317, "accessibility": "unknown", "comment": "Hillside Avenue, east of 235 Court" },
+    { "name": "Hunts Point Playground Public Restroom", "id": "Hunts-Restroom-Public-Playground-Point7C09F389-7E96-47F7-B810-6B3843CC1E6E", "lat": 40.8143, "lng": -73.8859, "accessibility": "unknown", "comment": "Spofford Avenue, Hunts Point Avenue, Faile Street" },
+    { "name": "Arrochar Playground Public Restroom", "id": "Playground-Restroom-Arrochar-PublicAC56A9D8-612C-4005-90A4-71933D77F458", "lat": 40.5978, "lng": -74.0712, "accessibility": "unknown", "comment": "228 Major Avenue" },
+    { "name": "Sunset Park Public Restroom", "id": "Park-Sunset-Public-Restroom5DF7C0BF-78F7-42B9-8A87-73FCC16D696D", "lat": 40.6477, "lng": -74.005, "accessibility": "unknown", "comment": "44th St between 5th Ave & 6th Ave" },
+    { "name": "Playground 52 LII Public Restroom", "id": "52-Public-Restroom-Playground-LIID253C464-0E26-41D0-8289-ED358345802F", "lat": 40.8154, "lng": -73.9014, "accessibility": "unknown", "comment": "Kelly Street, St. John's Avenue, Beck Street" },
+    { "name": "McGuire Fields Public Restroom", "id": "McGuire-Public-Restroom-Fields44FFB834-C40D-4BFF-BEAB-C286890C05DB", "lat": 40.6186, "lng": -73.8988, "accessibility": "unknown", "comment": "Ave Y., Bergen Ave. bet. Ave. V and Belt Pkwy." },
+    { "name": "Lions Gate Field Public Restroom", "id": "Restroom-Lions-Gate-Field-Public0A50D493-EA90-4A2E-9E82-7508926E91CA", "lat": 40.7188, "lng": -73.993, "accessibility": "unknown", "comment": "Broome Street between Forsyth St. & Christie St." },
+    { "name": "Mill Pond Park Power House Building", "id": "Mill-Pond-House-Building-Power-Park0970A44B-4FB5-4F73-83FD-8219D4778CCC", "lat": 40.8244, "lng": -73.9315, "accessibility": "unknown", "comment": "Exterior Street & E. 153rd Street" },
+    { "name": "Tiffany Playground Public Restroom", "id": "Tiffany-Playground-Restroom-Public21880D14-A3AA-4A5D-9307-688E59846AF8", "lat": 40.8248, "lng": -73.8943, "accessibility": "unknown", "comment": "Tiffany Street, Fox Street, East 167 Street" },
+    { "name": "Bellerose Playground Public Restroom", "id": "Bellerose-Restroom-Playground-Public174D056E-FD56-4DBD-BE07-34EE907599F9", "lat": 40.7328, "lng": -73.7177, "accessibility": "unknown", "comment": "85 Avenue, 248 & 249 Streets" },
+    { "name": "Kelly Park Playground Public Restroom", "id": "Kelly-Park-Public-Restroom-PlaygroundF1005AD2-2AD7-4972-9357-E79AE11AFC24", "lat": 40.6037, "lng": -73.9576, "accessibility": "unknown", "comment": "Avenue S, East 14 & East 15 Streets" },
+    { "name": "Schenck Playground Public Restroom", "id": "Restroom-Playground-Public-Schenck1534EA83-A381-4EF3-9506-C60BBFC738EF", "lat": 40.6654, "lng": -73.886, "accessibility": "unknown", "comment": "Livonia Ave. between Barbey St. and Schenck Ave." },
+    { "name": "Silent Springs Playground PR", "id": "Silent-PR-Springs-Playground25654BCB-C190-4B67-A272-7D8A8654A202", "lat": 40.7496, "lng": -73.8232, "accessibility": "unknown", "comment": "45-20 Colden Street" },
+    { "name": "Annadale Playground Public Restroom", "id": "Restroom-Public-Playground-Annadale5749E50A-04E7-4977-9239-B04C996143E5", "lat": 40.7311, "lng": -73.8517, "accessibility": "unknown", "comment": "Yellowstone Boulevard, 65 Road, 65 Avenue" },
+    { "name": "Lower Highland Playground Public Restroom", "id": "Playground-Highland-Lower-Restroom-PublicD7C53984-8E28-4C37-B51A-0051527683CD", "lat": 40.684, "lng": -73.8858, "accessibility": "unknown", "comment": "Jamaica Avenue & Elton Street" },
+    { "name": "Castlewood Playground Public Restroom", "id": "Castlewood-Restroom-Public-Playground2121A062-F738-4F1B-9C9E-7D30015EB261", "lat": 40.7499, "lng": -73.7208, "accessibility": "unknown", "comment": "Little Neck Parkway & 72 Avenue" },
+    { "name": "Fulton Park Public Restroom", "id": "Park-Fulton-Public-Restroom9CC892DB-52AC-4FB6-985A-493041EC14EE", "lat": 40.6798, "lng": -73.9316, "accessibility": "unknown", "comment": "Fulton, Chauncey Streets, Stuyvesant, Lewis Avenues" },
+    { "name": "Sobelsohn Playground Public Restroom", "id": "Playground-Sobelsohn-Restroom-Public71D944F2-D087-4B7C-9BD1-0D56DC6EFD28", "lat": 40.7099, "lng": -73.8354, "accessibility": "unknown", "comment": "Park Lane South and Abingdon Road" },
+    { "name": "Rappaport Playground Public Restroom", "id": "Playground-Restroom-Rappaport-PublicFE195225-82E8-4894-88C1-259CA2306CE4", "lat": 40.6368, "lng": -74.0008, "accessibility": "unknown", "comment": "52-53 Streets, Fort Hamilton Parkway" },
+    { "name": "Ciccarone Park Public Restroom", "id": "Restroom-Public-Park-Ciccarone17778E63-9CFD-4C30-8C29-607C41DC36CC", "lat": 40.8559, "lng": -73.8866, "accessibility": "unknown", "comment": "Arthur Avenue, East 188 Street" },
+    { "name": "Fred Samuel Playground Public Restroom", "id": "Restroom-Fred-Public-Samuel-Playground2C945BC8-E8B8-43CB-B537-4D6B16D01BAD", "lat": 40.8173, "lng": -73.939, "accessibility": "unknown", "comment": "Lenox Avenue, West 139 to West 140 Streets" },
+    { "name": "Spring Creek Park-Public Restroom ", "id": "Restroom-Park-Public-Creek-SpringD64369E6-D669-4BAE-A41B-3BC4181B121A", "lat": 40.6492, "lng": -73.8738, "accessibility": "unknown", "comment": "" },
+    { "name": "Fort Independence Playground Public Restroom", "id": "Playground-Fort-Public-Independence-Restroom97FF1A77-AA45-430B-9F64-06F0A34746A5", "lat": 40.8816, "lng": -73.8959, "accessibility": "unknown", "comment": "Stevenson Place, West 238 Street, Sedgwick Avenue" },
+    { "name": "121st Avenue Entrance Public Restroom", "id": "Restroom-Avenue-Entrance-121st-Public3D7FAA16-54EC-415B-B7E1-685CE0DAFAB6", "lat": 40.678, "lng": -73.7867, "accessibility": "unknown", "comment": "121st Ave. & 155th St." },
+    { "name": "Kaiser Park Public Restroom", "id": "Restroom-Public-Park-Kaiser489D9CB3-48EC-4937-8CBD-3DDF5D09C806", "lat": 40.5785, "lng": -73.9954, "accessibility": "unknown", "comment": "South of Gravesend Bay, southeast of Path, northeast of Neptune Avenue" },
+    { "name": "Nelson Playground Public Restroom", "id": "Public-Playground-Nelson-Restroom65A9C75F-B3DE-4BE7-9929-851DEA9D5B7F", "lat": 40.835, "lng": -73.9266, "accessibility": "unknown", "comment": "West 166 Street, Nelson Avenue, Woodycrest Avenue" },
+    { "name": "Pratt Playground Public Restroom", "id": "Playground-Public-Restroom-Pratt490AD4E4-4248-4A2C-BFF0-BDF2D6BC8DCD", "lat": 40.6926, "lng": -73.9622, "accessibility": "unknown", "comment": "Willoughby Avenue, Emerson Place" },
+    { "name": "Wakefield Playground Public Restroom", "id": "Public-Playground-Wakefield-Restroom5E1826B2-F979-419C-A222-31C28C645252", "lat": 40.9018, "lng": -73.8548, "accessibility": "unknown", "comment": "Matilda Avenue, East 239 Street, Carpenter Avenue" },
+    { "name": "Stillwell Ave. Public Restroom", "id": "Stillwell-Restroom-Ave.-Public80BB5127-420C-41D3-B6C8-F70C012D897F", "lat": 40.5728, "lng": -73.9808, "accessibility": "unknown", "comment": "Boardwalk between W. 10th St. & Stillwell Ave." },
+    { "name": "Taylor Playground Public Restroom", "id": "Playground-Taylor-Restroom-Public6678CAD9-4423-4CF1-8823-EEC085474930", "lat": 40.839, "lng": -73.8662, "accessibility": "unknown", "comment": "Guerlain Street, Thieriot Avenue, Taylor Avenue" },
+    { "name": "Delacorte Theater Women's Restroom", "id": "Women's-Theater-Restroom-DelacorteF7A0E1CF-597E-4684-BE37-4B424BA37034", "lat": 40.7804, "lng": -73.9691, "accessibility": "unknown", "comment": "Mid-Park at 80th Street on the southwest corner of the Great Lawn" },
+    { "name": "Abraham Lincoln Playground Public Restroom", "id": "Restroom-Playground-Lincoln-Public-AbrahamE46251A9-7794-4FCE-83F8-949DF662EA8E", "lat": 40.8123, "lng": -73.9371, "accessibility": "unknown", "comment": "East 135 Street, between Madison & 5 Avenues" },
+    { "name": "Fox Playground Public Restroom", "id": "Playground-Fox-Restroom-Public0B9AC97F-0923-48BA-83FD-CA1235B9D0A6", "lat": 40.6327, "lng": -73.9239, "accessibility": "unknown", "comment": "Avenue H, East 54 to E 55 Streets" },
+    { "name": "John J Carty Park Public Restroom", "id": "Carty-John-J-Park-Restroom-Public624A8E84-0D59-4704-AE6A-3F4460CC4C18", "lat": 40.6145, "lng": -74.0294, "accessibility": "unknown", "comment": "Fort Hamilton Parkway, 94-95 Streets" },
+    { "name": "Nostrand Playground Public Restroom", "id": "Public-Playground-Restroom-NostrandC5C22B77-AF71-43A4-ABCE-58CC021EF114", "lat": 40.6384, "lng": -73.9475, "accessibility": "unknown", "comment": "Nostrand & Foster Avenues" },
+    { "name": "Montbellier Park Public Restroom", "id": "Montbellier-Park-Restroom-PublicC735E8AC-1155-4394-8E61-E76F8A80624B", "lat": 40.674, "lng": -73.7564, "accessibility": "unknown", "comment": "Springfield Boulevard & 139 Avenue" },
+    { "name": "Cambria Playground Public Restroom", "id": "Restroom-Cambria-Playground-Public9A326222-DAD3-456B-B1A3-73E039A3C5CB", "lat": 40.6885, "lng": -73.7425, "accessibility": "unknown", "comment": "121 Avenue & 220 Street" },
+    { "name": "Colden Playground Public Restroom", "id": "Restroom-Playground-Colden-PublicE893EDB9-F7AE-43D2-8B64-ED389FBC615B", "lat": 40.7701, "lng": -73.827, "accessibility": "unknown", "comment": "Union Street & 31 Road" },
+    { "name": "St. Vartan Park Public Restroom", "id": "St.-Park-Restroom-Vartan-Public7FA90125-59BC-4B0B-8B86-E91CEA03154E", "lat": 40.7449, "lng": -73.9733, "accessibility": "unknown", "comment": "East 35-East 36 Streets, between 1 & 2 Avenues" },
+    { "name": "Dinosaur Playground Public Restroom", "id": "Dinosaur-Restroom-Public-PlaygroundC1BCAB78-62B3-4987-B3E6-7D5ECB266C9A", "lat": 40.7967, "lng": -73.9752, "accessibility": "unknown", "comment": "97th Street & Riverside Drive" },
+    { "name": "Belmont Playground Public Restroom", "id": "Belmont-Public-Restroom-Playground52CFF144-4615-4520-88D2-21AD945FBE81", "lat": 40.8506, "lng": -73.8875, "accessibility": "unknown", "comment": "E. 182nd Street & Grote Street" },
+    { "name": "Robert E. Venable Park Public Restroom", "id": "Public-E.-Park-Robert-Venable-Restroom8A398C54-7C39-4B64-8AF3-C1B44A38CC8F", "lat": 40.6744, "lng": -73.8651, "accessibility": "unknown", "comment": "Belmont Ave. & Sheridan Ave." },
+    { "name": "Pat Parlato Playground Public Restroom", "id": "Pat-Parlato-Public-Restroom-Playground9254D9BB-9978-456A-BF6C-F4BA52D4E348", "lat": 40.577, "lng": -73.9462, "accessibility": "unknown", "comment": "Ocean Ave. & Oriental Blvd." },
+    { "name": "Upper Picnic Area Public Restroom", "id": "Public-Upper-Picnic-Restroom-AreaC22B44FF-596D-4628-9537-D86A3C8693D4", "lat": 40.7265, "lng": -73.7737, "accessibility": "unknown", "comment": "North of Grand Central Parkway to ballfields & tennis courts between 193rd Street and Francis Lewis*" },
+    { "name": "Yolanda García Park Public Restroom", "id": "Yolanda-Restroom-Park-García-Public6D5B40E8-5665-4548-8014-85C4E47C6529", "lat": 40.8229, "lng": -73.9139, "accessibility": "unknown", "comment": "Melrose Ave. & E. 159th St." },
+    { "name": "De Hostos Playground Public Restroom", "id": "Hostos-Public-Restroom-Playground-De2A446047-CC74-48C4-A1BC-3D7EF3443FB9", "lat": 40.7025, "lng": -73.9495, "accessibility": "unknown", "comment": "Harrison Ave between Lorimer St & Walton St" },
+    { "name": "Bethesda Terrace", "id": "Bethesda-TerraceF2072386-F302-48F9-94EE-5CE4068CA267", "lat": 40.7735, "lng": -73.9711, "accessibility": "unknown", "comment": "Mid-Park at 72nd Street" },
+    { "name": "Van Cortlandt Stadium", "id": "Van-Stadium-CortlandtE3C9C987-006E-4DC4-8449-69AB888079BA", "lat": 40.8883, "lng": -73.8981, "accessibility": "unknown", "comment": "Broadway between West 240 and West 242 Streets" },
+    { "name": "Castle Hill Playground Public Restroom", "id": "Castle-Public-Playground-Hill-Restroom664E495A-535A-46B6-8718-E888F48E6FFF", "lat": 40.839, "lng": -73.853, "accessibility": "unknown", "comment": "Parker Street, Castle Hill Avenue, Puroy Street" },
+    { "name": "Mott Playground Public Restroom", "id": "Public-Playground-Mott-Restroom4F38F9A3-1883-492D-9E1D-0AB0345FB5C6", "lat": 40.8313, "lng": -73.9147, "accessibility": "unknown", "comment": "Morris Avenue, College Avenue, Mc Clellan Street" },
+    { "name": "Coleman Playground Public Restroom", "id": "Playground-Coleman-Public-Restroom6B9B0030-7C14-4EAB-B617-F57D5D0BF471", "lat": 40.7109, "lng": -73.9935, "accessibility": "unknown", "comment": "Between Cherry & Monroe Streets" },
+    { "name": "Holcombe Rucker Park Public Restroom", "id": "Holcombe-Restroom-Rucker-Public-Park2240F122-746D-48ED-AD1F-3E0D7E7E9736", "lat": 40.8292, "lng": -73.9362, "accessibility": "unknown", "comment": "West 155 Street, 8 Avenue to Harlem River Drive" },
+    { "name": "Playland Playground Public Restroom", "id": "Public-Playground-Playland-Restroom7C5041B8-C630-41CA-9CC5-B843CFDD4A47", "lat": 40.5889, "lng": -74.0668, "accessibility": "unknown", "comment": "Sand Lane & Father Capodanno Blvd" },
+    { "name": "Horatio Playground Public Restroom", "id": "Horatio-Playground-Public-Restroom8313FD58-7BFF-46C7-BA5C-380F8D81B5B8", "lat": 40.7588, "lng": -73.754, "accessibility": "unknown", "comment": "Horatio Parkway and 50 Avenue" },
+    { "name": "Icahn Stadium", "id": "Stadium-Icahn5CC11877-A6E7-4899-A7C8-D225336688A6", "lat": 40.7929, "lng": -73.9247, "accessibility": "unknown", "comment": "Central Road" },
+    { "name": "Little Bay Park - Public Restroom", "id": "--Park-Little-Restroom-Bay-PublicFF818F7A-D5EB-41FE-AC17-7E4EF6D03922", "lat": 40.7904, "lng": -73.782, "accessibility": "unknown", "comment": "211-01 Cross Island Parkway" },
+    { "name": "Jackie Robinson Playground Public Restroom", "id": "Public-Playground-Restroom-Jackie-Robinson6CB3544C-21E1-425B-85E0-82C3C099B828", "lat": 40.6659, "lng": -73.9589, "accessibility": "unknown", "comment": "Sullivan Place & Franklin Avenue, Montgomery Street" },
+    { "name": "Roebling Playground Public Restroom", "id": "Public-Playground-Roebling-RestroomA455ABDF-2D8E-4A67-BBEF-2D5893CA7E29", "lat": 40.7061, "lng": -73.9624, "accessibility": "unknown", "comment": "Wilson & Lee Avenues, Taylor Street" },
+    { "name": "Captain Rivera Playground Public Restroom", "id": "Playground-Captain-Restroom-Rivera-PublicAC4BB896-9CC5-477F-9E5C-99AB36611715", "lat": 40.8179, "lng": -73.9068, "accessibility": "unknown", "comment": "East 156 Street, Forest Avenue" },
+    { "name": "Gertrude Ederle Recreation Center & Playground PR", "id": "Center-Ederle-Recreation-&-PR-Playground-Gertrude6ABA3C3C-095C-4D8D-8377-16B3243CB3B5", "lat": 40.7715, "lng": -73.9887, "accessibility": "unknown", "comment": "232 West 60th Street" },
+    { "name": "Herald Square Public Restroom", "id": "Public-Restroom-Herald-Square80F79C7E-34D8-4705-97D6-49E35A156B2A", "lat": 40.7504, "lng": -73.9875, "accessibility": "unknown", "comment": "Ave. of the Americas & W. 35th St." },
+    { "name": "Carver Playground Public Restroom", "id": "Public-Carver-Restroom-Playground7ABC8CF9-B646-4342-9B83-B3CC213C0031", "lat": 40.6804, "lng": -73.9205, "accessibility": "unknown", "comment": "Ralph Avenue & Sumpter Street" },
+    { "name": "Monsignor McGolrick Playground Public Restroom", "id": "Monsignor-Playground-McGolrick-Restroom-Public9F664F62-DC46-4B62-AAD9-ADAA02CC673E", "lat": 40.7248, "lng": -73.9435, "accessibility": "unknown", "comment": "Nashua Ave. between Monitor St. & Russell St." },
+    { "name": "Springfield Park North Public Restroom", "id": "Springfield-North-Public-Park-Restroom60B08FE9-5425-4ADC-9397-598935BC1912", "lat": 40.6638, "lng": -73.7595, "accessibility": "unknown", "comment": "145th Rd. & Springfield Blvd." },
+    { "name": "Sheltering Arms Playground Public Restroom", "id": "Arms-Public-Sheltering-Restroom-PlaygroundB9CCFA69-BC60-44EA-9B3A-116861112012", "lat": 40.8153, "lng": -73.956, "accessibility": "unknown", "comment": "West 129 Street, Amsterdam Avenue" },
+    { "name": "Bartlett Playground Public Restroom", "id": "Bartlett-Playground-Restroom-PublicBEA4C1FF-B779-4067-96F6-7FA8094EA375", "lat": 40.7007, "lng": -73.946, "accessibility": "unknown", "comment": "Bartlett Street & Throop Avenue" },
+    { "name": "Bayside Playground-Public Restroom", "id": "Playground-Public-Restroom-BaysideD4691573-385A-48D8-A61C-8D6357532EE4", "lat": 40.585, "lng": -73.825, "accessibility": "unknown", "comment": "Beach Channel Drive @ Seaside Avenue" },
+    { "name": "Alley Park Public Restroom", "id": "Public-Alley-Restroom-Park3DEB1377-F5E9-43FD-9B09-D38855AB84D5", "lat": 40.747, "lng": -73.7456, "accessibility": "unknown", "comment": "67 Avenue & 230 Street" },
+    { "name": "Greene Playground Public Restroom", "id": "Public-Restroom-Playground-Greene40144B1B-6340-49AA-B21F-5713EEE497D8", "lat": 40.6864, "lng": -73.9658, "accessibility": "unknown", "comment": "Greene & Washington Avenues" },
+    { "name": "Haffen Park Public Restroom", "id": "Restroom-Park-Public-Haffen33DEEF93-39D4-4068-945B-D27A8D7E0F80", "lat": 40.8735, "lng": -73.8393, "accessibility": "unknown", "comment": "Burke Avenue, Hammersley Avenue, Gunther Avenue, Ely Avenue" },
+    { "name": "Marlboro Playground Public Restroom", "id": "Marlboro-Restroom-Public-PlaygroundDDCB7503-2B70-424C-8A82-BEB82DE27CFE", "lat": 40.5913, "lng": -73.9811, "accessibility": "unknown", "comment": "West 11 Street & Avenue W" },
+    { "name": "Tiger Playground Public Restroom", "id": "Playground-Tiger-Restroom-PublicDBB69637-2DC7-4512-80FD-3EA4A7270149", "lat": 40.688, "lng": -73.9112, "accessibility": "unknown", "comment": "Evergreen Avenue & Eldert Street" },
+    { "name": "Judge Moses Weinstein Playground Public Restroom", "id": "Judge-Playground-Restroom-Public-Weinstein-Moses2BE19940-771F-4083-B29D-97A05638B70B", "lat": 40.7187, "lng": -73.8204, "accessibility": "unknown", "comment": "Vleigh Place & 141 Street" },
+    { "name": "Hippo Playground Public Restroom", "id": "Hippo-Restroom-Public-Playground02308FCC-698C-4EDC-94FA-C20BD65298AB", "lat": 40.7934, "lng": -73.978, "accessibility": "unknown", "comment": "91st Street near Riverside Drive" },
+    { "name": "Maple Playground Public Restroom", "id": "Public-Playground-Restroom-MapleC8BF9EE8-48A4-49A1-99CF-E9E4421ADEBE", "lat": 40.756, "lng": -73.8261, "accessibility": "unknown", "comment": "Kissena Boulevard & Maple Avenue" },
+    { "name": "Wallenberg Playground Public Restroom", "id": "Public-Wallenberg-Restroom-PlaygroundADEFAB67-48D1-4AEA-9F7F-A39BCC5A6229", "lat": 40.8528, "lng": -73.9272, "accessibility": "unknown", "comment": "W. 189th St. & Amsterdam Ave." },
+    { "name": "Dr. Charles R. Drew Park Public Restroom", "id": "Drew-Charles-Park-R.-Restroom-Dr.-PublicE41AD376-B246-418F-8BD9-83CCA9FC67DD", "lat": 40.6802, "lng": -73.8024, "accessibility": "unknown", "comment": "Van Wyck Expressway, 116 Avenue, 140 Street, 115 Avenue" },
+    { "name": "Lawrence Virgilio Playground Public Restroom", "id": "Restroom-Virgilio-Playground-Public-LawrenceE445D946-3D82-46CD-83F7-2C23E8B7E378", "lat": 40.7475, "lng": -73.9106, "accessibility": "unknown", "comment": "39 Drive & 54 Street" },
+    { "name": "Mafera Park Public Restroom", "id": "Restroom-Public-Park-Mafera244B5AEA-E8E6-4F02-8C38-1CC6AD1E9092", "lat": 40.706, "lng": -73.8913, "accessibility": "unknown", "comment": "65 Place & Catalpa Avenue & 68 Avenue" },
+    { "name": "Horace Harding Playground Public Restroom", "id": "Public-Harding-Horace-Playground-Restroom1A12E240-6959-4D9A-A252-68B66ABD3A7A", "lat": 40.7332, "lng": -73.8603, "accessibility": "unknown", "comment": "62 Drive between 97 Place & 98 Street" },
+    { "name": "Hamilton Fish Recreation Center", "id": "Recreation-Center-Fish-Hamilton3207EC70-DEF6-4D19-9C35-F66BD139FE01", "lat": 40.72, "lng": -73.9815, "accessibility": "unknown", "comment": "128 Pitt St" },
+    { "name": "Adams Street Library", "id": "Street-Library-AdamsB72DA064-03A3-4FAA-95C4-E65213F9932D", "lat": 40.7042563, "lng": -73.9886841, "accessibility": "full", "comment": "9 Adams Street (between John and Plymouth) Brooklyn, NY 11201" },
+    { "name": "Arlington Library", "id": "Library-Arlington8E1E7F4E-A008-47DC-A0D8-9F6B1A2AB246", "lat": 40.6806308, "lng": -73.8872311, "accessibility": "full", "comment": "203 Arlington Ave. at Warwick St. Brooklyn, NY 11207" },
+    { "name": "Bay Ridge Library", "id": "Library-Ridge-BayEB387FDD-DFD6-4499-B9ED-9A93ECFE30A0", "lat": 40.6336184, "lng": -74.0295114, "accessibility": "full", "comment": "7223 Ridge Blvd. at 73rd St. Brooklyn, NY 11209" },
+    { "name": "Bedford Library", "id": "Library-BedfordA4AC780F-9124-4CDE-91C4-4C4334EFDC19", "lat": 40.681831, "lng": -73.9560213, "accessibility": "full", "comment": "496 Franklin Avenue Brooklyn, NY 11238" },
+    { "name": "Bedford Library Learning Center", "id": "Learning-Center-Bedford-Library93576F54-D31C-4252-A1DD-94F9758DC2C5", "lat": 40.681831, "lng": -73.9560213, "accessibility": "partial", "comment": "496 Franklin Avenue Brooklyn, NY 11238" },
+    { "name": "Borough Park Library", "id": "Park-Borough-LibraryF30C7E96-AE04-42C2-A1D4-144E2577864A", "lat": 40.6388137, "lng": -73.9891201, "accessibility": "full", "comment": "1265 43rd St. at 13th Ave. Brooklyn, NY 11219" },
+    { "name": "Brighton Beach Library", "id": "Beach-Library-Brighton176D11D7-6519-4A94-B2DE-72F181AEF684", "lat": 40.576069, "lng": -73.9667601, "accessibility": "full", "comment": "6 Brighton First Rd. at Brighton Beach Ave. Brooklyn, NY 11235" },
+    { "name": "Brooklyn Heights Library", "id": "Library-Brooklyn-Heights7BFDD2E2-6639-4A66-960C-761D39934325", "lat": 40.6961204, "lng": -73.9914203, "accessibility": "full", "comment": "286 Cadman Plaza West Brooklyn, NY 11201" },
+    { "name": "Brower Park Library at Brooklyn Children's Museum", "id": "Brooklyn-Children's-Library-at-Brower-Museum-Park748E77D4-BCF3-42E4-9A68-DAED3BE8A5CD", "lat": 40.6744268, "lng": -73.9439205, "accessibility": "full", "comment": "145 Brooklyn Ave Brooklyn, NY 11213" },
+    { "name": "Brownsville Library", "id": "Library-BrownsvilleAB09D517-53FB-4291-B79C-AEC45922F4A3", "lat": 40.6708734, "lng": -73.9079603, "accessibility": "full", "comment": "61 Glenmore Ave. at Watkins St. Brooklyn, NY 11212" },
+    { "name": "Bushwick Library", "id": "Bushwick-LibraryC3D88E3D-9CD1-41D5-BC53-646F0977C3AF", "lat": 40.7045728, "lng": -73.9395457, "accessibility": "full", "comment": "340 Bushwick Avenue Brooklyn, NY 11206" },
+    { "name": "Canarsie Library", "id": "Library-Canarsie25ADA552-17C0-40CE-972D-CEAFFA90C48D", "lat": 40.6422625, "lng": -73.8994432, "accessibility": "partial", "comment": "1580 Rockaway Pkwy. at Ave. J Brooklyn, NY 11236" },
+    { "name": "Carroll Gardens Library", "id": "Library-Gardens-Carroll706938DA-CD7A-4EFB-8446-0B5429280B26", "lat": 40.6832331, "lng": -73.9980304, "accessibility": "full", "comment": "396 Clinton St. Brooklyn, NY 11231" },
+    { "name": "Center for Brooklyn History", "id": "Brooklyn-for-Center-HistoryBC9F1A89-3474-40F5-A31A-DA8C90900121", "lat": 40.6948029, "lng": -73.9924046, "accessibility": "full", "comment": "128 Pierrepont Street Brooklyn, NY 11201" },
+    { "name": "Central Library", "id": "Central-Library0890B1B2-D140-4C33-8418-0BE583CD9C24", "lat": 40.6723862, "lng": -73.9682475, "accessibility": "full", "comment": "10 Grand Army Plaza Brooklyn, NY 11238" },
+    { "name": "Central Library Learning Center", "id": "Learning-Central-Library-Center0510F6FE-12F0-4857-B4FE-456C77BA2BE1", "lat": 40.6723862, "lng": -73.9682475, "accessibility": "partial", "comment": "10 Grand Army Plaza Brooklyn, NY 11238" },
+    { "name": "Clarendon Library", "id": "Clarendon-LibraryE2021F53-F294-4BF4-97D3-A9B0D5618458", "lat": 40.6356657, "lng": -73.9476862, "accessibility": "full", "comment": "2035 Nostrand Ave. Brooklyn, NY 11210" },
+    { "name": "Clinton Hill Library", "id": "Clinton-Hill-LibraryCC06F49D-F36A-4C63-B3CF-35AC02294D39", "lat": 40.687401, "lng": -73.965943, "accessibility": "full", "comment": "380 Washington Ave. at Lafayette Ave. Brooklyn, NY 11238" },
+    { "name": "Coney Island Library", "id": "Library-Coney-IslandD4B640AC-36D8-48DA-92B6-16EAEAEEC4E1", "lat": 40.5767211, "lng": -73.9860632, "accessibility": "full", "comment": "1901 Mermaid Ave. (Near W. 19th St.) Brooklyn, NY 11224" },
+    { "name": "Cortelyou Library", "id": "Cortelyou-LibraryBD33008F-F9B5-4FA0-A84F-B6873DEE2993", "lat": 40.6406079, "lng": -73.9660055, "accessibility": "full", "comment": "1305 Cortelyou Rd. at Argyle Rd. Brooklyn, NY 11226" },
+    { "name": "Crown Heights Library", "id": "Crown-Library-Heights4BB6FCFD-1C0C-438A-9F60-71710277444F", "lat": 40.6612125, "lng": -73.9479385, "accessibility": "full", "comment": "560 New York Ave. at Maple St. Brooklyn, NY 11225" },
+    { "name": "Cypress Hills Library", "id": "Hills-Library-Cypress4BDD130C-9D98-4A4E-8231-0640318A1556", "lat": 40.6726682, "lng": -73.8740205, "accessibility": "full", "comment": "1197 Sutter Ave. at Crystal St. Brooklyn, NY 11208" },
+    { "name": "DeKalb Library", "id": "Library-DeKalbEF679C6C-836E-4031-87CD-56C294DC42C1", "lat": 40.6937519, "lng": -73.9296067, "accessibility": "partial", "comment": "790 Bushwick Ave. at DeKalb Ave. Brooklyn, NY 11221" },
+    { "name": "Dyker Library", "id": "Library-DykerEBC58E5A-5F9E-4D3F-81CC-AD0FE29987C6", "lat": 40.6163466, "lng": -74.0120111, "accessibility": "full", "comment": "8202 13th Ave. (@ 82nd St.) Brooklyn, NY 11228" },
+    { "name": "East Flatbush Library", "id": "Flatbush-Library-EastB889B8FC-36D0-4852-96A2-5A0C28410305", "lat": 40.6557119, "lng": -73.9149405, "accessibility": "full", "comment": "9612 Church Ave Brooklyn, NY 11212" },
+    { "name": "Eastern Parkway Learning Center", "id": "Parkway-Learning-Eastern-Center0813EBFB-5482-447D-B6E1-AFC6880241EC", "lat": 40.6685507, "lng": -73.9336564, "accessibility": "full", "comment": "1044 Eastern Parkway - 2nd Floor Brooklyn, NY 11213" },
+    { "name": "Eastern Parkway Library", "id": "Eastern-Parkway-Library78660BB0-19A8-473D-B183-371117765DA9", "lat": 40.6685507, "lng": -73.9336564, "accessibility": "full", "comment": "1044 Eastern Pkwy. at Schenectady Ave. Brooklyn, NY 11213" },
+    { "name": "Flatbush Learning Center", "id": "Center-Flatbush-Learning1496692B-F406-46E1-A902-7636F698EC9D", "lat": 40.6519737, "lng": -73.9582372, "accessibility": "partial", "comment": "22 Linden Blvd. at Flatbush Ave. Brooklyn, NY 11226" },
+    { "name": "Flatbush Library", "id": "Library-Flatbush535CA8CA-8BD7-4F44-B23A-C2BBE59AC5A7", "lat": 40.6519737, "lng": -73.9582372, "accessibility": "full", "comment": "22 Linden Blvd. at Flatbush Ave. Brooklyn, NY 11226" },
+    { "name": "Flatlands Library", "id": "Flatlands-Library92FD4642-2B86-4AB2-AABD-CACDF9E26EE5", "lat": 40.6196604, "lng": -73.9333236, "accessibility": "full", "comment": "2065 Flatbush Ave. at Ave. P Brooklyn, NY 11234" },
+    { "name": "Fort Hamilton Library", "id": "Hamilton-Fort-LibraryCA9CA536-1B83-4E0D-86A0-B38420048964", "lat": 40.6163589, "lng": -74.0313628, "accessibility": "full", "comment": "9424 Fourth Ave. Brooklyn, NY 11209" },
+    { "name": "Gerritsen Beach Library", "id": "Gerritsen-Library-BeachA4E33625-84FA-4FF5-8669-FACACCA18EFA", "lat": 40.5914716, "lng": -73.9238771, "accessibility": "full", "comment": "2808 Gerritsen Ave. Brooklyn, NY 11229" },
+    { "name": "Gravesend Library", "id": "Gravesend-LibraryB1D91F4E-8794-455B-89B9-A68E7F4C768C", "lat": 40.6269908, "lng": -73.9750264, "accessibility": "full", "comment": "303 Ave. X at West. 2nd St. Brooklyn, NY 11223" },
+    { "name": "Greenpoint Library", "id": "Library-Greenpoint4EB50F92-9951-4D33-8CAC-70415150E24D", "lat": 40.7241392, "lng": -73.9502164, "accessibility": "full", "comment": "107 Norman Ave. at Leonard St. Brooklyn, NY 11222" },
+    { "name": "Highlawn Library", "id": "Library-Highlawn96D44748-B962-473F-ABF5-596A2937ED7C", "lat": 40.6056946, "lng": -73.9862442, "accessibility": "full", "comment": "1664 W. 13th St. Brooklyn, NY 11223" },
+    { "name": "Homecrest Library", "id": "Library-HomecrestEBD54E2E-8392-43B3-94FD-AC57688196DD", "lat": 40.5952068, "lng": -73.9605023, "accessibility": "full", "comment": "2525 Coney Island Ave. at Ave. V Brooklyn, NY 11223" },
+    { "name": "Jamaica Bay Library", "id": "Bay-Library-JamaicaAB2719E4-10BD-4298-9F0D-4250077B7815", "lat": 40.6344803, "lng": -73.8893197, "accessibility": "full", "comment": "9727 Seaview Ave. at E. 98th St. near Rockaway Pkwy. Brooklyn, NY 11236" },
+    { "name": "Kensington Library", "id": "Kensington-Library03056250-A916-4AA5-A404-1B186D631DC5", "lat": 40.6313515, "lng": -73.9755116, "accessibility": "full", "comment": "4207 18th Avenue Brooklyn, NY 11218" },
+    { "name": "Kings Bay Library", "id": "Bay-Library-KingsFC89EDFE-D14D-4D1C-826C-7C036F5BE10E", "lat": 40.5948765, "lng": -73.9411772, "accessibility": "full", "comment": "3650 Nostrand Ave. (near Ave. W) Brooklyn, NY 11229" },
+    { "name": "Kings Highway Library", "id": "Kings-Highway-Library80C1368B-E385-4BBB-B335-9D03672D2DDC", "lat": 40.6102804, "lng": -73.9532511, "accessibility": "full", "comment": "2115 Ocean Ave. Brooklyn, NY 11229" },
+    { "name": "Leonard Library", "id": "Leonard-Library78D27B9E-29BE-4869-A4E0-C9166EF92399", "lat": 40.7114472, "lng": -73.9474944, "accessibility": "partial", "comment": "81 Devoe St. at Leonard St. Brooklyn, NY 11211" },
+    { "name": "Macon Library", "id": "Macon-Library841FCE06-6D7D-4BD9-8904-7E8845A93F98", "lat": 40.6829969, "lng": -73.9348732, "accessibility": "full", "comment": "361 Lewis Ave. at Macon St. Brooklyn, NY 11233" },
+    { "name": "Mapleton Library", "id": "Library-Mapleton2857D04A-8296-468C-B7B4-11BA995DBD42", "lat": 40.6231593, "lng": -73.9894561, "accessibility": "full", "comment": "1702 60th Street Brooklyn, NY 11204" },
+    { "name": "Marcy Library", "id": "Marcy-Library5C603B1C-BD85-4821-B549-8BDC4E0141E6", "lat": 40.680755, "lng": -73.9494015, "accessibility": "full", "comment": "617 DeKalb Ave. at Nostrand Ave. Brooklyn, NY 11216" },
+    { "name": "McKinley Park Library", "id": "McKinley-Library-ParkAB762041-4A12-42F3-A889-DB65B5A1599B", "lat": 40.6292287, "lng": -74.0118955, "accessibility": "full", "comment": "6802 Fort Hamilton Pkwy (at 68th St.) Brooklyn, NY 11219" },
+    { "name": "Midwood Library", "id": "Midwood-Library777A3F6F-B336-4A28-801D-D34548099DA0", "lat": 40.625907, "lng": -73.9604005, "accessibility": "full", "comment": "975 East 16th St. at Avenue J Brooklyn, NY 11230" },
+    { "name": "Mill Basin Library", "id": "Mill-Basin-LibraryF44A5FD7-2769-452C-A5FE-1B95138BD8CA", "lat": 40.6198638, "lng": -73.9170083, "accessibility": "full", "comment": "2385 Ralph Ave (near Ave N) Brooklyn, NY 11234" },
+    { "name": "New Lots Learning Center", "id": "Lots-Learning-New-Center59C2C8AE-4F4E-4B84-A026-0D5FCDE6906E", "lat": 40.6659975, "lng": -73.8855675, "accessibility": "full", "comment": "665 New Lots Avenue at Barbey St. Brooklyn, NY 11207" },
+    { "name": "New Lots Library", "id": "Lots-New-LibraryE66F5516-000A-493F-8BB9-3154DC752EA0", "lat": 40.6659975, "lng": -73.8855675, "accessibility": "full", "comment": "665 New Lots Avenue at Barbey St. Brooklyn, NY 11207" },
+    { "name": "New Utrecht Library", "id": "Library-Utrecht-New5C871780-7E26-4CA9-94E0-5136BF597F01", "lat": 40.5850653, "lng": -73.9510009, "accessibility": "full", "comment": "1743 86th St. at Bay 17th St. Brooklyn, NY 11214" },
+    { "name": "Pacific Library", "id": "Pacific-LibraryC2569BF4-8955-40CA-82DA-0BA8C28D9C89", "lat": 40.6521423, "lng": -73.9778355, "accessibility": "partial", "comment": "25 Fourth Ave. at Pacific St. Brooklyn, NY 11217" },
+    { "name": "Paerdegat Library", "id": "Paerdegat-LibraryF7A9D46D-CBE1-4ECA-89CF-57C4E78CC19B", "lat": 40.6326274, "lng": -73.9199457, "accessibility": "full", "comment": "850 E. 59th St. at Paerdegat Ave. South Brooklyn, NY 11234" },
+    { "name": "Park Slope Library", "id": "Park-Library-Slope475B714E-B2AC-4545-8022-EFD43FC41128", "lat": 40.6682239, "lng": -73.9834488, "accessibility": "full", "comment": "431 6th Ave Brooklyn, NY 11215" },
+    { "name": "Red Hook Library", "id": "Library-Hook-RedE58B3EBE-237F-49C0-81AE-8520014ADD89", "lat": 40.675242, "lng": -74.0103423, "accessibility": "full", "comment": "7 Wolcott St Brooklyn, NY 11231" },
+    { "name": "Rugby Library", "id": "Rugby-Library7F31E554-D785-4878-B263-51CBFFD0C5EA", "lat": 40.6486123, "lng": -73.9303999, "accessibility": "full", "comment": "1000 Utica Ave. Brooklyn, NY 11203" },
+    { "name": "Ryder Library", "id": "Library-Ryder95419738-61C0-44C8-A61F-3870FF39D842", "lat": 40.6159104, "lng": -73.9759322, "accessibility": "full", "comment": "5902 23rd Ave. Brooklyn, NY 11204" },
+    { "name": "Saratoga Library", "id": "Library-Saratoga194F8FFE-868C-4E35-B861-FF2E068C9FD8", "lat": 40.6848144, "lng": -73.9152118, "accessibility": "full", "comment": "8 Thomas S. Boyland St. at Macon St. Brooklyn, NY 11233" },
+    { "name": "Sheepshead Bay Library", "id": "Library-Bay-SheepsheadA12B1AF6-B43B-49CF-B6C2-F696B91E22AB", "lat": 40.586996, "lng": -73.9553979, "accessibility": "full", "comment": "2636 E. 14th St. at Ave. Z Brooklyn, NY 11235" },
+    { "name": "Spring Creek Library", "id": "Spring-Creek-LibraryF8845939-D67A-4835-9D6A-A525A20ACDC5", "lat": 40.6532694, "lng": -73.8857767, "accessibility": "full", "comment": "12143 Flatlands Ave. at New Jersey Ave. Brooklyn, NY 11207" },
+    { "name": "Stone Avenue Library", "id": "Library-Stone-Avenue1092D571-8B4A-4CB3-93A9-8DD6B4689E37", "lat": 40.6645452, "lng": -73.9053547, "accessibility": "full", "comment": "581 Mother Gaston Boulevard Brooklyn, NY 11212" },
+    { "name": "Sunset Park Library", "id": "Library-Sunset-Park4EE7B2FD-538A-4EF9-9545-7CA0900E8099", "lat": 40.6504822, "lng": -74.0078969, "accessibility": "partial", "comment": "4201 Fourth Avenue Brooklyn, NY 11232" },
+    { "name": "Ulmer Park Library", "id": "Ulmer-Library-Park0611AADA-B91F-45CB-82D9-4DBF8CBFD71E", "lat": 40.5985344, "lng": -73.9976377, "accessibility": "full", "comment": "2602 Bath Avenue at 26th Ave Brooklyn, NY 11214" },
+    { "name": "Walt Whitman Library", "id": "Library-Walt-WhitmanEA83C3A2-11CC-4EF0-90C9-EE743FA041DE", "lat": 40.6944732, "lng": -73.9778261, "accessibility": "full", "comment": "93 Saint Edwards Street Brooklyn, NY 11205" },
+    { "name": "Washington Irving Library", "id": "Irving-Library-Washington90812D82-2FDB-4DE2-91EE-83A87AC99950", "lat": 40.6974978, "lng": -73.9122161, "accessibility": "full", "comment": "360 Irving Ave. (at Woodbine St.) Brooklyn, NY 11237" },
+    { "name": "Williamsburgh Library", "id": "Library-Williamsburgh6C1ED7EF-72B9-4624-9AD1-61316E812A2B", "lat": 40.7069891, "lng": -73.9575624, "accessibility": "full", "comment": "240 Division Ave. at Marcy Ave. Brooklyn, NY 11211" },
+    { "name": "Windsor Terrace Library", "id": "Terrace-Library-Windsor37AF65FF-DEF2-4C0B-9164-C8FB1B17225C", "lat": 40.6486979, "lng": -73.9767751, "accessibility": "partial", "comment": "160 E. 5th St. at Ft. Hamilton Pkwy. Brooklyn, NY 11218" }]
     """
 }
