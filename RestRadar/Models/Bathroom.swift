@@ -32,7 +32,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     @Published var route: MKRoute?
     
     func getDirections() {
-        if let current = LocationAttendant.shared.current {
+        if let current = LocationAttendant.shared.current, self.directions.isEmpty {
             LocationAttendant.shared.getTravelDirections(sourceLocation: current.coordinate, endLocation: self.coordinate) { directions, route in
                 self.directions = directions
                 self.route = route
@@ -195,7 +195,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     var description : String {
         get {
             return """
-            { "lat": \(self.coordinate.latitude.description), "lng": \(self.coordinate.longitude.description), "name": \"\(name)\", "accessibility": \"\(accessibility.rawValue)\", "comment": \"\(comment ?? "")\" },
+            { "name": \"\(name)\", "id": "\(self.id)", "lat": \(self.coordinate.latitude.description), "lng": \(self.coordinate.longitude.description),, "accessibility": \"\(accessibility.rawValue)\", "comment": \"\(comment ?? "")\" },
             """
         }
     }

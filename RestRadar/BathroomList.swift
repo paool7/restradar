@@ -40,6 +40,11 @@ struct Constants { static func getBathrooms() -> [Bathroom] {
             
             return Bathroom(name: item.name, accessibility: Accessibility(rawValue: item.accessibility ?? "unknown") ?? .unknown, coordinate: coordinate, comment: item.comment, id: id)
         }
+        
+        for bathroom in bathrooms {
+            print(bathroom.description)
+        }
+        
         return Array(Set(bathrooms))
     } catch {
         print(error)

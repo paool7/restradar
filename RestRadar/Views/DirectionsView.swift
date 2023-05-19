@@ -66,9 +66,7 @@ struct DirectionsView: View {
                 .cornerRadius(16)
         }
         .onAppear {
-            if bathroom.directions.isEmpty {
-                locationAttendant.getDirections(to: bathroom.id)
-            }
+            bathroom.getDirections()
         }
     }
 }

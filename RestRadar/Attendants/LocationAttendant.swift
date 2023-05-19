@@ -20,7 +20,7 @@ class LocationAttendant: NSObject, ObservableObject {
     @Published var selectedSearchLocation: MKLocalSearchCompletion?
 
     @Published var current: CLLocation?
-    @Published var currentHeading: CLLocationDegrees = 0.0
+    @Published var currentHeading: CLLocationDegrees?
     
     @Published var currentHourValue: Double
     
@@ -62,34 +62,6 @@ class LocationAttendant: NSObject, ObservableObject {
         self.locationManager.stopUpdatingHeading()
         self.locationManager.stopUpdatingLocation()
     }
-    
-//    func getLocations() {
-//        let group = DispatchGroup()
-//
-//        let bathrooms = BathroomAttendant.shared.sortedBathrooms.filter({ $0.lat == nil && $0.long == nil})
-//        for i in 0..<bathrooms.count {
-//            group.enter()
-//
-//            var bathroom = bathrooms[i]
-//            self.getLocation(from: bathroom.address) { location in
-//                bathroom.lat = location?.coordinate.latitude
-//                bathroom.long = location?.coordinate.longitude
-//                BathroomAttendant.shared.changeDefault(bathroom.id, to: bathroom)
-//                group.leave()
-//            }
-//        }
-//
-//        group.notify(queue: DispatchQueue.main) {
-//            for bathroom in BathroomAttendant.shared.sortedBathrooms {
-//                if let coordinate = bathroom.coordinate {
-//                    print(bathroom.id)
-//                    print(coordinate)
-//                }
-//            }
-//
-//
-//        }
-//    }
     
     func getDirections(to toId: String) {
         if let current = self.current, let index = BathroomAttendant.shared.allBathrooms.firstIndex(where: {$0.id == toId}) {
@@ -188,7 +160,7 @@ class LocationAttendant: NSObject, ObservableObject {
     
     func fetchLocation() async throws -> CLLocation {
         self.locationManager.requestLocation()
-        while self.current == nil && self.currentHeading == 0.0 {
+        while self.current == nil && self.currentHeading == nil {
             
         }
         return current!

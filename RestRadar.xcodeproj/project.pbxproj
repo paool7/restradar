@@ -10,10 +10,8 @@
 		22108B3F29D24203004EB964 /* CircleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22108B3E29D24203004EB964 /* CircleLabel.swift */; };
 		2224C65629CFC10600222FD4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65529CFC10600222FD4 /* MapView.swift */; };
 		2224C65829CFC2E400222FD4 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65729CFC2E400222FD4 /* Annotation.swift */; };
-		2224C65A29CFC49A00222FD4 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65929CFC49A00222FD4 /* HeaderView.swift */; };
 		2224C65C29CFCB4B00222FD4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65B29CFCB4B00222FD4 /* Extensions.swift */; };
 		2224C66429D1D18400222FD4 /* CompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C66329D1D18400222FD4 /* CompassView.swift */; };
-		222AD8B229E2339D00A18E76 /* BathroomCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B129E2339D00A18E76 /* BathroomCellView.swift */; };
 		222AD8B429E2362700A18E76 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B329E2362700A18E76 /* SettingsView.swift */; };
 		222AD8B629E2392000A18E76 /* SettingsAttendant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B529E2392000A18E76 /* SettingsAttendant.swift */; };
 		222AD8B829E27DF500A18E76 /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B729E27DF500A18E76 /* LocationSearchView.swift */; };
@@ -88,10 +86,8 @@
 		221CCF782A04A7B800B0E171 /* BathroomList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomList.swift; sourceTree = "<group>"; };
 		2224C65529CFC10600222FD4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		2224C65729CFC2E400222FD4 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
-		2224C65929CFC49A00222FD4 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		2224C65B29CFCB4B00222FD4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2224C66329D1D18400222FD4 /* CompassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassView.swift; sourceTree = "<group>"; };
-		222AD8B129E2339D00A18E76 /* BathroomCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomCellView.swift; sourceTree = "<group>"; };
 		222AD8B329E2362700A18E76 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		222AD8B529E2392000A18E76 /* SettingsAttendant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAttendant.swift; sourceTree = "<group>"; };
 		222AD8B729E27DF500A18E76 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
@@ -172,18 +168,16 @@
 		2242AC2E29FC807800AFD64F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				22DE02EB29C8084F00C21D67 /* BathroomView.swift */,
-				222AD8B129E2339D00A18E76 /* BathroomCellView.swift */,
 				2242AC2829F775C700AFD64F /* BathroomSummaryView.swift */,
+				22DE02EB29C8084F00C21D67 /* BathroomView.swift */,
 				2242ABEE29E7C5F600AFD64F /* CalendarChooser.swift */,
 				22108B3E29D24203004EB964 /* CircleLabel.swift */,
-				22F2521329B57B990010223E /* HomeView.swift */,
-				222AD8B729E27DF500A18E76 /* LocationSearchView.swift */,
-				2224C66329D1D18400222FD4 /* CompassView.swift */,
 				2242AC2629EB8E4900AFD64F /* CompactStatsView.swift */,
+				2224C66329D1D18400222FD4 /* CompassView.swift */,
 				22D43DD529D47B730085CA4C /* DirectionsView.swift */,
 				2242AC1C29EA52CF00AFD64F /* FilteringView.swift */,
-				2224C65929CFC49A00222FD4 /* HeaderView.swift */,
+				22F2521329B57B990010223E /* HomeView.swift */,
+				222AD8B729E27DF500A18E76 /* LocationSearchView.swift */,
 				2224C65529CFC10600222FD4 /* MapView.swift */,
 				222AD8B329E2362700A18E76 /* SettingsView.swift */,
 			);
@@ -396,7 +390,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2224C65629CFC10600222FD4 /* MapView.swift in Sources */,
-				2224C65A29CFC49A00222FD4 /* HeaderView.swift in Sources */,
 				2242AC2C29FA0AB300AFD64F /* AppIcon.swift in Sources */,
 				22D43DD629D47B730085CA4C /* DirectionsView.swift in Sources */,
 				22DE02EC29C8084F00C21D67 /* BathroomView.swift in Sources */,
@@ -414,7 +407,6 @@
 				2242742B29E5A8ED00F2C196 /* Gradients.swift in Sources */,
 				22C9436929C64EB100E41651 /* BathroomAttendant.swift in Sources */,
 				22F2521429B57B990010223E /* HomeView.swift in Sources */,
-				222AD8B229E2339D00A18E76 /* BathroomCellView.swift in Sources */,
 				225BDBB22A171FD500FB0DA5 /* BathroomList.swift in Sources */,
 				2224C65829CFC2E400222FD4 /* Annotation.swift in Sources */,
 				22108B3F29D24203004EB964 /* CircleLabel.swift in Sources */,

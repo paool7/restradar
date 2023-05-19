@@ -63,7 +63,9 @@ struct MapView: UIViewRepresentable {
       if let current = locationAttendant.current, let distance = bathroom.distanceMeters(current: current)?.value {
           camera.centerCoordinateDistance = distance*2.5
       }
-      camera.heading = locationAttendant.currentHeading
+      if let currentHeading = locationAttendant.currentHeading {
+          camera.heading = currentHeading
+      }
       mapView.camera = camera
       
       if let route = bathroom.route {
@@ -75,8 +77,9 @@ struct MapView: UIViewRepresentable {
   func updateUIView(_ uiView: MKMapView, context: Context) {
       let camera = MKMapCamera()
 
-      camera.heading = locationAttendant.currentHeading
-
+      if let currentHeading = locationAttendant.currentHeading {
+          camera.heading = currentHeading
+      }
       if let current = locationAttendant.current {
           camera.centerCoordinate = current.coordinate.midpointTo(location: bathroom.coordinate)
       }
@@ -85,13 +88,6 @@ struct MapView: UIViewRepresentable {
       }
       if let route = bathroom.route {
           uiView.addOverlay((route.polyline), level: .aboveRoads)
-          
-//              let step = route.steps[1].polyline
-//              var count = 0
-//              for point in UnsafeBufferPointer(start: step.points(), count: step.pointCount) {
-//                  uiView.addAnnotation(Annotation(title: "\(count)", coordinate: point.coordinate))
-//                  count += 1
-//              }
       }
 
       uiView.camera = camera

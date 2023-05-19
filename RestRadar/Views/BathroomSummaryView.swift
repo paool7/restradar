@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Shiny
 
 struct BathroomSummaryView: View {
     @StateObject private var bathroomAttendant = BathroomAttendant.shared
@@ -16,14 +17,22 @@ struct BathroomSummaryView: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text(bathroom.name)
-                    .font(.headline)
-                    .lineLimit(2)
-                    .foregroundColor(.primary)
-                    .multilineTextAlignment(.leading)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .minimumScaleFactor(0.75)
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 0))
+                HStack {
+                    Text(bathroom.name)
+                        .font(.headline)
+                        .lineLimit(2)
+                        .foregroundColor(.primary)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .minimumScaleFactor(0.75)
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 0))
+
+                    if bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id }) {
+                        Image(systemName: "bookmark.fill")
+                            .shiny(.iridescent2)
+                            .foregroundColor(.primary)
+                    }
+                }
                 if let current = locationAttendant.current, let timeAway = bathroom.totalTime(current: current) {
                     HStack {
                         VStack(alignment: .leading) {

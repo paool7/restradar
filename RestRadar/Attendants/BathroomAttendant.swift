@@ -29,20 +29,11 @@ class BathroomAttendant: ObservableObject {
     @Published var filteredBathrooms: [Bathroom] = []
     
     @Published var closestFavoriteBathroom: Bathroom?
-    @Published var favoriteBathrooms: [Bathroom] = [] {
-        didSet {
-            let bathroomIds = favoriteBathrooms.map { $0.id }
-            userDefaults?.set(bathroomIds, forKey: "FavoriteBathroomsIdStrings")
-        }
-    }
+    @Published var favoriteBathrooms: [Bathroom] = []
     
     var initialDirectionsLoad = true
     
     init(){
-        if let bathroomIds = userDefaults?.object(forKey: "FavoriteBathroomsIdStrings") as? [String] {
-            self.favoriteBathrooms = bathroomIds.compactMap({ id in self.allBathrooms.first(where: { $0.id == id }) })
-        }
-                
         self.$codesState.sink { [weak self] codesState in
             self?.filterBathrooms()
 
@@ -57,10 +48,23 @@ class BathroomAttendant: ObservableObject {
             if let firstFavorite = self?.favoriteBathrooms.first {
                 self?.closestFavoriteBathroom = firstFavorite
             }
+            
+            let bathroomIds = bathrooms.map { $0.id }
+            if !bathroomIds.isEmpty {
+                userDefaults?.set(bathroomIds, forKey: "FavoriteBathroomsIdStrings")
+            }
         }.store(in: &subscriptions)
         
         self.$allBathrooms.sink {  [weak self] bathrooms in
             self?.filterBathrooms()
+            
+//            for bathroom in bathrooms {
+//                print(bathroom.id)
+//            }
+            
+            if let bathroomIds = userDefaults?.object(forKey: "FavoriteBathroomsIdStrings") as? [String], !bathroomIds.isEmpty {
+                self?.favoriteBathrooms = bathroomIds.compactMap({ id in bathrooms.first(where: { $0.id == id }) })
+            }
         }.store(in: &subscriptions)
 
         LocationAttendant.shared.$current.sink { [weak self] location in
@@ -79,15 +83,13 @@ class BathroomAttendant: ObservableObject {
         bathroomList = bathroomList.sorted(by: { $0.distanceMeters(current: current)?.value ?? 1000 < $1.distanceMeters(current: current)?.value ?? 1000 })
         bathroomList = codesState == .all ? bathroomList : (codesState == .noCodes ? bathroomList.filter({ $0.code == nil }) : bathroomList.filter({ $0.code != nil }))
         
-        let constrainedBathrooms = bathroomList.count > 50 ? Array(bathroomList[0..<50]) : bathroomList
+        let constrainedBathrooms = bathroomList.count > 75 ? Array(bathroomList[0..<75]) : bathroomList
+//        let constrainedBathrooms = bathroomList
 
         self.filteredBathrooms = constrainedBathrooms
         
         if let firstSorted = constrainedBathrooms.first {
             self.closestBathroom = firstSorted
-            if let bathroom = self.allBathrooms.first(where: {$0.id == firstSorted.id}), bathroom.directions.count == 0 {
-                self.closestBathroom.getDirections()
-            }
         }
     }
     

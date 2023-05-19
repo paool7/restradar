@@ -15,8 +15,8 @@ struct CompassView: View {
     @Binding var bathroom: Bathroom
     
     var body: some View {
-        if let current = locationAttendant.current {
-            CompassShapeView(rotation: locationAttendant.currentHeading.angle(current.coordinate, bathroom.coordinate))
+        if let current = locationAttendant.current, let currentHeading = locationAttendant.currentHeading {
+            CompassShapeView(rotation: currentHeading.angle(current.coordinate, bathroom.coordinate))
                 .aspectRatio(contentMode: .fit)
                 .frame(maxWidth: .infinity)
                 .overlay {
@@ -32,18 +32,13 @@ struct CompassView: View {
                 }
                 .shadow(color: .primary.opacity(0.5), radius: 1)
                 .onAppear {
-                    if bathroom.directions.isEmpty {
-                        bathroom.getDirections()
-                    }
+                    bathroom.getDirections()
                 }
         }
     }
 }
 
 struct CompassShapeView: View {
-    @ObservedObject private var bathroomAttendant = BathroomAttendant.shared
-    @ObservedObject private var locationAttendant = LocationAttendant.shared
-
     static let gradientStart = Color(red: 0.953, green: 0.839, blue: 0.592, opacity: 1.000)
     static let gradientEnd = Color(red: 0.855, green: 0.506, blue: 0.490, opacity: 1.000)
     

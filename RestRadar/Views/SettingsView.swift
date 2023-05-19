@@ -117,7 +117,7 @@ struct SettingsView: View {
                                 } label: {
                                     LinearGradient(gradient: Gradient.gradient(forHour: i), startPoint: .top, endPoint: .bottom)
                                         .mask {
-                                            CompassShapeView(rotation: locationAttendant.currentHeading)
+                                            CompassShapeView(rotation: locationAttendant.currentHeading ?? 0.0)
                                                 .aspectRatio(contentMode: .fit)
                                         }
                                         .shadow(color: .primary.opacity(0.5), radius: 1)
