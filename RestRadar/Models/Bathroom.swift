@@ -24,6 +24,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     var id: String
     var name: String
     var accessibility: Accessibility = .unknown
+    var url: String?
 
     @Published var coordinate: CLLocationCoordinate2D
     @Published var directions: [MKRoute.Step] = []
@@ -174,7 +175,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
         return self.directions.firstIndex(of: currentStep) ?? 0
     }
     
-    init(name: String, accessibility: Accessibility, coordinate: CLLocationCoordinate2D, comment: String? = nil, code: String? = nil, hours: Hours? = nil, id: String) {
+    init(name: String, accessibility: Accessibility, coordinate: CLLocationCoordinate2D, comment: String? = nil, code: String? = nil, hours: Hours? = nil, id: String, url: String?) {
         self.name = name
         self.accessibility = accessibility
         self.comment = comment
@@ -182,6 +183,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
         self.hours = hours
         self.id = id
         self.coordinate = coordinate
+        self.url = url
     }
     
     public func hash(into hasher: inout Hasher) {
@@ -195,7 +197,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     var description : String {
         get {
             return """
-            { "name": \"\(name)\", "id": "\(self.id)", "lat": \(self.coordinate.latitude.description), "lng": \(self.coordinate.longitude.description), "accessibility": \"\(accessibility.rawValue)\", "comment": \"\(comment ?? "")\" },
+            { "name": \"\(name)\", "id": "\(self.id)", "lat": \(self.coordinate.latitude.description), "lng": \(self.coordinate.longitude.description), "accessibility": \"\(accessibility.rawValue)\", "comment": \"\(comment ?? "")\", "url": \"\(url ?? "")\" },
             """
         }
     }

@@ -45,6 +45,12 @@
 		2242AC2A29F9E5DB00AFD64F /* BathroomSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2829F775C700AFD64F /* BathroomSummaryView.swift */; };
 		2242AC2C29FA0AB300AFD64F /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2B29FA0AB300AFD64F /* AppIcon.swift */; };
 		225BDBB22A171FD500FB0DA5 /* BathroomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221CCF782A04A7B800B0E171 /* BathroomList.swift */; };
+		225BDBB52A212C1D00FB0DA5 /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 225BDBB42A212C1D00FB0DA5 /* SwiftCSV */; };
+		225BDBB72A212F1600FB0DA5 /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 225BDBB62A212F1600FB0DA5 /* SwiftCSV */; };
+		225BDBBF2A2131C200FB0DA5 /* queenslibraries.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBBE2A2131C200FB0DA5 /* queenslibraries.csv */; };
+		225BDBC02A2131C200FB0DA5 /* queenslibraries.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBBE2A2131C200FB0DA5 /* queenslibraries.csv */; };
+		225BDBC82A213DAE00FB0DA5 /* libraries.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBC72A213DAE00FB0DA5 /* libraries.csv */; };
+		225BDBC92A213DAE00FB0DA5 /* libraries.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBC72A213DAE00FB0DA5 /* libraries.csv */; };
 		22C9436729C64A0100E41651 /* Bathroom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C9436629C64A0100E41651 /* Bathroom.swift */; };
 		22C9436929C64EB100E41651 /* BathroomAttendant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C9436829C64EB100E41651 /* BathroomAttendant.swift */; };
 		22C9436B29C7937700E41651 /* LocationAttendant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C9436A29C7937700E41651 /* LocationAttendant.swift */; };
@@ -106,6 +112,8 @@
 		2242AC2629EB8E4900AFD64F /* CompactStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactStatsView.swift; sourceTree = "<group>"; };
 		2242AC2829F775C700AFD64F /* BathroomSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomSummaryView.swift; sourceTree = "<group>"; };
 		2242AC2B29FA0AB300AFD64F /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
+		225BDBBE2A2131C200FB0DA5 /* queenslibraries.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = queenslibraries.csv; sourceTree = "<group>"; };
+		225BDBC72A213DAE00FB0DA5 /* libraries.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libraries.csv; sourceTree = "<group>"; };
 		22C9436629C64A0100E41651 /* Bathroom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bathroom.swift; sourceTree = "<group>"; };
 		22C9436829C64EB100E41651 /* BathroomAttendant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomAttendant.swift; sourceTree = "<group>"; };
 		22C9436A29C7937700E41651 /* LocationAttendant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAttendant.swift; sourceTree = "<group>"; };
@@ -126,6 +134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				225BDBB72A212F1600FB0DA5 /* SwiftCSV in Frameworks */,
 				2242AC2529EB44D200AFD64F /* Shiny in Frameworks */,
 				2242AC1429E8495D00AFD64F /* Solar in Frameworks */,
 				2242ABFB29E843E300AFD64F /* SwiftUI.framework in Frameworks */,
@@ -138,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2242AC2329EB448600AFD64F /* Shiny in Frameworks */,
+				225BDBB52A212C1D00FB0DA5 /* SwiftCSV in Frameworks */,
 				2242ABED29E78E8300AFD64F /* ComposableArchitecture in Frameworks */,
 				2242742E29E60E2D00F2C196 /* Solar in Frameworks */,
 			);
@@ -239,6 +249,8 @@
 				2224C65B29CFCB4B00222FD4 /* Extensions.swift */,
 				2242742A29E5A8ED00F2C196 /* Gradients.swift */,
 				221CCF782A04A7B800B0E171 /* BathroomList.swift */,
+				225BDBC72A213DAE00FB0DA5 /* libraries.csv */,
+				225BDBBE2A2131C200FB0DA5 /* queenslibraries.csv */,
 				22F2521529B57B990010223E /* Assets.xcassets */,
 				22F2521729B57B990010223E /* Preview Content */,
 			);
@@ -272,6 +284,7 @@
 			packageProductDependencies = (
 				2242AC1329E8495D00AFD64F /* Solar */,
 				2242AC2429EB44D200AFD64F /* Shiny */,
+				225BDBB62A212F1600FB0DA5 /* SwiftCSV */,
 			);
 			productName = ClosestBathroomWidgetExtension;
 			productReference = 2242ABF629E843E300AFD64F /* ClosestBathroomWidgetExtension.appex */;
@@ -296,6 +309,7 @@
 				2242742D29E60E2D00F2C196 /* Solar */,
 				2242ABEC29E78E8300AFD64F /* ComposableArchitecture */,
 				2242AC2229EB448600AFD64F /* Shiny */,
+				225BDBB42A212C1D00FB0DA5 /* SwiftCSV */,
 			);
 			productName = G2G;
 			productReference = 22F2520E29B57B990010223E /* RestRadar.app */;
@@ -332,6 +346,7 @@
 				2242742C29E60E2D00F2C196 /* XCRemoteSwiftPackageReference "Solar" */,
 				2242ABEB29E78E8300AFD64F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				2242AC2129EB448600AFD64F /* XCRemoteSwiftPackageReference "shiny" */,
+				225BDBB32A212C1D00FB0DA5 /* XCRemoteSwiftPackageReference "SwiftCSV" */,
 			);
 			productRefGroup = 22F2520F29B57B990010223E /* Products */;
 			projectDirPath = "";
@@ -348,7 +363,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				225BDBC92A213DAE00FB0DA5 /* libraries.csv in Resources */,
 				2242AC0229E843E400AFD64F /* Assets.xcassets in Resources */,
+				225BDBC02A2131C200FB0DA5 /* queenslibraries.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +373,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				225BDBC82A213DAE00FB0DA5 /* libraries.csv in Resources */,
+				225BDBBF2A2131C200FB0DA5 /* queenslibraries.csv in Resources */,
 				22F2521929B57B990010223E /* Preview Assets.xcassets in Resources */,
 				22F2521629B57B990010223E /* Assets.xcassets in Resources */,
 			);
@@ -743,6 +762,14 @@
 				kind = branch;
 			};
 		};
+		225BDBB32A212C1D00FB0DA5 /* XCRemoteSwiftPackageReference "SwiftCSV" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swiftcsv/SwiftCSV.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.8.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -770,6 +797,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2242AC2129EB448600AFD64F /* XCRemoteSwiftPackageReference "shiny" */;
 			productName = Shiny;
+		};
+		225BDBB42A212C1D00FB0DA5 /* SwiftCSV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 225BDBB32A212C1D00FB0DA5 /* XCRemoteSwiftPackageReference "SwiftCSV" */;
+			productName = SwiftCSV;
+		};
+		225BDBB62A212F1600FB0DA5 /* SwiftCSV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 225BDBB32A212C1D00FB0DA5 /* XCRemoteSwiftPackageReference "SwiftCSV" */;
+			productName = SwiftCSV;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -24,7 +24,7 @@ class BathroomAttendant: ObservableObject {
     @Published var codesState: CodesState = .all
     @Published var onlyFavorites = false
         
-    @Published var closestBathroom: Bathroom = Bathroom(name: "", accessibility: .unknown, coordinate: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), id: "first")
+    @Published var closestBathroom: Bathroom = Bathroom(name: "", accessibility: .unknown, coordinate: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), id: "first", url: nil)
     @Published var allBathrooms: [Bathroom] = []
     @Published var filteredBathrooms: [Bathroom] = []
     
@@ -83,7 +83,7 @@ class BathroomAttendant: ObservableObject {
         bathroomList = bathroomList.sorted(by: { $0.distanceMeters(current: current)?.value ?? 1000 < $1.distanceMeters(current: current)?.value ?? 1000 })
         bathroomList = codesState == .all ? bathroomList : (codesState == .noCodes ? bathroomList.filter({ $0.code == nil }) : bathroomList.filter({ $0.code != nil }))
         
-        let constrainedBathrooms = bathroomList.count > 75 ? Array(bathroomList[0..<75]) : bathroomList
+        let constrainedBathrooms = bathroomList.count > 101 ? Array(bathroomList[0..<100]) : bathroomList
 //        let constrainedBathrooms = bathroomList
 
         self.filteredBathrooms = constrainedBathrooms
