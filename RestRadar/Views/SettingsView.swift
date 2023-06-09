@@ -7,24 +7,44 @@
 
 import SwiftUI
 import Shiny
+import RevenueCat
+import StoreKit
+import MessageUI
 
 struct SettingsView: View {
     @ObservedObject var attendant = SettingsAttendant.shared
     @ObservedObject var locationAttendant = LocationAttendant.shared
-    @ObservedObject var eventsRepository = EventsRepository.shared
     
     @State private(set) var selectedAppIcon: AppIcon = .primary
 
     let availableModes = TransportMode.allCases
     let themes = [Theme.sunsetsunrise, Theme.random]
-
-    @State private var showCalendarPicker = false
+    
+    @State var dollarProduct: StoreProduct?
+    @State var dollar3Product: StoreProduct?
+    @State var dollar5Product: StoreProduct?
+    @State private var showingAlert = false
+    @State var purchasingDollarProduct = false
+    @State var purchasingDollar3Product = false
+    @State var purchasingDollar5Product = false
+    
+    private let productIdentifiers = ["restradar.1dollar","restradar.3dollar","restradar.5dollar"]
+    @State private var purchasedProductIdentifiers: [String] = []
+    
+    @State var result: Result<MFMailComposeResult, Error>? = nil
+    @State var isShowingMailView = false
 
     var body: some View {
         List {
             Section {
                 Picker("Transport Method:", selection: $attendant.transportMode) {
                     ForEach(availableModes, id: \.self) {
+                        Text($0.name)
+                    }
+                }
+                
+                Picker("Distance Measurement:", selection: $attendant.distanceMeasurement) {
+                    ForEach(DistanceMeasurement.allCases, id: \.self) {
                         Text($0.name)
                     }
                 }
@@ -37,66 +57,130 @@ struct SettingsView: View {
                     } else {
                         Stepper("Wheelchair Speed: \(String(format: "%.1f", attendant.wheelchairSpeed)) mph", value: $attendant.wheelchairSpeed, in: 0.1...10.0, step: 0.1)
                     }
+                    Text("\(SettingsAttendant.shared.transportMode.name) Speed is used to estimate travel time to nearby bathrooms.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                 } else {
                     Stepper("Walking Speed: \(String(format: "%.1f", attendant.walkingSpeed)) mph", value: $attendant.walkingSpeed, in: 0.1...8.0, step: 0.1)
+                    Text("\(SettingsAttendant.shared.transportMode.name) Speed is used to estimate travel time to nearby bathrooms.\nStep Length is used to estimate step distance from nearby bathrooms.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                     Stepper("Step Length: \(String(format: "%.1f", attendant.stepLength)) feet", value: $attendant.walkingSpeed, in: 0.1...8.0, step: 0.1)
+                    Text("Step Length is used to estimate step distance from nearby bathrooms.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                 }
-                Text("Walking Speed is used to estimate travel time to nearby bathrooms.\nStep Length is used to estimate step distance from nearby bathrooms.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            } header: {
-                Text("Tuning:")
-            }
-            
-//            Section {
-//                Toggle("Plan Ahead", isOn:$attendant.useCalendarEvents)
-//                .tint(.teal)
-//
-//                Text("Upcoming events from your selected calendars will be checked to identify bathrooms close by.")
-//                    .font(.caption)
-//                    .foregroundColor(.secondary)
-//
-//                if attendant.useCalendarEvents {
-//                    Button {
-//                        showCalendarPicker = true
-//                        eventsRepository.loadEvents { events in
-//                            if let events = events {
-//                                for event in events {
-//                                    if let location = event.structuredLocation?.geoLocation {
-//                                        print(event.title)
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    } label: {
-//                        Text("Choose Calendars")
-//                            .foregroundColor(.teal)
-//                    }
-//                }
-//            } header: {
-//                Text("Calendar:")
-//            }
-            
-//            Section {
-//                TextField("Heading Filter", text: $attendant.headingStringValue)
+                
+//                TextField("Compass Heading Filter", text: $attendant.headingStringValue)
 //                    .keyboardType(.numberPad)
 //                Text("The minimum angular change in degrees relative to the last heading required to update the compass.")
 //                    .font(.caption)
 //                    .foregroundColor(.secondary)
-//            } header: {
-//                Text("Compass:")
-//            }
-//
+            } header: {
+                Text("Tuning:")
+            }
+            
             Section {
-                Picker("Primary Hand:", selection: $attendant.primaryHand) {
+                Text("Please submit any bugs, issues, or ideas for improvements or new features and I will get back to you as soon as possible.")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                Button(action: {
+                    self.isShowingMailView.toggle()
+                }) {
+                    Text("Submit Issue or Idea")
+                }
+                .disabled(!MFMailComposeViewController.canSendMail())
+                .sheet(isPresented: $isShowingMailView) {
+                    MailView(result: self.$result)
+                }
+                
+                if !self.purchasedProductIdentifiers.contains(where: { $0 == self.productIdentifiers[2] && $0 == self.productIdentifiers[1] && $0 == self.productIdentifiers[0] }) {
+                    Text("You can also support the continued development of this app with an optional tip.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+                
+                if !self.purchasedProductIdentifiers.contains(where: { $0 == self.productIdentifiers.first}), let product = self.dollarProduct {
+                    Button {
+                            self.purchasingDollarProduct = true
+                            self.makePurchase(product: product)
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text("1 Dollar Tip")
+                            if self.purchasingDollarProduct {
+                                ProgressView()
+                            }
+                        }
+                    }
+                    .disabled(self.purchasingDollarProduct || self.purchasingDollar3Product || self.purchasingDollar5Product)
+                }
+                
+                if !self.purchasedProductIdentifiers.contains(where: { $0 == self.productIdentifiers[1]}), let product = self.dollar3Product {
+                    Button {
+                        self.purchasingDollar3Product = true
+                        self.makePurchase(product: product)
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text("3 Dollar Tip")
+                            if self.purchasingDollar3Product {
+                                ProgressView()
+                            }
+                        }
+                    }
+                    .disabled(self.purchasingDollarProduct || self.purchasingDollar3Product || self.purchasingDollar5Product)
+                }
+                if !self.purchasedProductIdentifiers.contains(where: { $0 == self.productIdentifiers[2]}), let product = self.dollar5Product {
+                    Button {
+                        self.purchasingDollar5Product = true
+                        self.makePurchase(product: product)
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text("5 Dollar Tip")
+                            if self.purchasingDollar5Product {
+                                ProgressView()
+                            }
+                        }
+                    }
+                    .disabled(self.purchasingDollarProduct || self.purchasingDollar3Product || self.purchasingDollar5Product)
+                }
+            } header: {
+                Text("Support:")
+            }.alert(isPresented: $showingAlert) {
+                Alert(title: Text("Thank you so much for your generosity!"), message: Text("Please submit any ideas for fixes, improvements, or new features and I will make them a priority.\n\nAlternative app icons have also been unlocked!"), dismissButton: .default(Text("Ok")))
+            }
+            
+            Section {
+                Picker("Buttons:", selection: $attendant.primaryHand) {
                     ForEach(Handed.allCases, id: \.self) {
                         Text($0.name)
                     }
                 }
                 
-                Text("Important buttons will appear on the side of your primary hand.")
-                    .font(.caption)
+                Text("Important buttons will appear on the specified side of the screen.")
+                    .font(.footnote)
                     .foregroundColor(.secondary)
+                
+                if !purchasedProductIdentifiers.isEmpty {
+                    ScrollViewReader { proxy in
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            LazyHStack {
+                                ForEach(AppIcon.allCases) { icon in
+                                    Button {
+                                        self.updateAppIcon(to: icon)
+                                    } label: {
+                                        Image(icon.rawValue + "-Preview")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit
+                                            )
+                                            .frame(height: 102)
+                                            .frame(width: 102)
+                                            .cornerRadius(16)
+                                    }
+                                }
+                            }
+                        }.frame(height: 102)
+                    }
+                }
 
                 Picker("Theme:", selection: $attendant.gradientTheme) {
                     ForEach(themes, id: \.self) {
@@ -106,7 +190,7 @@ struct SettingsView: View {
                 Toggle("Update Hourly:", isOn: $attendant.useTimeGradients)
                     .tint(.teal)
                 Text(attendant.useTimeGradients ? "Gradient colors will update automatically every hour." : "Only your selected gradient color will be shown.")
-                    .font(.caption)
+                    .font(.body)
                     .foregroundColor(.secondary)
                 ScrollViewReader { proxy in
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -117,7 +201,7 @@ struct SettingsView: View {
                                 } label: {
                                     LinearGradient(gradient: Gradient.gradient(forHour: i), startPoint: .top, endPoint: .bottom)
                                         .mask {
-                                            CompassShapeView(rotation: locationAttendant.currentHeading ?? 0.0)
+                                            CompassShapeView(rotation: (locationAttendant.currentHeading ?? 0.0) + (Double(i) * 10.0))
                                                 .aspectRatio(contentMode: .fit)
                                         }
                                         .shadow(color: .primary.opacity(0.5), radius: 1)
@@ -151,26 +235,6 @@ struct SettingsView: View {
                             }
                         }
                 }
-                Divider()
-                ScrollViewReader { proxy in
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        LazyHStack {
-                            ForEach(AppIcon.allCases) { icon in
-                                Button {
-                                    self.updateAppIcon(to: icon)
-                                } label: {
-                                    Image(icon.rawValue + "-Preview")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit
-                                        )
-                                        .frame(height: 102)
-                                        .frame(width: 102)
-                                        .cornerRadius(16)
-                                }
-                            }
-                        }
-                    }.frame(height: 102)
-                }
             } header: {
                 Text("Customization:")
             }
@@ -178,12 +242,27 @@ struct SettingsView: View {
         .listStyle(.grouped)
         .navigationTitle("RestRadar")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showCalendarPicker) {
-            CalendarChooser(calendars: self.$eventsRepository.selectedCalendars, eventStore: self.eventsRepository.eventStore)
-        }
         .onAppear{
             if let iconName = UIApplication.shared.alternateIconName, let appIcon = AppIcon(rawValue: iconName) {
                 self.selectedAppIcon = appIcon
+            }
+            
+            Purchases.shared.getProducts(productIdentifiers) { products in
+                for product in products {
+                    if product.productIdentifier == "restradar.1dollar" {
+                        self.dollarProduct = product
+                    } else if product.productIdentifier == "restradar.3dollar" {
+                        self.dollar3Product = product
+                    } else if product.productIdentifier == "restradar.5dollar" {
+                        self.dollar5Product = product
+                    }
+                }
+            }
+            
+            Purchases.shared.getCustomerInfo { (customerInfo, error) in
+                if let identifiers = customerInfo?.allPurchasedProductIdentifiers {
+                    self.purchasedProductIdentifiers.append(contentsOf: identifiers)
+                }
             }
         }
     }
@@ -210,10 +289,38 @@ struct SettingsView: View {
             }
         }
     }
+    
+    func makePurchase(product: StoreProduct) {
+        Purchases.shared.purchase(product: product) { transaction, info, error, cancelled in
+            self.purchasingDollarProduct = false
+            self.purchasingDollar3Product = false
+            self.purchasingDollar5Product = false
+
+            if !cancelled && error == nil {
+                Purchases.shared.getCustomerInfo { (customerInfo, error) in
+                    if customerInfo?.originalPurchaseDate != nil {
+                        showingAlert = true
+                    }
+                    if let identifiers = customerInfo?.allPurchasedProductIdentifiers {
+                        self.purchasedProductIdentifiers.append(contentsOf: identifiers)
+                    }
+                }
+            }
+        }
+    }
 }
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView()
+    }
+}
+
+extension SKProduct {
+    func localizedPrice() -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = self.priceLocale
+        return formatter.string(from: self.price)!
     }
 }

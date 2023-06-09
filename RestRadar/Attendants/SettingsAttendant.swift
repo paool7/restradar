@@ -26,20 +26,6 @@ enum Handed: Int, CaseIterable {
     }
 }
 
-enum HomeMode: CaseIterable {
-    case nearby
-    case calendar
-    
-    var name: String {
-        switch self {
-        case .nearby:
-            return "Nearby"
-        case .calendar:
-            return "Calendar"
-        }
-    }
-}
-
 enum Theme: Int, CaseIterable {
     case sunsetsunrise = 0
     case random = 1
@@ -47,7 +33,7 @@ enum Theme: Int, CaseIterable {
     var name: String {
         switch self {
         case .sunsetsunrise:
-            return "Sunset to Sunrise"
+            return "Sunrise to Sunset"
         case .random:
             return "Assortment"
         }
@@ -78,10 +64,40 @@ enum TransportMode: CaseIterable {
     
 }
 
+enum DistanceMeasurement: CaseIterable {
+    case blocks
+    case miles
+    case steps
+
+    var name: String {
+        switch self {
+        case .miles:
+            return "Miles"
+        case .blocks:
+            return "Blocks"
+        case .steps:
+            return "Steps"
+        }
+    }
+    
+    var image: Image {
+        switch self {
+        case .miles:
+            return Image(systemName: "point.topleft.down.curvedto.point.filled.bottomright.up")
+        case .blocks:
+            return Image(systemName: "building.2")
+        case .steps:
+            return SettingsAttendant.shared.transportMode.image
+        }
+    }
+    
+}
+
 
 class SettingsAttendant: ObservableObject {
     static let shared = SettingsAttendant()
     
+    static let distanceMeasurementKey = "DistanceMeasurementSetting"
     static let transportModeKey = "TransportModeSetting"
     static let usesElectricWheelchairKey = "UsesElectricWheelchairSetting"
     static let walkingKey = "WalkingSpeedSetting"
@@ -92,7 +108,6 @@ class SettingsAttendant: ObservableObject {
     static let gradientHourKey = "GradientHourSetting"
     static let gradientKey = "UseGradientSetting"
     static let gradientThemeKey = "GradientThemeSetting"
-    static let calendarKey = "UseCalendarEventsSetting"
     static let handKey = "PrimaryHandSettings"
     static let stepKey = "StepLengthSetting"
 
@@ -102,6 +117,12 @@ class SettingsAttendant: ObservableObject {
     static let defaultStrideLength = 2.5
 
     let eventStore = EKEventStore()
+    
+    @Published var distanceMeasurement: DistanceMeasurement {
+        didSet {
+            userDefaults?.set(distanceMeasurement.hashValue, forKey: SettingsAttendant.distanceMeasurementKey)
+        }
+    }
     
     @Published var transportMode: TransportMode {
         didSet {
@@ -165,12 +186,6 @@ class SettingsAttendant: ObservableObject {
         }
     }
     
-    @Published var useCalendarEvents: Bool = false {
-        didSet {
-            userDefaults?.set(useCalendarEvents, forKey: SettingsAttendant.calendarKey)
-        }
-    }
-    
     @Published var primaryHand: Handed {
         didSet {
             userDefaults?.set(primaryHand.rawValue, forKey: SettingsAttendant.handKey)
@@ -199,9 +214,6 @@ class SettingsAttendant: ObservableObject {
         let storedUseGradient = userDefaults?.object(forKey: SettingsAttendant.gradientKey) as? Bool
         useTimeGradients = storedUseGradient ?? true
         
-        let storedUseCalendarEvents = userDefaults?.object(forKey: SettingsAttendant.calendarKey) as? Bool
-        useCalendarEvents = storedUseCalendarEvents ?? false
-        
         let storedGradientTheme = userDefaults?.object(forKey: SettingsAttendant.gradientThemeKey) as? Int
         gradientTheme = Theme(rawValue: storedGradientTheme ?? 0) ?? Theme.sunsetsunrise
         
@@ -210,5 +222,8 @@ class SettingsAttendant: ObservableObject {
         
         let storedStepLength = userDefaults?.object(forKey: SettingsAttendant.stepKey) as? Double
         stepLength = storedStepLength ?? SettingsAttendant.defaultStrideLength
+        
+        let storedDistanceMeasurement = userDefaults?.object(forKey: SettingsAttendant.distanceMeasurementKey) as? DistanceMeasurement
+        distanceMeasurement = storedDistanceMeasurement ?? .blocks
     }
 }

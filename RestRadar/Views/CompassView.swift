@@ -12,7 +12,7 @@ struct CompassView: View {
     @ObservedObject private var bathroomAttendant = BathroomAttendant.shared
     @ObservedObject private var locationAttendant = LocationAttendant.shared
     
-    @Binding var bathroom: Bathroom
+    @StateObject var bathroom: Bathroom
     
     var body: some View {
         if let current = locationAttendant.current, let currentHeading = locationAttendant.currentHeading {
@@ -24,16 +24,13 @@ struct CompassView: View {
                         ZStack {
                             let height = geometry.size.height
                             let padding = height * 0.15
-                            MapView(bathroom: $bathroom)
+                            MapView(bathroom: bathroom)
                                 .clipShape(Circle())
                                 .padding(padding)
                         }
                     }
                 }
                 .shadow(color: .primary.opacity(0.5), radius: 1)
-                .onAppear {
-                    bathroom.getDirections()
-                }
         }
     }
 }

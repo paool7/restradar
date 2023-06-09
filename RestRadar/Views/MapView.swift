@@ -11,13 +11,11 @@ import SwiftUI
 struct MapView: UIViewRepresentable {
     @ObservedObject private var bathroomAttendant = BathroomAttendant.shared
     @ObservedObject private var locationAttendant = LocationAttendant.shared
-    @Binding var bathroom: Bathroom
+    @StateObject var bathroom: Bathroom
 
     class Coordinator: NSObject, MKMapViewDelegate {        
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-            if let tileOverlay = overlay as? BathroomTileOverlay  {
-                return MKTileOverlayRenderer(tileOverlay: tileOverlay)
-            } else if let circle = overlay as? MKCircle {
+            if let circle = overlay as? MKCircle {
                 let renderer = MKCircleRenderer(circle: circle)
                 renderer.fillColor = .systemBlue
                 return renderer
@@ -28,13 +26,6 @@ struct MapView: UIViewRepresentable {
                 return renderer
             }
         }
-    }
-    
-    class BathroomTileOverlay : MKTileOverlay {
-        override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
-            result(UIColor.secondarySystemBackground.image().pngData(), nil)
-        }
-        
     }
     
     func makeCoordinator() -> Coordinator {
@@ -54,22 +45,6 @@ struct MapView: UIViewRepresentable {
       mapView.delegate = context.coordinator
       if let annotation = bathroom.annotation {
           mapView.addAnnotation(annotation)
-      }
-      
-      let camera = MKMapCamera()
-      if let current = locationAttendant.current {
-          camera.centerCoordinate = current.coordinate.midpointTo(location: bathroom.coordinate )
-      }
-      if let current = locationAttendant.current, let distance = bathroom.distanceMeters(current: current)?.value {
-          camera.centerCoordinateDistance = distance*2.5
-      }
-      if let currentHeading = locationAttendant.currentHeading {
-          camera.heading = currentHeading
-      }
-      mapView.camera = camera
-      
-      if let route = bathroom.route {
-          mapView.addOverlay((route.polyline), level: .aboveRoads)
       }
       return mapView
   }
@@ -97,7 +72,7 @@ struct MapView: UIViewRepresentable {
 
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        MapView(bathroom: .constant(BathroomAttendant.shared.closestBathroom))
+        MapView(bathroom: BathroomAttendant.shared.closestBathroom)
     }
 }
 

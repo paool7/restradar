@@ -13,34 +13,29 @@ import Foundation
 struct HomeView: View {
     @ObservedObject private var bathroomAttendant = BathroomAttendant.shared
     @ObservedObject private var locationAttendant = LocationAttendant.shared
-    @StateObject private var eventAttendant = EventsRepository.shared
+    @ObservedObject private var settingsAttendant = SettingsAttendant.shared
 
     @Environment(\.scenePhase) var scenePhase
     
     @State private var showLocation = false
     @State private var showSettings = false
     @State private var showBathroom = false
-    @State var selectedBathroom: String = "Nearby"
-    
-    let mode = [HomeMode.nearby, HomeMode.calendar]
-    @State var selectedMode = HomeMode.nearby
-
-    var columns: [GridItem] = [
-        GridItem(.flexible(maximum: UIScreen.screenWidth/2-24), spacing: 8),
-        GridItem(.flexible(maximum: (UIScreen.screenWidth-24)/2), spacing: 8),
-]
-    
+    @State var selectedBathroom: String = ""
+        
     var body: some View {
             VStack {
                 ScrollView(showsIndicators: false) {
-                    ForEach($bathroomAttendant.filteredBathrooms) { bathroom in
-                        NavigationLink(destination: BathroomView(bathroom: bathroom)) {
-                            BathroomSummaryView(bathroom: bathroom)
-                                .background {
-                                    Color(uiColor: .secondarySystemBackground)
-                                }
-                                .cornerRadius(16)
+                    LazyVStack {
+                        ForEach(bathroomAttendant.filteredBathrooms) { bathroom in
+                            NavigationLink(destination: BathroomView(bathroom: bathroom)) {
+                                BathroomSummaryView(bathroom: bathroom)
+                                    .background {
+                                        Color(uiColor: .secondarySystemBackground)
+                                    }
+                                    .cornerRadius(16)
+                            }
                         }
+                        
                     }
                 }.refreshable {
                     
@@ -48,8 +43,8 @@ struct HomeView: View {
             }
             .padding(4)
             .toolbar {
-                ToolbarItemGroup(placement: .bottomBar) {
-                    if SettingsAttendant.shared.primaryHand == .left {
+                ToolbarItem(placement: .bottomBar) {
+                    HStack {
                         Button {
                             self.showSettings = true
                         } label: {
@@ -57,36 +52,25 @@ struct HomeView: View {
                             
                         }
                         
-                        Button {
-                            self.showLocation = !self.showLocation
-                        } label: {
-                            Image(systemName: "location.magnifyingglass")
-                                .if(locationAttendant.selectedSearchLocation != nil) { $0.shiny(.iridescent2) }
-                                .foregroundColor(.primary)
-                        }
-                        .popover(isPresented: $showLocation, attachmentAnchor: .point(.trailing), arrowEdge: .top) {
-                            LocationSearchView(locationService: locationAttendant.locationService)
-                        }
+                        //                        Button {
+                        //                            self.showLocation = !self.showLocation
+                        //                        } label: {
+                        //                            Image(systemName: "location.magnifyingglass")
+                        //                                .if(locationAttendant.selectedSearchLocation != nil) { $0.shiny(.iridescent2) }
+                        //                                .foregroundColor(.primary)
+                        //                        }
+                        //                        .popover(isPresented: $showLocation, attachmentAnchor: .point(.trailing), arrowEdge: .top) {
+                        //                            LocationSearchView(locationService: locationAttendant.locationService)
+                        //                        }
                         
-                        Button {
-                            if bathroomAttendant.codesState == .all {
-                                bathroomAttendant.codesState = .noCodes
-                            } else if bathroomAttendant.codesState == .noCodes {
-                                bathroomAttendant.codesState = .onlyCodes
-                            } else if bathroomAttendant.codesState == .onlyCodes {
-                                bathroomAttendant.codesState = .all
+                        if !bathroomAttendant.favoriteBathrooms.isEmpty {
+                            Button {
+                                bathroomAttendant.onlyFavorites = !bathroomAttendant.onlyFavorites
+                            } label: {
+                                Image(systemName: bathroomAttendant.onlyFavorites ? "bookmark.fill" : "bookmark")
+                                    .if(bathroomAttendant.onlyFavorites) { $0.shiny(Gradient.forCurrentTime() ?? .iridescent2) }
+                                    .foregroundColor(.primary)
                             }
-                        } label: {
-                            Image(systemName: bathroomAttendant.codesState == .noCodes ? "lock.open" : (bathroomAttendant.codesState == .onlyCodes ? "lock" : "lock.shield"))
-                                .foregroundColor(bathroomAttendant.codesState == .noCodes ? .mint : (bathroomAttendant.codesState == .onlyCodes ? .red : .primary))
-                        }
-                        
-                        Button {
-                            bathroomAttendant.onlyFavorites = !bathroomAttendant.onlyFavorites
-                        } label: {
-                            Image(systemName: bathroomAttendant.onlyFavorites ? "bookmark.fill" : "bookmark")
-                                .if(bathroomAttendant.onlyFavorites) { $0.shiny(.iridescent2) }
-                                .foregroundColor(.primary)
                         }
                         
                         Spacer()
@@ -96,54 +80,8 @@ struct HomeView: View {
                                 Text("Only Favorites")
                             }
                         }
-                    } else {
-                        VStack {
-                            if bathroomAttendant.onlyFavorites {
-                                Text("Only Favorites")
-                            }
-                        }
-                        
-                        Spacer()
-                        
-                        Button {
-                            bathroomAttendant.onlyFavorites = !bathroomAttendant.onlyFavorites
-                        } label: {
-                            Image(systemName: bathroomAttendant.onlyFavorites ? "bookmark.fill" : "bookmark")
-                                .if(bathroomAttendant.onlyFavorites) { $0.shiny(.iridescent2) }
-                                .foregroundColor(.primary)
-                        }
-                        
-                        Button {
-                            if bathroomAttendant.codesState == .all {
-                                bathroomAttendant.codesState = .noCodes
-                            } else if bathroomAttendant.codesState == .noCodes {
-                                bathroomAttendant.codesState = .onlyCodes
-                            } else if bathroomAttendant.codesState == .onlyCodes {
-                                bathroomAttendant.codesState = .all
-                            }
-                        } label: {
-                            Image(systemName: bathroomAttendant.codesState == .noCodes ? "lock.open" : (bathroomAttendant.codesState == .onlyCodes ? "lock" : "lock.shield"))
-                                .foregroundColor(bathroomAttendant.codesState == .noCodes ? .mint : (bathroomAttendant.codesState == .onlyCodes ? .red : .primary))
-                        }
-                        
-                        Button {
-                            self.showLocation = !self.showLocation
-                        } label: {
-                            Image(systemName: "location.magnifyingglass")
-                                .if(locationAttendant.selectedSearchLocation != nil) { $0.shiny(.iridescent2) }
-                                .foregroundColor(.primary)
-                        }
-                        .popover(isPresented: $showLocation, attachmentAnchor: .point(.trailing), arrowEdge: .top) {
-                            LocationSearchView(locationService: locationAttendant.locationService)
-                        }
-                        
-                        Button {
-                            self.showSettings = true
-                        } label: {
-                            Image(systemName: "gear")
-                            
-                        }
-                    }
+                    }.scaledToFill()
+                    .environment(\.layoutDirection, settingsAttendant.primaryHand == .right ? .rightToLeft : .leftToRight)
                 }
             }
             .onAppear {
@@ -163,7 +101,7 @@ struct HomeView: View {
                 SettingsView()
             }
             .navigationDestination(isPresented: $showBathroom) {
-                if let bathroom = $bathroomAttendant.filteredBathrooms.first(where: { $0.wrappedValue.id == self.selectedBathroom }) {
+                if let bathroom = bathroomAttendant.filteredBathrooms.first(where: { $0.id == self.selectedBathroom }) {
                     BathroomView(bathroom: bathroom)
                 }
             }.onOpenURL { url in

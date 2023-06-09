@@ -11,7 +11,7 @@ struct CompactStatsView: View {
     @StateObject private var bathroomAttendant = BathroomAttendant.shared
     @StateObject private var locationAttendant = LocationAttendant.shared
     
-    @Binding var bathroom: Bathroom
+    @StateObject var bathroom: Bathroom
     
     var body: some View {
             HStack {
@@ -27,9 +27,9 @@ struct CompactStatsView: View {
                     Divider()
                         .overlay(.primary)
                 }
-                if let totalBlocks = bathroom.totalBlocks, totalBlocks > 0 {
+                if bathroom.totalBlocks > 0 {
                     HStack(alignment:.center) {
-                        Text("\(totalBlocks)")
+                        Text("\(bathroom.totalBlocks)")
                             .font(.headline)
                             .foregroundColor(.primary)
                         Image(systemName: "building.2")
@@ -65,7 +65,7 @@ struct CompactStatsView: View {
                 }.frame(maxWidth: .infinity)
                 .fixedSize(horizontal: true, vertical: false)
                 
-                if bathroom.comment != nil {
+                if bathroom.address != nil {
                     Divider()
                         .overlay(.primary)
                     
@@ -85,6 +85,6 @@ struct CompactStatsView: View {
 
 struct CompactStatsView_Previews: PreviewProvider {
     static var previews: some View {
-        CompactStatsView(bathroom: .constant(BathroomAttendant.shared.closestBathroom))
+        CompactStatsView(bathroom: BathroomAttendant.shared.closestBathroom)
     }
 }

@@ -12,13 +12,20 @@ struct DirectionsView: View {
     @StateObject private var bathroomAttendant = BathroomAttendant.shared
     @StateObject private var locationAttendant = LocationAttendant.shared
     
-    @Binding var bathroom: Bathroom
+    @StateObject var bathroom: Bathroom
     
     var body: some View {
         VStack {
             VStack(alignment: .center) {
-                CompassView(bathroom: $bathroom)
-                    .frame(height: 325)
+                Button {
+                    let coordinate = CLLocationCoordinate2DMake(bathroom.coordinate.latitude, bathroom.coordinate.longitude)
+                    let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary:nil))
+                    mapItem.name = self.bathroom.name
+                    mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking])
+                } label: {
+                    CompassView(bathroom: bathroom)
+                        .frame(height: 325)
+                }
             }
             Spacer()
             if let current = locationAttendant.current, let stepsAway = bathroom.stepsAway(current: current) {
@@ -73,6 +80,6 @@ struct DirectionsView: View {
 
 struct DirectionsView_Previews: PreviewProvider {
     static var previews: some View {
-        DirectionsView(bathroom: .constant(BathroomAttendant().closestBathroom))
+        DirectionsView(bathroom: BathroomAttendant().closestBathroom)
     }
 }

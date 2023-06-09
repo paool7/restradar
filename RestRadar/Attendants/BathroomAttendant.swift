@@ -9,6 +9,7 @@ import Foundation
 import CoreLocation
 import Combine
 import SwiftUI
+import MapKit
 
 enum CodesState: Int {
     case noCodes
@@ -24,7 +25,7 @@ class BathroomAttendant: ObservableObject {
     @Published var codesState: CodesState = .all
     @Published var onlyFavorites = false
         
-    @Published var closestBathroom: Bathroom = Bathroom(name: "", accessibility: .unknown, coordinate: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), id: "first", url: nil)
+    @Published var closestBathroom: Bathroom = Bathroom(name: "", accessibility: .unknown, coordinate: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), id: "first", url: nil, category: .unknown)
     @Published var allBathrooms: [Bathroom] = []
     @Published var filteredBathrooms: [Bathroom] = []
     
@@ -35,12 +36,13 @@ class BathroomAttendant: ObservableObject {
     
     init(){
         self.$codesState.sink { [weak self] codesState in
-            self?.filterBathrooms()
+            guard let self = self else { return }
 
+            self.filterBathrooms(onlyFavorites: self.onlyFavorites)
         }.store(in: &subscriptions)
         
         self.$onlyFavorites.sink { [weak self] onlyFavorites in
-            self?.filterBathrooms()
+            self?.filterBathrooms(onlyFavorites: onlyFavorites)
 
         }.store(in: &subscriptions)
         
@@ -56,35 +58,31 @@ class BathroomAttendant: ObservableObject {
         }.store(in: &subscriptions)
         
         self.$allBathrooms.sink {  [weak self] bathrooms in
-            self?.filterBathrooms()
-            
-//            for bathroom in bathrooms {
-//                print(bathroom.id)
-//            }
-            
+            guard let self = self else { return }
             if let bathroomIds = userDefaults?.object(forKey: "FavoriteBathroomsIdStrings") as? [String], !bathroomIds.isEmpty {
-                self?.favoriteBathrooms = bathroomIds.compactMap({ id in bathrooms.first(where: { $0.id == id }) })
+                self.favoriteBathrooms = bathroomIds.compactMap({ id in bathrooms.first(where: { $0.id == id }) })
             }
+            
+            self.filterBathrooms(onlyFavorites: self.onlyFavorites)
         }.store(in: &subscriptions)
 
         LocationAttendant.shared.$current.sink { [weak self] location in
-            if self?.allBathrooms.count == 0 {
-                self?.allBathrooms = Constants.getBathrooms()
+            guard let self = self else { return }
+            if self.allBathrooms.count == 0 {
+                self.allBathrooms = Constants.getBathrooms()
             }
-            self?.filterBathrooms()
+            self.filterBathrooms(onlyFavorites: self.onlyFavorites)
         }.store(in: &subscriptions)
     }
     
-    func filterBathrooms() {
+    func filterBathrooms(onlyFavorites: Bool) {
         guard let current = LocationAttendant.shared.current else {
             return
         }
         var bathroomList = onlyFavorites ? favoriteBathrooms : self.allBathrooms
         bathroomList = bathroomList.sorted(by: { $0.distanceMeters(current: current)?.value ?? 1000 < $1.distanceMeters(current: current)?.value ?? 1000 })
-        bathroomList = codesState == .all ? bathroomList : (codesState == .noCodes ? bathroomList.filter({ $0.code == nil }) : bathroomList.filter({ $0.code != nil }))
         
         let constrainedBathrooms = bathroomList.count > 101 ? Array(bathroomList[0..<100]) : bathroomList
-//        let constrainedBathrooms = bathroomList
 
         self.filteredBathrooms = constrainedBathrooms
         
@@ -107,10 +105,22 @@ class BathroomAttendant: ObservableObject {
         return bathroomList.first
     }
     
-    struct PublicRestroom {
-        let name: String
-        let parkName: String
-        let parkURL: String
-        let address: String
+    func getImage(bathroom: Bathroom) {
+        if bathroom.image == nil {
+            let options = MKMapSnapshotter.Options()
+            options.region = MKCoordinateRegion(center: bathroom.coordinate, latitudinalMeters: 115, longitudinalMeters: 115)
+            options.mapType = .standard
+            options.showsBuildings = true
+//            options.size = CGSize(width: 100, height: 100)
+            
+            let snapshotter = MKMapSnapshotter(options: options)
+            snapshotter.start { snapshot, error in
+                if let snapshot = snapshot {
+                    bathroom.image = Image(uiImage: snapshot.image)
+                } else if let error = error {
+                    print("Something went wrong \(error.localizedDescription)")
+                }
+            }
+        }
     }
 }

@@ -17,9 +17,33 @@ enum Accessibility: String, Equatable {
     case unknown
 }
 
+enum Category: String, Equatable {
+    case park = "Park"
+    case library = "Library"
+    case store = "Store"
+    case playground = "Playground"
+    case unknown = "Unknown"
+    
+    var image: Image {
+        switch self {
+        case .store:
+            return Image("storefront_17")
+        case .park:
+            return Image(systemName: "tree")
+        case .library:
+            return Image(systemName: "books.vertical")
+        case .playground:
+            return Image(systemName: "figure.play")
+        case .unknown:
+            return Image(systemName: "oval.portrait.tophalf.filled")
+        }
+    }
+}
+
 class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     var code: String?
-    var comment: String?
+    var category: Category
+    var address: String?
     var hours: Hours?
     var id: String
     var name: String
@@ -31,6 +55,18 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     @Published var directionsEta: String?
     @Published var heading: Double = 0.0
     @Published var route: MKRoute?
+    @Published var image: Image?
+    
+    var distanceString: String? {
+        if SettingsAttendant.shared.distanceMeasurement == .blocks, let current = LocationAttendant.shared.current {
+            let distance = blockEstimate(current: current) ?? 0
+            return "\(distance) \(SettingsAttendant.shared.distanceMeasurement.name.lowercased())"
+        } else if SettingsAttendant.shared.distanceMeasurement == .miles, let current = LocationAttendant.shared.current, let distance = self.distance(current: current) {
+            return "\(distance) \(SettingsAttendant.shared.distanceMeasurement.name.lowercased())"
+        }
+        
+        return nil
+    }
     
     func getDirections() {
         if let current = LocationAttendant.shared.current, self.directions.isEmpty {
@@ -40,6 +76,10 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
                 if let travelTime = route?.expectedTravelTime {
                     let travelMinutes = Int(travelTime/60)
                     self.directionsEta = "\(travelMinutes) minute\(travelMinutes == 1 ? "" : "s")"
+                }
+                
+                if let index = BathroomAttendant.shared.allBathrooms.firstIndex(of: self) {
+                    BathroomAttendant.shared.allBathrooms[index] = self
                 }
             }
         }
@@ -144,9 +184,10 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
         return total
     }
     
-    var blocksAway: String {
-        let total = self.totalBlocks
-        return "\(total > 0 ? ("\(total) block\(total == 1 ? "" : "s")") : "")"
+    func blockEstimate(current: CLLocation) -> Int? {
+        guard let distanceMeters = distanceMeters(current: current) else { return nil }
+        let distanceFeet = distanceMeters.converted(to: .feet)
+        return Int(distanceFeet.value/375.0)
     }
     
     func currentRouteStep() -> MKRoute.Step? {
@@ -175,15 +216,16 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
         return self.directions.firstIndex(of: currentStep) ?? 0
     }
     
-    init(name: String, accessibility: Accessibility, coordinate: CLLocationCoordinate2D, comment: String? = nil, code: String? = nil, hours: Hours? = nil, id: String, url: String?) {
+    init(name: String, accessibility: Accessibility, coordinate: CLLocationCoordinate2D, address: String? = nil, code: String? = nil, hours: Hours? = nil, id: String, url: String?, category: Category) {
         self.name = name
         self.accessibility = accessibility
-        self.comment = comment
+        self.address = address
         self.code = code
         self.hours = hours
         self.id = id
         self.coordinate = coordinate
         self.url = url
+        self.category = category        
     }
     
     public func hash(into hasher: inout Hasher) {
@@ -191,13 +233,13 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     }
     
     static func ==(lhs: Bathroom, rhs: Bathroom) -> Bool {
-        return (lhs.id == rhs.id && lhs.directions == rhs.directions && lhs.coordinate.latitude == rhs.coordinate.latitude && lhs.coordinate.longitude == rhs.coordinate.longitude && lhs.hours == rhs.hours && lhs.comment == rhs.comment)
+        return (lhs.id == rhs.id && lhs.directions == rhs.directions && lhs.coordinate.latitude == rhs.coordinate.latitude && lhs.coordinate.longitude == rhs.coordinate.longitude && lhs.hours == rhs.hours && lhs.address == rhs.address)
     }
     
     var description : String {
         get {
             return """
-            { "name": \"\(name)\", "id": "\(self.id)", "lat": \(self.coordinate.latitude.description), "lng": \(self.coordinate.longitude.description), "accessibility": \"\(accessibility.rawValue)\", "comment": \"\(comment ?? "")\", "url": \"\(url ?? "")\" },
+            { "name": \"\(name)\", "id": "\(self.id)", "lat": \(self.coordinate.latitude.description), "lng": \(self.coordinate.longitude.description), "accessibility": \"\(accessibility.rawValue)\", "address": \"\(address ?? "")\", "url": \"\(url ?? "")\" },
             """
         }
     }

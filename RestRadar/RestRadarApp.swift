@@ -6,9 +6,14 @@
 //
 
 import SwiftUI
+import RevenueCat
 
 @main
 struct RestRadarApp: App {
+    init() {
+        Purchases.configure(withAPIKey: "appl_smCIXKLSnkGIwEKWXWCDhfpFnrM")
+    }
+    
     var body: some Scene {
         WindowGroup {
             NavigationStack {

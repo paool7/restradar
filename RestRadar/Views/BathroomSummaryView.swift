@@ -12,11 +12,17 @@ struct BathroomSummaryView: View {
     @StateObject private var bathroomAttendant = BathroomAttendant.shared
     @StateObject private var locationAttendant = LocationAttendant.shared
     
-    @Binding var bathroom: Bathroom
+    @StateObject var bathroom: Bathroom
     
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
+                HStack {
+                    bathroom.category.image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: UIFont.preferredFont(forTextStyle: .title2).pointSize)
+                        .foregroundColor(.primary)
                     Text(bathroom.name)
                         .font(.headline)
                         .lineLimit(2)
@@ -25,149 +31,111 @@ struct BathroomSummaryView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .minimumScaleFactor(0.75)
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 0))
-                if let current = locationAttendant.current, let timeAway = bathroom.totalTime(current: current) {
-                    HStack {
+                    if bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id }) {
                         VStack(alignment: .leading) {
-                            HStack {
-                                Text("\(timeAway)")
-                                    .lineLimit(1)
-                                    .font(.title)
-                                    .foregroundColor(.primary)
-                                Image(systemName: "hourglass")
-                                    .font(.title3)
-                                    .foregroundColor(.primary)
-                            }
-                            Text("mins")
+                            Image(systemName: "bookmark.fill")
+                                .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                                .foregroundColor(.primary)
+                        }
+                    }
+                }
+                if let current = locationAttendant.current {
+                    HStack {
+                        VStack(alignment: .center, spacing: 7) {
+                            SettingsAttendant.shared.transportMode.image
+                                .font(.title3)
+                                .foregroundColor(.primary)
+                            Text("\(bathroom.totalTime(current: current)) mins")
                                 .font(.caption)
                                 .foregroundColor(.primary)
                         }
-                        if let totalBlocks = bathroom.totalBlocks, totalBlocks > 0 {
-                            Divider()
-                                .overlay(.primary)
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text("\(totalBlocks)")
-                                        .lineLimit(1)
-                                        .font(.title)
-                                        .foregroundColor(.primary)
-                                    Image(systemName: "building.2")
-                                        .font(.title3)
-                                        .foregroundColor(.primary)
-                                }
-                                Text("blocks")
-                                    .font(.caption)
+                        
+                        Divider()
+                            .overlay(.primary)
+
+                        if let distanceString = bathroom.distanceString {
+                            VStack(alignment: .leading, spacing: 8) {
+                                SettingsAttendant.shared.distanceMeasurement.image
+                                    .font(.title3)
                                     .foregroundColor(.primary)
-                            }
-                        } else if let distance = bathroom.distance(current: current) {
-                            Divider()
-                                .overlay(.primary)
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text(String(format: "%.1f", distance))
-                                        .lineLimit(1)
-                                        .font(.title)
-                                        .foregroundColor(.primary)
-                                    Image(systemName: "point.topleft.down.curvedto.point.filled.bottomright.up")
-                                        .font(.title3)
-                                        .foregroundColor(.primary)
-                                }
-                                Text("miles")
+                                Text(distanceString)
                                     .font(.caption)
                                     .foregroundColor(.primary)
                             }
                         }
-                        if self.bathroom.id != bathroomAttendant.filteredBathrooms.first?.id {
-                            if let code = bathroom.code {
-                                Divider()
-                                    .overlay(.primary)
+                        
+                        Divider()
+                            .overlay(.primary)
+                        
+                        if let currentHeading = locationAttendant.currentHeading {
+                            VStack(alignment: .center) {
                                 HStack {
-                                    Image(systemName: "lock.shield")
-                                        .font(.headline)
+                                    Text(" ")
+                                        .lineLimit(1)
+                                        .font(.title)
                                         .foregroundColor(.primary)
-                                    Text(code)
-                                        .lineLimit(2)
-                                        .font(.title3)
-                                        .bold()
-                                        .minimumScaleFactor(0.2)
-                                        .foregroundColor(.primary)
-                                }
-                            } else {
-                                Divider()
-                                    .overlay(.primary)
-                                VStack(alignment: .leading) {
-                                    Image(systemName: "lock.open")
-                                        .font(.title3)
-                                        .bold()
-                                    Text("unlocked")
-                                        .font(.caption)
+                                    Image(systemName: "arrow.up.circle.fill")
+                                        .font(.title2)
+                                        .rotationEffect(Angle(degrees: currentHeading.angle(current.coordinate, bathroom.coordinate)))
+                                        .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                                    Text(" ")
+                                        .lineLimit(1)
+                                        .font(.title)
                                         .foregroundColor(.primary)
                                 }
-                            }
-                        }
-                        if bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id }) {
-                            Divider()
-                                .overlay(.primary)
-                            VStack(alignment: .leading) {
-                                Image(systemName: "bookmark.fill")
-                                    .shiny(.iridescent2)
+                                Text("direction")
+                                    .font(.caption)
                                     .foregroundColor(.primary)
                             }
+                            Divider()
+                                .overlay(.primary)
                         }
+                        
+                        DirectionsSummaryView(bathroom: bathroom)
+                        
+                        Spacer()
                     }
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 0))
                 }
                 
-                if let directions = bathroom.directions, directions.count > 0, self.bathroom.id == bathroomAttendant.filteredBathrooms.first?.id {
+                if let address = bathroom.address {
                     Divider()
                         .overlay(.primary)
                     HStack {
-                        Spacer()
-                        let currentIndex = bathroom.currentRouteStepIndex
-
-                        if let firstStep = bathroom.directions[currentIndex], let firstImage = bathroom.imageFor(step: firstStep), firstImage != "figure.walk" {
-                            Image(systemName: "figure.walk")
-                                .foregroundColor(.white)
-                                .minimumScaleFactor(0.5)
-                                .font(.title2)
-                                .bold()
-                        }
-                        ForEach(directions, id: \.hash) { step in
-                            if directions.firstIndex(of: step) ?? currentIndex >= currentIndex {
-                                Image(systemName: bathroom.imageFor(step: step))
-                                    .foregroundColor(.primary)
-                                    .minimumScaleFactor(0.5)
-                                    .if(step == bathroom.currentRouteStep()) { $0.bold() }
-                                    .font(step == bathroom.currentRouteStep() ? .title : .title2)
-                            }
-                        }
-                        Spacer()
-                    }.scaledToFit()
-                    .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
-
-                }
-                if let comment = bathroom.comment {
-                    Divider()
-                        .overlay(.primary)
-                    Text(comment)
-                        .lineLimit(2)
-                        .font(.subheadline)
-                        .truncationMode(.tail)
-                        .foregroundColor(.primary)
-                        .multilineTextAlignment(.leading)
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 0))
+                        Image(systemName: "mappin.and.ellipse")
+                            .foregroundColor(.primary)
+                            .font(.callout)
+                        Text(address)
+                            .lineLimit(2)
+                            .font(.subheadline)
+                            .truncationMode(.tail)
+                            .foregroundColor(.primary)
+                            .multilineTextAlignment(.leading)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 0))
+                    }
                 }
             }
-            if bathroom.id == bathroomAttendant.closestBathroom.id {
-                CompassView(bathroom: $bathroom)
-                    .aspectRatio(contentMode: .fill)
-            }
+//            if let image = bathroom.image {
+//                image
+//                    .frame(width: 100, height: 100)
+//                    .cornerRadius(8)
+//            } else {
+//                Rectangle()
+//                    .frame(width: 100, height: 100)
+//                    .cornerRadius(8)
+//                    .shiny(.iridescent2)
+//            }
         }
         .padding(EdgeInsets(top: 8, leading:12, bottom: 8, trailing: 12))
+        .onAppear {
+            bathroomAttendant.getImage(bathroom: bathroom)
+            bathroom.getDirections()
+        }
     }
 }
 
 struct BathroomSummaryView_Previews: PreviewProvider {
     static var previews: some View {
-        BathroomSummaryView(bathroom: .constant(BathroomAttendant.shared.closestBathroom))
+        BathroomSummaryView(bathroom: BathroomAttendant.shared.closestBathroom)
     }
 }
