@@ -25,16 +25,23 @@ class BathroomAttendant: ObservableObject {
     @Published var codesState: CodesState = .all
     @Published var onlyFavorites = false
         
-    @Published var closestBathroom: Bathroom = Bathroom(name: "", accessibility: .unknown, coordinate: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), id: "first", url: nil, category: .unknown)
+    @Published var closestBathroom: Bathroom
     @Published var allBathrooms: [Bathroom] = []
     @Published var filteredBathrooms: [Bathroom] = []
     
     @Published var closestFavoriteBathroom: Bathroom?
     @Published var favoriteBathrooms: [Bathroom] = []
     
+    @Published var visibleBathrooms: [Bathroom] = []
+    @Published var walkingDistance: Double?
+    
     var initialDirectionsLoad = true
     
     init(){
+        let all = Constants.getBathrooms()
+        self.allBathrooms = all
+        self.closestBathroom = all.first!
+        
         self.$codesState.sink { [weak self] codesState in
             guard let self = self else { return }
 
@@ -65,6 +72,11 @@ class BathroomAttendant: ObservableObject {
             
             self.filterBathrooms(onlyFavorites: self.onlyFavorites)
         }.store(in: &subscriptions)
+        
+        self.$visibleBathrooms.sink {  [weak self] bathrooms in
+            guard let self = self else { return }
+            self.recalculateWalkingDistance()
+        }.store(in: &subscriptions)
 
         LocationAttendant.shared.$current.sink { [weak self] location in
             guard let self = self else { return }
@@ -72,6 +84,8 @@ class BathroomAttendant: ObservableObject {
                 self.allBathrooms = Constants.getBathrooms()
             }
             self.filterBathrooms(onlyFavorites: self.onlyFavorites)
+            
+            self.recalculateWalkingDistance()
         }.store(in: &subscriptions)
     }
     
@@ -120,6 +134,16 @@ class BathroomAttendant: ObservableObject {
                 } else if let error = error {
                     print("Something went wrong \(error.localizedDescription)")
                 }
+            }
+        }
+    }
+    
+    func recalculateWalkingDistance() {
+        if let current = LocationAttendant.shared.current {
+
+            let bathrooms = self.visibleBathrooms.sorted(by: {$0.distanceMeters(current: current)?.converted(to: .meters).value ?? 0.0 < $1.distanceMeters(current: current)?.converted(to: .meters).value ?? 0.0 })
+            if let last = bathrooms.last, let distance = last.distanceMeters(current: current)?.converted(to: .meters).value {
+                self.walkingDistance = distance
             }
         }
     }

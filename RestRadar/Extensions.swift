@@ -164,6 +164,22 @@ extension CLLocationCoordinate2D {
 }
 
 extension CLLocationDirection {
+    var compassRepresentation: String {
+        var normalizedDirection = self.truncatingRemainder(dividingBy: 360)
+        
+        if normalizedDirection < 0 {
+            normalizedDirection = normalizedDirection + 360
+        }
+        
+        let directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+        
+        let index = Int((normalizedDirection + 11.25) / 22.5) % 16
+        
+        return directions[index]
+    }
+}
+
+extension CLLocationDirection {
     /// Compute the angle between two map points and the from point heading
     /// returned angle is between 0 and 360 degrees
     func angle(_ fromPoint: CLLocationCoordinate2D, _ toPoint: CLLocationCoordinate2D) -> CLLocationDirection {

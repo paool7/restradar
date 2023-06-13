@@ -49,7 +49,8 @@ struct Constants {
 
         let playgroundBathrooms: [Bathroom] = playgroundItems.compactMap { item in
             let coordinate = CLLocationCoordinate2D(latitude: item.lat, longitude: item.lng)
-            return Bathroom(name: item.name, accessibility: Accessibility(rawValue: item.accessibility ?? "unknown") ?? .unknown, coordinate: coordinate, address: item.address, id: item.id, url: item.url, category: .park)
+            let category: Category = item.name.contains("Playground") ? .playground : .park
+            return Bathroom(name: item.name, accessibility: Accessibility(rawValue: item.accessibility ?? "unknown") ?? .unknown, coordinate: coordinate, address: item.address, id: item.id, url: item.url, category: category)
         }
         let libraryBathrooms: [Bathroom] = libraryItems.compactMap { item in
             let coordinate = CLLocationCoordinate2D(latitude: item.lat, longitude: item.lng)

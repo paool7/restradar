@@ -30,18 +30,18 @@ struct BathroomSummaryView: View {
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .minimumScaleFactor(0.75)
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 0))
                     if bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id }) {
                         VStack(alignment: .leading) {
                             Image(systemName: "bookmark.fill")
                                 .shiny(Gradient.forCurrentTime() ?? .iridescent2)
-                                .foregroundColor(.primary)
+                                .shadow(color: .primary, radius: 0.5)
                         }
                     }
                 }
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 0))
                 if let current = locationAttendant.current {
                     HStack {
-                        VStack(alignment: .center, spacing: 7) {
+                        VStack(alignment: .center, spacing: 10) {
                             SettingsAttendant.shared.transportMode.image
                                 .font(.title3)
                                 .foregroundColor(.primary)
@@ -54,7 +54,7 @@ struct BathroomSummaryView: View {
                             .overlay(.primary)
 
                         if let distanceString = bathroom.distanceString {
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .center, spacing: 10) {
                                 SettingsAttendant.shared.distanceMeasurement.image
                                     .font(.title3)
                                     .foregroundColor(.primary)
@@ -68,21 +68,15 @@ struct BathroomSummaryView: View {
                             .overlay(.primary)
                         
                         if let currentHeading = locationAttendant.currentHeading {
-                            VStack(alignment: .center) {
-                                HStack {
-                                    Text(" ")
-                                        .lineLimit(1)
-                                        .font(.title)
-                                        .foregroundColor(.primary)
-                                    Image(systemName: "arrow.up.circle.fill")
-                                        .font(.title2)
-                                        .rotationEffect(Angle(degrees: currentHeading.angle(current.coordinate, bathroom.coordinate)))
-                                        .shiny(Gradient.forCurrentTime() ?? .iridescent2)
-                                    Text(" ")
-                                        .lineLimit(1)
-                                        .font(.title)
-                                        .foregroundColor(.primary)
-                                }
+                            VStack(alignment: .center, spacing: 10) {
+                                Image(systemName: "arrow.up.circle.fill")
+                                    .font(.title2)
+                                    .foregroundColor(.primary)
+                                    .rotationEffect(Angle(degrees: currentHeading.angle(current.coordinate, bathroom.coordinate)))
+                                    .overlay(
+                                        Circle()
+                                            .stroke(.primary, lineWidth: 1)
+                                    )
                                 Text("direction")
                                     .font(.caption)
                                     .foregroundColor(.primary)
@@ -111,7 +105,6 @@ struct BathroomSummaryView: View {
                             .truncationMode(.tail)
                             .foregroundColor(.primary)
                             .multilineTextAlignment(.leading)
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 4, trailing: 0))
                     }
                 }
             }
@@ -134,8 +127,3 @@ struct BathroomSummaryView: View {
     }
 }
 
-struct BathroomSummaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        BathroomSummaryView(bathroom: BathroomAttendant.shared.closestBathroom)
-    }
-}

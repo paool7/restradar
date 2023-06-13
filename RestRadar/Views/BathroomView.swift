@@ -15,6 +15,8 @@ struct BathroomView: View {
     @StateObject private var locationAttendant = LocationAttendant.shared
     @StateObject var bathroom: Bathroom
     
+    @State var scene: MKLookAroundScene?
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 8) {
@@ -103,7 +105,9 @@ struct BathroomView: View {
                                         .font(.title)
                                         .foregroundColor(.primary)
                                     bathroom.category.image
-                                        .font(.title2)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(height: UIFont.preferredFont(forTextStyle: .title2).pointSize)
                                         .foregroundColor(.primary)
                                 }
                                 Text(bathroom.category.rawValue.lowercased())
@@ -117,6 +121,10 @@ struct BathroomView: View {
                     if let address = bathroom.address {
                         Divider()
                             .overlay(.primary)
+                        LookAroundView(scene: self.$scene)
+                            .cornerRadius(8)
+                            .clipped()
+                            .frame(height: 120)
                         Text("\(address)")
                             .font(.title3)
                             .foregroundColor(.primary)
@@ -129,10 +137,15 @@ struct BathroomView: View {
                         Button {
                             UIApplication.shared.open(url, options: [:], completionHandler: nil)
                         } label: {
-                            Text("More Info")
-                                .foregroundColor(.cyan)
-                                .font(.headline)
-                                .frame(alignment: .center)
+                            HStack {
+                                Text("More Info")
+                                    .foregroundColor(.cyan)
+                                    .font(.headline)
+                                    .frame(alignment: .center)
+                                Image(systemName: "safari")
+                                    .foregroundColor(.cyan)
+                                    .font(.headline)
+                            }
                         }
                     }
                 }
@@ -145,6 +158,12 @@ struct BathroomView: View {
                 DirectionsView(bathroom: bathroom)
             }
             .padding(8)
+        }
+        .onAppear {
+            Task {
+                let scene = await getScene(location: .init(latitude: bathroom.coordinate.latitude, longitude: bathroom.coordinate.longitude))
+                self.scene = scene
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -179,6 +198,20 @@ struct BathroomView: View {
                 }.scaledToFill()
                 .environment(\.layoutDirection, SettingsAttendant.shared.primaryHand == .right ? .rightToLeft : .leftToRight)
             }
+        }
+    }
+    
+    func getScene(location: CLLocationCoordinate2D?) async -> MKLookAroundScene? {
+        if let latitude = location?.latitude, let longitude = location?.longitude {
+            let sceneRequest = MKLookAroundSceneRequest(coordinate: .init(latitude: latitude, longitude: longitude))
+
+            do {
+                return try await sceneRequest.scene
+            } catch {
+                return nil
+            }
+        } else {
+            return nil
         }
     }
 }

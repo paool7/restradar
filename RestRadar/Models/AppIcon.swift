@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 enum AppIcon: String, CaseIterable, Identifiable {
-    case primary = ""
+    case primary = "AppIcon-18"
     case first = "AppIcon-1"
     case second = "AppIcon-2"
     case third = "AppIcon-3"

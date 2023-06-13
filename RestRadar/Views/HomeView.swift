@@ -23,7 +23,13 @@ struct HomeView: View {
     @State var selectedBathroom: String = ""
         
     var body: some View {
-            VStack {
+        VStack(spacing: 8) {
+            if let current = Binding<CLLocation>($locationAttendant.current), let currentHeading = Binding<Double>($locationAttendant.currentHeading), let walkingDistance = Binding<Double>($bathroomAttendant.walkingDistance) {
+                WalkingDistanceMapView(bathroom: bathroomAttendant.closestBathroom, walkingDistance: walkingDistance, current: current, currentHeading: currentHeading)
+                    .cornerRadius(20)
+                    .frame(height: 200)
+            }
+
                 ScrollView(showsIndicators: false) {
                     LazyVStack {
                         ForEach(bathroomAttendant.filteredBathrooms) { bathroom in
@@ -33,17 +39,22 @@ struct HomeView: View {
                                         Color(uiColor: .secondarySystemBackground)
                                     }
                                     .cornerRadius(16)
+                                    .onAppear {
+                                        bathroomAttendant.visibleBathrooms.append(bathroom)
+                                    }
+                                    .onDisappear {
+                                        if let index = bathroomAttendant.visibleBathrooms.firstIndex(where: {$0.id == bathroom.id }) {
+                                            bathroomAttendant.visibleBathrooms.remove(at: index)
+                                        }
+                                    }
                             }
                         }
-                        
                     }
-                }.refreshable {
-                    
                 }
             }
             .padding(4)
             .toolbar {
-                ToolbarItem(placement: .bottomBar) {
+                ToolbarItemGroup(placement: .bottomBar) {
                     HStack {
                         Button {
                             self.showSettings = true
@@ -110,24 +121,6 @@ struct HomeView: View {
                     self.showBathroom = true
                 }
             }
-    }
-    
-    func combineStrings(_ string1: String, _ string2: String) -> String {
-        // Remove occurrences of "," and "."
-        let cleanedString1 = string1.replacingOccurrences(of: ",", with: "").replacingOccurrences(of: ".", with: "")
-        let cleanedString2 = string2.replacingOccurrences(of: ",", with: "").replacingOccurrences(of: ".", with: "")
-        
-        // Split the strings into arrays of words
-        let words1 = cleanedString1.components(separatedBy: " ")
-        let words2 = cleanedString2.components(separatedBy: " ")
-        
-        // Combine the arrays of words and shuffle them
-        var combinedWords = words1 + words2
-        combinedWords.shuffle()
-        
-        // Join the words with "-"
-        let result = combinedWords.joined(separator: "-")
-        return result
     }
 }
 

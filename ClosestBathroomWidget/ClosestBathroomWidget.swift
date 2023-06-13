@@ -15,6 +15,7 @@ struct ClosestBathoomEntry: TimelineEntry {
     let size: WidgetFamily
 }
 
+@available(iOSApplicationExtension 17.0, *)
 struct ClosestBathroomWidgetView: View {
     let entry: ClosestBathoomEntry
     
@@ -23,13 +24,20 @@ struct ClosestBathroomWidgetView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(entry.bathroom.name)
-                .lineLimit(3)
-                .font(.headline)
-                .bold()
-                .minimumScaleFactor(0.5)
-                .foregroundColor(.white)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: entry.size == .systemSmall ? 4 : 0, trailing: 0))
+            HStack {
+                if entry.size != .systemSmall {
+                    Image(systemName: "toilet")
+                        .foregroundColor(.white)
+                        .font(.subheadline)
+                }
+                Text(entry.bathroom.name)
+                    .lineLimit(2)
+                    .font(.headline)
+                    .bold()
+                    .minimumScaleFactor(0.5)
+                    .foregroundColor(.white)
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: entry.size == .systemSmall ? 4 : 0, trailing: 0))
+            }
             if let current = locationAttendant.current {
                 HStack {
                     if entry.size != .systemSmall {
@@ -119,15 +127,15 @@ struct ClosestBathroomWidgetView: View {
                         }
                     }
                     Spacer()
-                }
+                }.padding(EdgeInsets(top: entry.size == .systemSmall ? 4 : 0, leading: 0, bottom: 0, trailing: 0))
+
             }
         }
-        .padding(EdgeInsets(top: 8, leading:12, bottom: 8, trailing: 12))
-        .background {
+        .containerBackground(for: .widget, content: {
             if entry.size == .systemSmall, let gradient = Gradient.forCurrentTime() {
                 LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
             }
-        }
+        })
         .widgetURL({
             if let url = URL(string: "restradar://\(entry.bathroom.id)") {
                 return url
@@ -183,7 +191,12 @@ struct ClosestBathroomWidget: Widget {
             kind: kind,
             provider: ClosestBathroomTimelineProvider()
         ) { entry in
-            ClosestBathroomWidgetView(entry: entry)
+            
+            if #available(iOSApplicationExtension 17.0, *) {
+                ClosestBathroomWidgetView(entry: entry)
+            } else {
+                // Fallback on earlier versions
+            }
         }
         .configurationDisplayName("Closest Bathroom")
         .description("Find the closest bathroom near you.")

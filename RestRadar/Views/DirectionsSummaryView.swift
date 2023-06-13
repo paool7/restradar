@@ -29,7 +29,7 @@ struct DirectionsSummaryView: View {
                 }
                 ForEach(bathroom.directions, id: \.hash) { step in
                     let stepIndex = bathroom.directions.firstIndex(of: step) ?? currentIndex
-                    if (stepIndex >= currentIndex) && ((stepIndex - currentIndex) < 4)  {
+                    if (stepIndex >= currentIndex) && ((stepIndex - currentIndex) < 3)  {
                         Image(systemName: bathroom.imageFor(step: step))
                             .foregroundColor(.primary)
                             .font(.title2)
@@ -41,11 +41,5 @@ struct DirectionsSummaryView: View {
             }.scaledToFit()
             .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
         }
-    }
-}
-
-struct DirectionsSummaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        DirectionsSummaryView(bathroom: BathroomAttendant.shared.closestBathroom)
     }
 }

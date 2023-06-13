@@ -17,7 +17,8 @@ struct MapView: UIViewRepresentable {
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             if let circle = overlay as? MKCircle {
                 let renderer = MKCircleRenderer(circle: circle)
-                renderer.fillColor = .systemBlue
+                renderer.strokeColor = .systemBlue
+                renderer.lineWidth = 1
                 return renderer
             } else {
                 let renderer = MKPolylineRenderer(overlay: overlay)
@@ -39,13 +40,21 @@ struct MapView: UIViewRepresentable {
 
       mapView.backgroundColor = .secondarySystemBackground
       
-      let configuration = MKStandardMapConfiguration(emphasisStyle: .muted)
+      mapView.delegate = context.coordinator
+
+      let configuration = MKStandardMapConfiguration(emphasisStyle: .default)
       mapView.preferredConfiguration = configuration
       
-      mapView.delegate = context.coordinator
+      let camera = MKMapCamera()
+      if let current = locationAttendant.current, let distance = bathroom.distanceMeters(current: current)?.value {
+          camera.centerCoordinateDistance = distance*2.5
+      }
+      mapView.camera = camera
+      
       if let annotation = bathroom.annotation {
           mapView.addAnnotation(annotation)
       }
+      
       return mapView
   }
   
@@ -61,10 +70,11 @@ struct MapView: UIViewRepresentable {
       if let current = locationAttendant.current, let distance = bathroom.distanceMeters(current: current)?.value {
           camera.centerCoordinateDistance = distance*2.5
       }
+      uiView.removeOverlays(uiView.overlays)
+
       if let route = bathroom.route {
           uiView.addOverlay((route.polyline), level: .aboveRoads)
       }
-
       uiView.camera = camera
   }
     

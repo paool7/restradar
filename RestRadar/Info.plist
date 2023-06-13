@@ -19,5 +19,7 @@
 	</array>
 	<key>NSWidgetWantsLocation</key>
 	<true/>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
 </dict>
 </plist>

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2207D0782A33CC5600948AEB /* DirectionsSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2207D0772A33CC5600948AEB /* DirectionsSummaryView.swift */; };
 		2207D0792A33CC5600948AEB /* DirectionsSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2207D0772A33CC5600948AEB /* DirectionsSummaryView.swift */; };
+		220D17BA2A3589F500DECB69 /* LookAroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220D17B92A3589F500DECB69 /* LookAroundView.swift */; };
+		220D17BC2A36A77900DECB69 /* WalkingDistanceMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220D17BB2A36A77900DECB69 /* WalkingDistanceMapView.swift */; };
 		22108B3F29D24203004EB964 /* CircleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22108B3E29D24203004EB964 /* CircleLabel.swift */; };
 		2224C65629CFC10600222FD4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65529CFC10600222FD4 /* MapView.swift */; };
 		2224C65829CFC2E400222FD4 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65729CFC2E400222FD4 /* Annotation.swift */; };
@@ -94,6 +96,8 @@
 
 /* Begin PBXFileReference section */
 		2207D0772A33CC5600948AEB /* DirectionsSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsSummaryView.swift; sourceTree = "<group>"; };
+		220D17B92A3589F500DECB69 /* LookAroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LookAroundView.swift; sourceTree = "<group>"; };
+		220D17BB2A36A77900DECB69 /* WalkingDistanceMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkingDistanceMapView.swift; sourceTree = "<group>"; };
 		22108B3E29D24203004EB964 /* CircleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleLabel.swift; sourceTree = "<group>"; };
 		221CCF782A04A7B800B0E171 /* BathroomList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomList.swift; sourceTree = "<group>"; };
 		2224C65529CFC10600222FD4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
@@ -199,6 +203,8 @@
 				22F2521329B57B990010223E /* HomeView.swift */,
 				222AD8B729E27DF500A18E76 /* LocationSearchView.swift */,
 				2224C65529CFC10600222FD4 /* MapView.swift */,
+				220D17BB2A36A77900DECB69 /* WalkingDistanceMapView.swift */,
+				220D17B92A3589F500DECB69 /* LookAroundView.swift */,
 				222AD8B329E2362700A18E76 /* SettingsView.swift */,
 				228ED6CF2A2D3EAD00F3D293 /* MailView.swift */,
 			);
@@ -431,7 +437,9 @@
 				2224C66429D1D18400222FD4 /* CompassView.swift in Sources */,
 				222AD8B829E27DF500A18E76 /* LocationSearchView.swift in Sources */,
 				228ED6D02A2D3EAD00F3D293 /* MailView.swift in Sources */,
+				220D17BA2A3589F500DECB69 /* LookAroundView.swift in Sources */,
 				22C9436729C64A0100E41651 /* Bathroom.swift in Sources */,
+				220D17BC2A36A77900DECB69 /* WalkingDistanceMapView.swift in Sources */,
 				222AD8B629E2392000A18E76 /* SettingsAttendant.swift in Sources */,
 				2242AC2729EB8E4900AFD64F /* CompactStatsView.swift in Sources */,
 				2242AC2929F775C700AFD64F /* BathroomSummaryView.swift in Sources */,
