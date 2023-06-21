@@ -20,22 +20,23 @@ struct DirectionsSummaryView: View {
                 let firstStep = bathroom.directions[currentIndex]
                 let firstImage = bathroom.imageFor(step: firstStep)
                 
-                if firstImage != "figure.walk" {
-                    Image(systemName: "figure.walk")
+                if firstImage != "figure.walk.departure" {
+                    Image(systemName: "figure.walk.departure")
                         .foregroundColor(.primary)
-//                        .minimumScaleFactor(0.5)
                         .font(.title2)
                         .bold()
                 }
                 ForEach(bathroom.directions, id: \.hash) { step in
                     let stepIndex = bathroom.directions.firstIndex(of: step) ?? currentIndex
                     if (stepIndex >= currentIndex) && ((stepIndex - currentIndex) < 3)  {
-                        Image(systemName: bathroom.imageFor(step: step))
-                            .foregroundColor(.primary)
-                            .font(.title2)
-//                            .minimumScaleFactor(0.5)
-//                            .if(step == bathroom.currentRouteStep()) { $0.bold() }
-//                            .font(step == bathroom.currentRouteStep() ? .title : .title2)
+                        VStack(alignment: .center, spacing: 0) {
+                            Image(systemName: bathroom.imageFor(step: step))
+                                .foregroundColor(.primary)
+                                .font(.title2)
+                            Text(bathroom.summaryFor(step: step))
+                                .font(.caption)
+                                .foregroundColor(.primary)
+                        }
                     }
                 }
             }.scaledToFit()

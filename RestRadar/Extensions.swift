@@ -319,7 +319,7 @@ enum TurnDirection: Identifiable {
         case .uturn:
             return "arrow.uturn.down"
         default:
-            return "figure.walk"
+            return "figure.walk.motion"
         }
     }
 }

@@ -39,7 +39,7 @@ struct BathroomView: View {
                                             .font(.largeTitle)
                                             .minimumScaleFactor(0.5)
                                             .foregroundColor(.primary)
-                                        SettingsAttendant.shared.transportMode.image
+                                        Image(systemName: "hourglass")
                                             .font(.title3)
                                     }
                                     Text("mins")
@@ -54,17 +54,13 @@ struct BathroomView: View {
                             Spacer()
                             VStack(alignment: .leading) {
                                 HStack {
-                                    if SettingsAttendant.shared.distanceMeasurement == .blocks, let totalBlocks = bathroom.blockEstimate(current: current), totalBlocks > 0 {
-                                        Text("~\(totalBlocks)")
+                                    if let distanceString = bathroom.distanceString {
+                                        Text(distanceString)
                                             .lineLimit(1)
                                             .font(.title)
                                             .foregroundColor(.primary)
-                                    } else if SettingsAttendant.shared.distanceMeasurement == .miles, let distance = bathroom.distance(current: current) {
-                                        Text(String(format: "%.1f", distance))
-                                                .lineLimit(1)
-                                                .font(.title)
-                                                .foregroundColor(.primary)
                                     }
+                                    
                                     SettingsAttendant.shared.distanceMeasurement.image
                                         .font(.title3)
                                         .foregroundColor(.primary)
@@ -118,44 +114,35 @@ struct BathroomView: View {
                         }
                         .frame(height: 50)
                     }
+                    //                    Divider()
+                    //                        .overlay(.primary)
+                    
                     if let address = bathroom.address {
                         Divider()
                             .overlay(.primary)
+                        HStack {
+                            Image(systemName: "mappin.and.ellipse")
+                                .foregroundColor(.primary)
+                                .font(.headline)
+                            Text("\(address)")
+                                .font(.title3)
+                                .foregroundColor(.primary)
+                                .frame(alignment: .center)
+                        }
+                        
                         LookAroundView(scene: self.$scene)
                             .cornerRadius(8)
                             .clipped()
                             .frame(height: 120)
-                        Text("\(address)")
-                            .font(.title3)
-                            .foregroundColor(.primary)
-                            .frame(alignment: .center)
                     }
-                    Divider()
-                        .overlay(.primary)
                     
-                    if let urlString = bathroom.url, let url = URL(string: urlString) {
-                        Button {
-                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                        } label: {
-                            HStack {
-                                Text("More Info")
-                                    .foregroundColor(.cyan)
-                                    .font(.headline)
-                                    .frame(alignment: .center)
-                                Image(systemName: "safari")
-                                    .foregroundColor(.cyan)
-                                    .font(.headline)
-                            }
-                        }
-                    }
+                    DirectionsView(bathroom: bathroom)
                 }
                 .padding(16)
                 .background {
                     Color(uiColor: .secondarySystemBackground)
                         .cornerRadius(16)
                 }
-                                
-                DirectionsView(bathroom: bathroom)
             }
             .padding(8)
         }
@@ -168,7 +155,7 @@ struct BathroomView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .bottomBar) {
-                HStack {
+                HStack(spacing: -2) {
                     Button {
                         let coordinate = CLLocationCoordinate2DMake(bathroom.coordinate.latitude, bathroom.coordinate.longitude)
                         let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil))
@@ -179,10 +166,44 @@ struct BathroomView: View {
                         //                            UIApplication.shared.open(url, options: [:])
                         //                        }
                     } label: {
-                        Text("Open In Maps")
-                            .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                        Group {
+                            HStack(spacing: 4) {
+                                Image(systemName: "map")
+                                    .foregroundColor(.primary)
+                                    .font(.headline)
+                                Text("Maps")
+                                    .foregroundColor(.primary)
+                                    .font(.headline)
+                            }.padding(6)
+                        }.background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                        }
                     }
                     
+                    if let urlString = bathroom.url, let url = URL(string: urlString) {
+                        Button {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        } label: {
+                            Group {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "safari")
+                                        .foregroundColor(.primary)
+                                        .font(.headline)
+                                    Text("Info")
+                                        .foregroundColor(.primary)
+                                        .font(.headline)
+                                }.padding(6)
+                            }.background {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                            }
+                        }
+                    }
+                    
+                    Spacer()
+                                        
+                    let isFavorite = bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id })
                     Button {
                         if let index = bathroomAttendant.favoriteBathrooms.firstIndex(where: { $0.id == bathroom.id }) {
                             bathroomAttendant.favoriteBathrooms.remove(at: index)
@@ -190,13 +211,31 @@ struct BathroomView: View {
                             bathroomAttendant.favoriteBathrooms.append(bathroom)
                         }
                     } label: {
-                        Image(systemName: bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id })  ? "bookmark.fill" : "bookmark")
-                            .if(bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id })) { $0.shiny(Gradient.forCurrentTime() ?? .iridescent2) }
-                            .foregroundColor(.primary)
+                        Group {
+                            HStack(spacing: 4) {
+                                Image(systemName: isFavorite ? "bookmark.fill" : "bookmark")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                    .clipped()
+                                    .id("\(isFavorite)")
+                                    .transition(AnyTransition.opacity)
+                                if !isFavorite {
+                                    Text("Save")
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                        .clipped()
+                                        .id("\(isFavorite)")
+                                        .transition(AnyTransition.opacity)
+                                }
+                            }.padding(6)
+                                .clipped()
+                        }.background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                        }
                     }
-                    Spacer()
-                }.scaledToFill()
-                .environment(\.layoutDirection, SettingsAttendant.shared.primaryHand == .right ? .rightToLeft : .leftToRight)
+                    .animation(.bouncy, value: isFavorite)
+                }
             }
         }
     }
@@ -204,7 +243,7 @@ struct BathroomView: View {
     func getScene(location: CLLocationCoordinate2D?) async -> MKLookAroundScene? {
         if let latitude = location?.latitude, let longitude = location?.longitude {
             let sceneRequest = MKLookAroundSceneRequest(coordinate: .init(latitude: latitude, longitude: longitude))
-
+            
             do {
                 return try await sceneRequest.scene
             } catch {

@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 import CoreLocation
 import Foundation
+import Shiny
 
 struct HomeView: View {
     @ObservedObject private var bathroomAttendant = BathroomAttendant.shared
@@ -23,11 +24,51 @@ struct HomeView: View {
     @State var selectedBathroom: String = ""
         
     var body: some View {
-        VStack(spacing: 8) {
-            if let current = Binding<CLLocation>($locationAttendant.current), let currentHeading = Binding<Double>($locationAttendant.currentHeading), let walkingDistance = Binding<Double>($bathroomAttendant.walkingDistance) {
-                WalkingDistanceMapView(bathroom: bathroomAttendant.closestBathroom, walkingDistance: walkingDistance, current: current, currentHeading: currentHeading)
-                    .cornerRadius(20)
-                    .frame(height: 200)
+        VStack(spacing: 2) {
+            if let current = Binding<CLLocation>($locationAttendant.current), let currentHeading = Binding<Double>($locationAttendant.currentHeading), let walkingDistance = Binding<Double>($bathroomAttendant.walkingDistance), let walkingTime = bathroomAttendant.walkingTime {
+                HStack {
+                    ZStack() {
+                        WalkingDistanceMapView(bathroom: bathroomAttendant.closestBathroom, walkingDistance: walkingDistance, current: current, currentHeading: currentHeading)
+                            .frame(height: 220)
+                            .mask(LinearGradient(gradient: Gradient(colors: [.blacko, .black, .black, .black, .black, .black, .clear]), startPoint: .bottom, endPoint: .top))
+                        ZStack(alignment: .bottom) {
+                            Circle()
+                                .trim(from: 0.1, to: 0.9)
+                                .rotation(.degrees(90))
+                                .stroke(Gradient.forCurrentTime()  ?? .iridescent2, style: .init(lineWidth: 4))
+                                .frame(width: 215, height: 215)
+                            VStack {
+                                HStack {
+                                    SettingsAttendant.shared.transportMode.image
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding(EdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 0))
+                                    HStack(spacing: 0) {
+                                        Text("\(walkingTime)")
+                                            .font(.headline)
+                                            .minimumScaleFactor(0.5)
+                                            .foregroundColor(.white)
+                                            .padding(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 4))
+                                            .id("\(walkingTime)")
+                                            .transition(AnyTransition.move(edge: .top))
+                                            .animation(.default, value: "\(walkingTime)")
+                                        Text("mins")
+                                            .font(.headline)
+                                            .minimumScaleFactor(0.5)
+                                            .foregroundColor(.white)
+                                            .padding(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 4))
+                                    }
+                                }
+                                .clipped()
+                                .background {
+                                    Color.black
+                                        .cornerRadius(8)
+                                        .opacity(0.6)
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
                 ScrollView(showsIndicators: false) {
@@ -55,12 +96,48 @@ struct HomeView: View {
             .padding(4)
             .toolbar {
                 ToolbarItemGroup(placement: .bottomBar) {
-                    HStack {
+                    HStack(spacing: -2) {
+                        Spacer()
+                        
+                        if !bathroomAttendant.favoriteBathrooms.isEmpty {
+                            Button {
+                                bathroomAttendant.onlyFavorites = !bathroomAttendant.onlyFavorites
+                            } label: {
+                                Group {
+                                    HStack {
+                                        Image(systemName: bathroomAttendant.onlyFavorites ? "bookmark.fill" : "bookmark")
+                                            .foregroundColor(.primary)
+                                            .clipped()
+                                            .id("\(bathroomAttendant.onlyFavorites)")
+                                            .transition(AnyTransition.identity)
+                                        if bathroomAttendant.onlyFavorites {
+                                            Text("Only Favorites")
+                                                .foregroundColor(.primary)
+                                                .font(.headline)
+                                                .clipped()
+                                                .id("\(bathroomAttendant.onlyFavorites)")
+                                                .transition(AnyTransition.opacity)
+                                        }
+                                    }.padding(6)
+                                        .clipped()
+                                }.background {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                                }
+                            }
+                            .animation(.default, value: bathroomAttendant.onlyFavorites)
+                        }
+                        
                         Button {
                             self.showSettings = true
                         } label: {
-                            Image(systemName: "gear")
-                            
+                            Group {
+                                Image(systemName: "gear")
+                                    .padding(6)
+                            }.background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                            }
                         }
                         
                         //                        Button {
@@ -73,26 +150,7 @@ struct HomeView: View {
                         //                        .popover(isPresented: $showLocation, attachmentAnchor: .point(.trailing), arrowEdge: .top) {
                         //                            LocationSearchView(locationService: locationAttendant.locationService)
                         //                        }
-                        
-                        if !bathroomAttendant.favoriteBathrooms.isEmpty {
-                            Button {
-                                bathroomAttendant.onlyFavorites = !bathroomAttendant.onlyFavorites
-                            } label: {
-                                Image(systemName: bathroomAttendant.onlyFavorites ? "bookmark.fill" : "bookmark")
-                                    .if(bathroomAttendant.onlyFavorites) { $0.shiny(Gradient.forCurrentTime() ?? .iridescent2) }
-                                    .foregroundColor(.primary)
-                            }
-                        }
-                        
-                        Spacer()
-                        
-                        VStack {
-                            if bathroomAttendant.onlyFavorites {
-                                Text("Only Favorites")
-                            }
-                        }
-                    }.scaledToFill()
-                    .environment(\.layoutDirection, settingsAttendant.primaryHand == .right ? .rightToLeft : .leftToRight)
+                    }
                 }
             }
             .onAppear {
@@ -100,6 +158,8 @@ struct HomeView: View {
                 appearance.backgroundEffect = UIBlurEffect(style: .light)
                 UITabBar.appearance().scrollEdgeAppearance = appearance
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("RestRadar")
             .foregroundColor(.primary)
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .active {

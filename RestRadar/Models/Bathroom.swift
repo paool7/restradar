@@ -60,9 +60,11 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     var distanceString: String? {
         if SettingsAttendant.shared.distanceMeasurement == .blocks, let current = LocationAttendant.shared.current {
             let distance = blockEstimate(current: current) ?? 0
-            return "\(distance) \(SettingsAttendant.shared.distanceMeasurement.name.lowercased())"
+            return "\(distance)"
         } else if SettingsAttendant.shared.distanceMeasurement == .miles, let current = LocationAttendant.shared.current, let distance = self.distance(current: current) {
-            return "\(distance) \(SettingsAttendant.shared.distanceMeasurement.name.lowercased())"
+            return "\(String(format: "%.1f", distance))"
+        } else if SettingsAttendant.shared.distanceMeasurement == .steps, let current = LocationAttendant.shared.current, let steps = self.stepsAway(current: current) {
+            return steps
         }
         
         return nil
@@ -105,13 +107,25 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     func imageFor(step: MKRoute.Step) -> String {
         let isFirst = step == directions.first
         let isLast = step == directions.last
-        var imageName = "figure.walk"
+        var imageName = "figure.walk.departure"
         if isLast {
             imageName = step.instructions.lowercased().contains("on your right") ? "signpost.right" : (step.instructions.lowercased().contains("on your left") ? "signpost.left" : "mappin")
         } else if !isFirst {
-            imageName = step.instructions.lowercased().contains("take a right") ? "arrow.turn.up.right" : (step.instructions.lowercased().contains("take a left") ? "arrow.turn.up.left" : "figure.walk")
+            imageName = step.instructions.lowercased().contains("take a right") ? "arrow.turn.up.right" : (step.instructions.lowercased().contains("take a left") ? "arrow.turn.up.left" : "figure.walk.motion")
         }
         return imageName
+    }
+    
+    func summaryFor(step: MKRoute.Step) -> String {
+        let isFirst = step == directions.first
+        let isLast = step == directions.last
+        var summary = "Start"
+        if isLast {
+            summary = "Arrive"
+        } else if !isFirst {
+            summary = step.instructions.lowercased().contains("take a right") ? "Right" : (step.instructions.lowercased().contains("take a left") ? "Left" : "Walk")
+        }
+        return summary
     }
         
 //    func heading(current: CLLocation) -> Double {

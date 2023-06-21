@@ -58,7 +58,7 @@ enum TransportMode: CaseIterable {
         case .wheelchair:
             return Image(systemName: "figure.roll")
         case .walking:
-            return Image(systemName: "figure.walk")
+            return Image(systemName: "figure.walk.motion")
         }
     }
     

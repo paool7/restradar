@@ -34,7 +34,8 @@ class BathroomAttendant: ObservableObject {
     
     @Published var visibleBathrooms: [Bathroom] = []
     @Published var walkingDistance: Double?
-    
+    @Published var walkingTime: Int?
+
     var initialDirectionsLoad = true
     
     init(){
@@ -144,6 +145,7 @@ class BathroomAttendant: ObservableObject {
             let bathrooms = self.visibleBathrooms.sorted(by: {$0.distanceMeters(current: current)?.converted(to: .meters).value ?? 0.0 < $1.distanceMeters(current: current)?.converted(to: .meters).value ?? 0.0 })
             if let last = bathrooms.last, let distance = last.distanceMeters(current: current)?.converted(to: .meters).value {
                 self.walkingDistance = distance
+                self.walkingTime = last.totalTime(current: current)
             }
         }
     }

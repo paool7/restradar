@@ -44,7 +44,7 @@ struct CompactStatsView: View {
                         Text("\(stepsAway)")
                             .font(.headline)
                             .foregroundColor(.primary)
-                        Image(systemName: "figure.walk")
+                        Image(systemName: "figure.walk.motion")
                             .font(.subheadline)
                     }.frame(maxWidth: .infinity)
                     .fixedSize(horizontal: true, vertical: false)

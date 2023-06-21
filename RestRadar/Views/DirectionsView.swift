@@ -27,12 +27,12 @@ struct DirectionsView: View {
                         .frame(height: 325)
                 }
             }
-            Spacer()
-            if let current = locationAttendant.current, let stepsAway = bathroom.stepsAway(current: current) {
-                Text(stepsAway)
-                    .font(.title3)
-                    .minimumScaleFactor(0.75)
-            }
+//            Spacer()
+//            if let current = locationAttendant.current, let stepsAway = bathroom.stepsAway(current: current) {
+//                Text(stepsAway)
+//                    .font(.title3)
+//                    .minimumScaleFactor(0.75)
+//            }
             Divider()
                 .overlay(.primary)
             if let nextStep = bathroom.currentRouteStep(), let intro = nextStep.naturalCurrentIntro() {
@@ -66,12 +66,7 @@ struct DirectionsView: View {
                     .frame(maxHeight: .infinity)
             }
         }
-        .padding(8)
         .frame(maxWidth: .infinity)
-        .background {
-            Color(uiColor: .secondarySystemBackground)
-                .cornerRadius(16)
-        }
         .onAppear {
             bathroom.getDirections()
         }

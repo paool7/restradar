@@ -160,9 +160,7 @@ class LocationAttendant: NSObject, ObservableObject {
     
     func fetchLocation() async throws -> CLLocation {
         self.locationManager.requestLocation()
-        while self.current == nil && self.currentHeading == nil {
-            
-        }
+        while self.current == nil && self.currentHeading == nil { }
         return current!
     }
 }

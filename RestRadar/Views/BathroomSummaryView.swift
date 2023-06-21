@@ -42,7 +42,7 @@ struct BathroomSummaryView: View {
                 if let current = locationAttendant.current {
                     HStack {
                         VStack(alignment: .center, spacing: 10) {
-                            SettingsAttendant.shared.transportMode.image
+                            Image(systemName: "hourglass")
                                 .font(.title3)
                                 .foregroundColor(.primary)
                             Text("\(bathroom.totalTime(current: current)) mins")
@@ -58,7 +58,7 @@ struct BathroomSummaryView: View {
                                 SettingsAttendant.shared.distanceMeasurement.image
                                     .font(.title3)
                                     .foregroundColor(.primary)
-                                Text(distanceString)
+                                Text("\(distanceString) \(SettingsAttendant.shared.distanceMeasurement.name.lowercased())")
                                     .font(.caption)
                                     .foregroundColor(.primary)
                             }

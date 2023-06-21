@@ -16,7 +16,7 @@ struct SettingsView: View {
     @ObservedObject var locationAttendant = LocationAttendant.shared
     
     @State private(set) var selectedAppIcon: AppIcon = .primary
-
+    
     let availableModes = TransportMode.allCases
     let themes = [Theme.sunsetsunrise, Theme.random]
     
@@ -33,7 +33,7 @@ struct SettingsView: View {
     
     @State var result: Result<MFMailComposeResult, Error>? = nil
     @State var isShowingMailView = false
-
+    
     var body: some View {
         List {
             Section {
@@ -71,11 +71,11 @@ struct SettingsView: View {
                         .foregroundColor(.secondary)
                 }
                 
-//                TextField("Compass Heading Filter", text: $attendant.headingStringValue)
-//                    .keyboardType(.numberPad)
-//                Text("The minimum angular change in degrees relative to the last heading required to update the compass.")
-//                    .font(.caption)
-//                    .foregroundColor(.secondary)
+                //                TextField("Compass Heading Filter", text: $attendant.headingStringValue)
+                //                    .keyboardType(.numberPad)
+                //                Text("The minimum angular change in degrees relative to the last heading required to update the compass.")
+                //                    .font(.caption)
+                //                    .foregroundColor(.secondary)
             } header: {
                 Text("Tuning:")
             }
@@ -102,8 +102,8 @@ struct SettingsView: View {
                 
                 if !self.purchasedProductIdentifiers.contains(where: { $0 == self.productIdentifiers.first}), let product = self.dollarProduct {
                     Button {
-                            self.purchasingDollarProduct = true
-                            self.makePurchase(product: product)
+                        self.purchasingDollarProduct = true
+                        self.makePurchase(product: product)
                     } label: {
                         HStack(spacing: 4) {
                             Text("1 Dollar Tip")
@@ -150,48 +150,48 @@ struct SettingsView: View {
             }
             
             Section {
-                Picker("Buttons:", selection: $attendant.primaryHand) {
-                    ForEach(Handed.allCases, id: \.self) {
-                        Text($0.name)
-                    }
-                }
-                
-                Text("Important buttons will appear on the specified side of the screen.")
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
+                //                Picker("Buttons:", selection: $attendant.primaryHand) {
+                //                    ForEach(Handed.allCases, id: \.self) {
+                //                        Text($0.name)
+                //                    }
+                //                }
+                //
+                //                Text("Important buttons will appear on the specified side of the screen.")
+                //                    .font(.footnote)
+                //                    .foregroundColor(.secondary)
                 
                 if !purchasedProductIdentifiers.isEmpty {
-                    ScrollViewReader { proxy in
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            LazyHStack {
-                                ForEach(AppIcon.allCases) { icon in
-                                    Button {
-                                        self.updateAppIcon(to: icon)
-                                    } label: {
-                                        Image(icon.rawValue + "-Preview")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit
-                                            )
-                                            .frame(height: 102)
-                                            .frame(width: 102)
-                                            .cornerRadius(16)
+                    VStack(alignment: .leading) {
+                        Text("App Icon: ")
+                            .foregroundColor(.primary)
+                        ScrollViewReader { proxy in
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                LazyHStack {
+                                    ForEach(AppIcon.allCases) { icon in
+                                        Button {
+                                            self.updateAppIcon(to: icon)
+                                        } label: {
+                                            Image(icon.rawValue + "-Preview")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(height: 102)
+                                                .frame(width: 102)
+                                                .cornerRadius(16)
+                                        }
                                     }
                                 }
-                            }
-                        }.frame(height: 102)
+                            }.frame(height: 102)
+                        }
                     }
                 }
-
-                Picker("Theme:", selection: $attendant.gradientTheme) {
+                
+                Text("Theme:")
+                    .foregroundColor(.primary)
+                Picker("Colors:", selection: $attendant.gradientTheme) {
                     ForEach(themes, id: \.self) {
                         Text($0.name)
                     }
                 }
-                Toggle("Update Hourly:", isOn: $attendant.useTimeGradients)
-                    .tint(.teal)
-                Text(attendant.useTimeGradients ? "Gradient colors will update automatically every hour." : "Only your selected gradient color will be shown.")
-                    .font(.body)
-                    .foregroundColor(.secondary)
                 ScrollViewReader { proxy in
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack {
@@ -206,10 +206,7 @@ struct SettingsView: View {
                                         }
                                         .shadow(color: .primary.opacity(0.5), radius: 1)
                                         .background {
-                                            if attendant.useTimeGradients == true {
-                                                Circle()
-                                                    .foregroundColor(Int(locationAttendant.currentHourValue) == i ? .secondary : .clear)
-                                            } else {
+                                            if attendant.useTimeGradients == false {
                                                 Circle()
                                                     .foregroundColor(Int(attendant.gradientHour) == i ? .secondary : .clear)
                                             }
@@ -235,6 +232,11 @@ struct SettingsView: View {
                             }
                         }
                 }
+                Toggle("Update Hourly:", isOn: $attendant.useTimeGradients)
+                    .tint(.teal)
+                Text(attendant.useTimeGradients ? "Gradient colors will update automatically every hour." : "Only your selected gradient color will be shown.")
+                    .font(.body)
+                    .foregroundColor(.secondary)
             } header: {
                 Text("Customization:")
             }
@@ -270,20 +272,20 @@ struct SettingsView: View {
     func updateAppIcon(to icon: AppIcon) {
         let previousAppIcon = selectedAppIcon
         selectedAppIcon = icon
-
+        
         Task { @MainActor in
             guard UIApplication.shared.alternateIconName != icon.iconName else {
                 /// No need to update since we're already using this icon.
                 return
             }
-
+            
             do {
                 try await UIApplication.shared.setAlternateIconName(icon.iconName)
             } catch {
                 /// We're only logging the error here and not actively handling the app icon failure
                 /// since it's very unlikely to fail.
                 print("Updating icon to \(String(describing: icon.iconName)) failed.")
-
+                
                 /// Restore previous app icon
                 selectedAppIcon = previousAppIcon
             }
@@ -295,7 +297,7 @@ struct SettingsView: View {
             self.purchasingDollarProduct = false
             self.purchasingDollar3Product = false
             self.purchasingDollar5Product = false
-
+            
             if !cancelled && error == nil {
                 Purchases.shared.getCustomerInfo { (customerInfo, error) in
                     if customerInfo?.originalPurchaseDate != nil {
