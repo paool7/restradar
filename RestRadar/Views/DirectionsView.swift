@@ -18,21 +18,21 @@ struct DirectionsView: View {
         VStack {
             VStack(alignment: .center) {
                 Button {
-                    let coordinate = CLLocationCoordinate2DMake(bathroom.coordinate.latitude, bathroom.coordinate.longitude)
-                    let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary:nil))
-                    mapItem.name = self.bathroom.name
-                    mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking])
+                    if SettingsAttendant.shared.mapProvider == .apple {
+                        let coordinate = CLLocationCoordinate2DMake(bathroom.coordinate.latitude, bathroom.coordinate.longitude)
+                        let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil))
+                        mapItem.name = self.bathroom.name
+                        mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeWalking])
+                    } else {
+                        if let url = URL(string: "comgooglemaps://?saddr=&daddr=\(bathroom.coordinate.latitude),\(bathroom.coordinate.longitude)&directionsmode=walking") {
+                                UIApplication.shared.open(url, options: [:])
+                        }
+                    }
                 } label: {
                     CompassView(bathroom: bathroom)
                         .frame(height: 325)
                 }
             }
-//            Spacer()
-//            if let current = locationAttendant.current, let stepsAway = bathroom.stepsAway(current: current) {
-//                Text(stepsAway)
-//                    .font(.title3)
-//                    .minimumScaleFactor(0.75)
-//            }
             Divider()
                 .overlay(.primary)
             if let nextStep = bathroom.currentRouteStep(), let intro = nextStep.naturalCurrentIntro() {

@@ -33,76 +33,74 @@ struct ClosestBathroomWidgetView: View {
                     .foregroundColor(.white)
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: entry.size == .systemSmall ? 4 : 0, trailing: 0))
             }
-            if let current = locationAttendant.current {
-                HStack {
-                    if entry.size != .systemSmall {
-                        Spacer()
-                    }
-                    VStack(alignment: .leading) {
-                        HStack(alignment: .center) {
-                            Text("\(entry.bathroom.totalTime(current: current))")
-                                .font(entry.size == .systemSmall ? .largeTitle : .headline)
-                                .minimumScaleFactor(0.5)
-                                .foregroundColor(.white)
-                            Image(systemName: "hourglass")
-                                .foregroundColor(.white)
-                                .font(entry.size == .systemSmall ? .title3 : .subheadline)
-                        }.frame(maxWidth: .infinity)
-                        if entry.size == .systemSmall {
-                            Text("mins")
-                                .font(.caption)
-                                .minimumScaleFactor(0.5)
-                                .foregroundColor(.white)
-                        }
-                    }.fixedSize(horizontal: true, vertical: false)
+            HStack {
+                if entry.size != .systemSmall {
+                    Spacer()
+                }
+                VStack(alignment: .leading) {
+                    HStack(alignment: .center) {
+                        Text("\(entry.bathroom.totalTime() ?? 0)")
+                            .font(entry.size == .systemSmall ? .largeTitle : .headline)
+                            .minimumScaleFactor(0.5)
+                            .foregroundColor(.white)
+                        Image(systemName: "hourglass")
+                            .foregroundColor(.white)
+                            .font(entry.size == .systemSmall ? .title3 : .subheadline)
+                    }.frame(maxWidth: .infinity)
                     if entry.size == .systemSmall {
-                        Spacer()
+                        Text("mins")
+                            .font(.caption)
+                            .minimumScaleFactor(0.5)
+                            .foregroundColor(.white)
                     }
+                }.fixedSize(horizontal: true, vertical: false)
+                if entry.size == .systemSmall {
+                    Spacer()
+                }
+                Divider()
+                    .overlay(.white)
+                if entry.size == .systemSmall {
+                    Spacer()
+                }
+                VStack(alignment: .leading) {
+                    HStack(alignment:.center) {
+                        Text("\(entry.bathroom.totalBlocks)")
+                            .font(entry.size == .systemSmall ? .largeTitle : .headline)
+                            .minimumScaleFactor(0.5)
+                            .foregroundColor(.white)
+                        Image(systemName: "building.2")
+                            .foregroundColor(.white)
+                            .font(entry.size == .systemSmall ? .title3 : .subheadline)
+                    }.frame(maxWidth: .infinity)
+                    if entry.size == .systemSmall {
+                        Text("blocks")
+                            .font(.caption)
+                            .minimumScaleFactor(0.5)
+                            .foregroundColor(.white)
+                    }
+                }.fixedSize(horizontal: true, vertical: false)
+
+                if entry.size != .systemSmall {
                     Divider()
                         .overlay(.white)
-                    if entry.size == .systemSmall {
-                        Spacer()
+                    
+                    HStack(alignment: .center) {
+                        Text("In")
+                            .font(.headline)
+                            .minimumScaleFactor(0.25)
+                            .foregroundColor(.white)
+                        entry.bathroom.category.image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: UIFont.preferredFont(forTextStyle: .subheadline).pointSize)
+                            .foregroundColor(.white)
                     }
-                    VStack(alignment: .leading) {
-                        HStack(alignment:.center) {
-                            Text("\(entry.bathroom.totalBlocks)")
-                                .font(entry.size == .systemSmall ? .largeTitle : .headline)
-                                .minimumScaleFactor(0.5)
-                                .foregroundColor(.white)
-                            Image(systemName: "building.2")
-                                .foregroundColor(.white)
-                                .font(entry.size == .systemSmall ? .title3 : .subheadline)
-                        }.frame(maxWidth: .infinity)
-                        if entry.size == .systemSmall {
-                            Text("blocks")
-                                .font(.caption)
-                                .minimumScaleFactor(0.5)
-                                .foregroundColor(.white)
-                        }
-                    }.fixedSize(horizontal: true, vertical: false)
-
-                    if entry.size != .systemSmall {
-                        Divider()
-                            .overlay(.white)
-                        
-                        HStack(alignment: .center) {
-                            Text("In")
-                                .font(.headline)
-                                .minimumScaleFactor(0.25)
-                                .foregroundColor(.white)
-                            entry.bathroom.category.image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: UIFont.preferredFont(forTextStyle: .subheadline).pointSize)
-                                .foregroundColor(.white)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .fixedSize(horizontal: true, vertical: false)
-                    }
+                    .frame(maxWidth: .infinity)
+                    .fixedSize(horizontal: true, vertical: false)
                 }
-                .frame(maxWidth: .infinity)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: entry.size == .systemSmall ? 4 : 0, trailing: 0))
             }
+            .frame(maxWidth: .infinity)
+            .padding(EdgeInsets(top: 0, leading: 0, bottom: entry.size == .systemSmall ? 4 : 0, trailing: 0))
 
             if entry.size == .systemSmall {
                 Divider()
@@ -110,9 +108,9 @@ struct ClosestBathroomWidgetView: View {
                 HStack {
                     Spacer()
                     DirectionsSummaryView(bathroom: entry.bathroom)
-                        .padding(EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 0))
                     Spacer()
                 }
+                .padding(EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 0))
             }
         }
         .containerBackground(for: .widget, content: {

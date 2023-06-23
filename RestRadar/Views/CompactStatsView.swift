@@ -17,7 +17,7 @@ struct CompactStatsView: View {
             HStack {
                 if let current = locationAttendant.current {
                     HStack(alignment: .center) {
-                        Text("\(bathroom.totalTime(current: current))")
+                        Text("\(bathroom.totalTime() ?? 0)")
                             .font(.headline)
                             .foregroundColor(.primary)
                         Image(systemName: "hourglass")
@@ -39,7 +39,7 @@ struct CompactStatsView: View {
                     
                     Divider()
                         .overlay(.primary)
-                } else if let current = locationAttendant.current, let stepsAway = bathroom.totalSteps(current: current) {
+                } else if let current = locationAttendant.current, let stepsAway = bathroom.totalSteps() {
                     HStack(alignment:.center) {
                         Text("\(stepsAway)")
                             .font(.headline)

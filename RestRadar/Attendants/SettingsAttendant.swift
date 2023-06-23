@@ -40,9 +40,9 @@ enum Theme: Int, CaseIterable {
     }
 }
 
-enum TransportMode: CaseIterable {
-    case wheelchair
+enum TransportMode: Int, CaseIterable {
     case walking
+    case wheelchair
     
     var name: String {
         switch self {
@@ -62,37 +62,71 @@ enum TransportMode: CaseIterable {
         }
     }
     
+    var verb: String {
+        switch self {
+        case .wheelchair:
+            return "Wheel"
+        case .walking:
+            return "Walk"
+        }
+    }
+    
 }
 
-enum DistanceMeasurement: CaseIterable {
+enum DistanceMeasurement: Int, CaseIterable {
     case blocks
-    case miles
+    case meterskilometers
+    case milesfeet
     case steps
 
     var name: String {
         switch self {
-        case .miles:
-            return "Miles"
+        case .milesfeet:
+            return "Feet/Miles"
         case .blocks:
             return "Blocks"
         case .steps:
             return "Steps"
+        case .meterskilometers:
+            return "Meters/Kilometers"
         }
     }
     
     var image: Image {
         switch self {
-        case .miles:
+        case .milesfeet, .meterskilometers:
             return Image(systemName: "point.topleft.down.curvedto.point.filled.bottomright.up")
         case .blocks:
             return Image(systemName: "building.2")
         case .steps:
-            return SettingsAttendant.shared.transportMode.image
+            return Image(systemName: "shoeprints.fill")
+        }
+    }
+}
+
+enum MapProvider: Int, CaseIterable {
+    case apple
+    case google
+
+    var name: String {
+        switch self {
+        case .apple:
+            return "Apple"
+        case .google:
+            return "Google"
+        }
+    }
+    
+    var image: Image {
+        switch self {
+        case .apple:
+            return Image(systemName: "apple.logo")
+        case .google:
+            return Image(systemName: "g.circle")
         }
     }
     
 }
-
 
 class SettingsAttendant: ObservableObject {
     static let shared = SettingsAttendant()
@@ -110,23 +144,24 @@ class SettingsAttendant: ObservableObject {
     static let gradientThemeKey = "GradientThemeSetting"
     static let handKey = "PrimaryHandSettings"
     static let stepKey = "StepLengthSetting"
+    static let mapKey = "MapProviderSetting"
 
     static let defaultWheelchairSpeed = 4.0
     static let defaultElectricWheelchairSpeed = 5.0
     static let defaultWalkingSpeed = 3.0
-    static let defaultStrideLength = 2.5
+    static let defaultStepLength = 2.5
 
     let eventStore = EKEventStore()
     
     @Published var distanceMeasurement: DistanceMeasurement {
         didSet {
-            userDefaults?.set(distanceMeasurement.hashValue, forKey: SettingsAttendant.distanceMeasurementKey)
+            userDefaults?.set(distanceMeasurement.rawValue, forKey: SettingsAttendant.distanceMeasurementKey)
         }
     }
     
     @Published var transportMode: TransportMode {
         didSet {
-            userDefaults?.set(transportMode.hashValue, forKey: SettingsAttendant.transportModeKey)
+            userDefaults?.set(transportMode.rawValue, forKey: SettingsAttendant.transportModeKey)
         }
     }
     
@@ -160,11 +195,10 @@ class SettingsAttendant: ObservableObject {
         }
     }
     
-    @Published var headingStringValue: String = "" {
+    @Published var headingFilter: Double = 0.0 {
         didSet {
-            if let doubleValue = Double(headingStringValue) {
-                LocationAttendant.shared.locationManager.headingFilter = doubleValue
-            }
+            userDefaults?.set(headingFilter, forKey: SettingsAttendant.headingKey)
+            LocationAttendant.shared.locationManager.headingFilter = headingFilter
         }
     }
     
@@ -192,9 +226,15 @@ class SettingsAttendant: ObservableObject {
         }
     }
     
+    @Published var mapProvider: MapProvider {
+        didSet {
+            userDefaults?.set(mapProvider.rawValue, forKey: SettingsAttendant.mapKey)
+        }
+    }
+    
     init() {
-        let storedMode = userDefaults?.object(forKey: SettingsAttendant.transportModeKey) as? TransportMode
-        transportMode = storedMode ?? .walking
+        let storedMode = userDefaults?.object(forKey: SettingsAttendant.transportModeKey) as? Int ?? 0
+        transportMode = TransportMode(rawValue: storedMode) ?? .walking
         let storedUseElectricWheelchair = userDefaults?.object(forKey: SettingsAttendant.usesElectricWheelchairKey) as? Bool
         useElectricWheelchair = storedUseElectricWheelchair ?? false
         let storedWalkingSpeed = userDefaults?.object(forKey: SettingsAttendant.walkingKey) as? Double
@@ -204,9 +244,8 @@ class SettingsAttendant: ObservableObject {
         let storedElectricWheelchairSpeed = userDefaults?.object(forKey: SettingsAttendant.electricWheelchairKey) as? Double
         electricWheelchairSpeed = storedElectricWheelchairSpeed ?? SettingsAttendant.defaultElectricWheelchairSpeed
         
-        if let storedHeadingFilter = userDefaults?.object(forKey: SettingsAttendant.headingKey) as? String {
-            headingStringValue = storedHeadingFilter
-        }
+        let storedHeadingFilter = userDefaults?.object(forKey: SettingsAttendant.headingKey) as? Double ?? 0.0
+        headingFilter = storedHeadingFilter
         
         let storedGradientHour = userDefaults?.object(forKey: SettingsAttendant.gradientHourKey) as? Double
         gradientHour = storedGradientHour ?? LocationAttendant.shared.currentHourValue
@@ -221,9 +260,12 @@ class SettingsAttendant: ObservableObject {
         primaryHand = Handed(rawValue: storedPrimaryHand ?? 0) ?? Handed.right
         
         let storedStepLength = userDefaults?.object(forKey: SettingsAttendant.stepKey) as? Double
-        stepLength = storedStepLength ?? SettingsAttendant.defaultStrideLength
+        stepLength = storedStepLength ?? SettingsAttendant.defaultStepLength
         
-        let storedDistanceMeasurement = userDefaults?.object(forKey: SettingsAttendant.distanceMeasurementKey) as? DistanceMeasurement
-        distanceMeasurement = storedDistanceMeasurement ?? .blocks
+        let storedDistanceMeasurement = userDefaults?.object(forKey: SettingsAttendant.distanceMeasurementKey) as? Int ?? 0
+        distanceMeasurement = DistanceMeasurement(rawValue: storedDistanceMeasurement) ?? .blocks
+        
+        let storedMapProvider = userDefaults?.object(forKey: SettingsAttendant.mapKey) as? Int ?? 0
+        mapProvider = MapProvider(rawValue: storedMapProvider) ?? .apple
     }
 }

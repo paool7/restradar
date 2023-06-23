@@ -95,7 +95,7 @@ class BathroomAttendant: ObservableObject {
             return
         }
         var bathroomList = onlyFavorites ? favoriteBathrooms : self.allBathrooms
-        bathroomList = bathroomList.sorted(by: { $0.distanceMeters(current: current)?.value ?? 1000 < $1.distanceMeters(current: current)?.value ?? 1000 })
+        bathroomList = bathroomList.sorted(by: { $0.distanceMeters()?.value ?? 1000 < $1.distanceMeters()?.value ?? 1000 })
         
         let constrainedBathrooms = bathroomList.count > 101 ? Array(bathroomList[0..<100]) : bathroomList
 
@@ -115,7 +115,7 @@ class BathroomAttendant: ObservableObject {
     
     func findClosestBathroom(to current: CLLocation) -> Bathroom? {
         var bathroomList = onlyFavorites ? favoriteBathrooms : allBathrooms
-        bathroomList = bathroomList.sorted(by: { $0.distanceMeters(current: current)?.value ?? 1000 < $1.distanceMeters(current: current)?.value ?? 1000 })
+        bathroomList = bathroomList.sorted(by: { $0.distanceMeters()?.value ?? 1000 < $1.distanceMeters()?.value ?? 1000 })
         bathroomList = codesState == .all ? bathroomList : (codesState == .noCodes ? bathroomList.filter({ $0.code == nil }) : bathroomList.filter({ $0.code != nil }))
         return bathroomList.first
     }
@@ -142,10 +142,10 @@ class BathroomAttendant: ObservableObject {
     func recalculateWalkingDistance() {
         if let current = LocationAttendant.shared.current {
 
-            let bathrooms = self.visibleBathrooms.sorted(by: {$0.distanceMeters(current: current)?.converted(to: .meters).value ?? 0.0 < $1.distanceMeters(current: current)?.converted(to: .meters).value ?? 0.0 })
-            if let last = bathrooms.last, let distance = last.distanceMeters(current: current)?.converted(to: .meters).value {
+            let bathrooms = self.visibleBathrooms.sorted(by: {$0.distanceMeters()?.converted(to: .meters).value ?? 0.0 < $1.distanceMeters()?.converted(to: .meters).value ?? 0.0 })
+            if let last = bathrooms.last, let distance = last.distanceMeters()?.converted(to: .meters).value {
                 self.walkingDistance = distance
-                self.walkingTime = last.totalTime(current: current)
+                self.walkingTime = last.totalTime()
             }
         }
     }

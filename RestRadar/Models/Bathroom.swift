@@ -57,17 +57,87 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     @Published var route: MKRoute?
     @Published var image: Image?
     
-    var distanceString: String? {
-        if SettingsAttendant.shared.distanceMeasurement == .blocks, let current = LocationAttendant.shared.current {
-            let distance = blockEstimate(current: current) ?? 0
-            return "\(distance)"
-        } else if SettingsAttendant.shared.distanceMeasurement == .miles, let current = LocationAttendant.shared.current, let distance = self.distance(current: current) {
-            return "\(String(format: "%.1f", distance))"
-        } else if SettingsAttendant.shared.distanceMeasurement == .steps, let current = LocationAttendant.shared.current, let steps = self.stepsAway(current: current) {
-            return steps
+    func distanceUnitString() -> String? {
+        switch SettingsAttendant.shared.distanceMeasurement {
+        case .blocks:
+            let blocks = blockEstimate() ?? 0
+            return blocks == 1 ? "block" : "blocks"
+        case .steps:
+            return "step\(self.totalTime() ?? 0 == 1 ? "" : "s")"
+        case .milesfeet:
+            guard let distanceMiles = self.distance(unit: .miles),
+                  let distanceFeet = self.distance(unit: .feet) else { return nil }
+            
+            let feetString = distanceFeet == 1.0 ? "foot" : "feet"
+            let milesString = distanceMiles == 1.0 ? "mile" : "miles"
+            if distanceMiles > 1.0 {
+                return milesString
+            } else {
+                if distanceFeet <= 100 {
+                    return feetString
+                } else {
+                    return "mile"
+                }
+            }
+            
+        case .meterskilometers:
+            guard let distanceKilometers = self.distance(unit: .kilometers),
+                  let distanceMeters = self.distance(unit: .meters) else { return nil }
+            
+            let metersString = distanceMeters == 1.0 ? "meter" : "meters"
+            let kilometersString = distanceKilometers == 1.0 ? "km" : "kms"
+            if distanceKilometers > 1.0 {
+                return kilometersString
+            } else {
+                if distanceMeters <= 100 {
+                    return metersString
+                } else {
+                    return "km"
+                }
+            }
         }
-        
-        return nil
+    }
+    
+    func distanceString(withUnit: Bool = false) -> String? {
+        switch SettingsAttendant.shared.distanceMeasurement {
+        case .blocks:
+            let blocks = blockEstimate() ?? 0
+            return withUnit ? "\(blocks) \(blocks == 1 ? "block" : "blocks")" : "\(blocks)"
+        case .steps:
+            return withUnit ? self.stepsAway() : "\(self.totalSteps() ?? 0)"
+        case .milesfeet:
+            guard let distanceMiles = self.distance(unit: .miles),
+                  let distanceFeet = self.distance(unit: .feet) else { return nil }
+            
+            let feetString = withUnit ? "\(Int(distanceFeet)) \(distanceFeet == 1.0 ? "foot" : "feet")" : "\(Int(distanceFeet))"
+            let milesString = withUnit ? (distanceMiles == 1.0 ? "1 mile" : "\(String(format: "%.1f", distanceMiles)) miles") : "\(String(format: "%.1f", distanceMiles))"
+            if distanceMiles > 1.0 {
+                return milesString
+            } else {
+                if distanceFeet <= 500 {
+                    return feetString
+                } else {
+                    let milesRational = Rational(approximating: distanceMiles, withPrecision: 0.1)
+                    return withUnit ? "\(milesRational.numerator)/\(milesRational.denominator) mile" : "\(milesRational.numerator)/\(milesRational.denominator)"
+                }
+            }
+        case .meterskilometers:
+            guard let distanceKilometers = self.distance(unit: .kilometers),
+                  let distanceMeters = self.distance(unit: .meters) else { return nil }
+            
+            let metersString = withUnit ? "\(Int(distanceMeters)) \(distanceMeters == 1.0 ? "meter" : "meters")" : "\(Int(distanceMeters))"
+            let kilometerString = withUnit ? (distanceKilometers == 1.0 ? "1 km" : "\(String(format: "%.1f", distanceKilometers)) kms") : "\(String(format: "%.1f", distanceKilometers))"
+            if distanceKilometers > 1.0 {
+                return kilometerString
+            } else {
+                if distanceMeters <= 500 {
+                    return metersString
+                } else {
+                    let milesRational = Rational(approximating: distanceKilometers, withPrecision: 0.1)
+                    return withUnit ? "\(milesRational.numerator)/\(milesRational.denominator) km" : "\(milesRational.numerator)/\(milesRational.denominator)"
+                }
+            }
+        }
     }
     
     func getDirections() {
@@ -119,7 +189,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     func summaryFor(step: MKRoute.Step) -> String {
         let isFirst = step == directions.first
         let isLast = step == directions.last
-        var summary = "Start"
+        var summary = "Walk"
         if isLast {
             summary = "Arrive"
         } else if !isFirst {
@@ -139,51 +209,48 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
         return Annotation(title: name, coordinate: coordinate)
     }
     
-    func distanceMeters(current: CLLocation) -> Measurement<UnitLength>? {
+    func distance(unit: UnitLength) -> Double? {
+        guard let distanceMeters = distanceMeters() else { return nil }
+        let convertedDistance = distanceMeters.converted(to: unit)
+        
+        return convertedDistance.value
+    }
+    
+    func distanceMeters() -> Measurement<UnitLength>? {
+        guard let current = LocationAttendant.shared.current else { return nil }
+
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let locationDistance = location.distance(from: current)
         
-        return Measurement(value: locationDistance, unit: UnitLength.meters)
+        return Measurement(value: locationDistance, unit: .meters)
     }
     
-    func totalTime(current: CLLocation) -> Int {
+    func totalTime() -> Int? {
+        guard let current = LocationAttendant.shared.current else { return nil }
+
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let locationDistance = location.distance(from: current)
         
         return locationDistance.travelTime
     }
     
-    func timeAway(current: CLLocation) -> String? {
+    func timeAway() -> String? {
+        guard let current = LocationAttendant.shared.current else { return nil }
+
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let locationDistance = location.distance(from: current)
         
         return "\(locationDistance.travelTime) minute\(locationDistance.travelTime == 1 ? "" : "s")"
     }
     
-    func distance(current: CLLocation) -> Double? {
-        guard let distanceMeters = distanceMeters(current: current) else { return nil }
-        let distanceMiles = distanceMeters.converted(to: .miles)
-        
-        return distanceMiles.value
-    }
-    
-    func distanceAway(current: CLLocation) -> String? {
-        guard let distanceMeters = distanceMeters(current: current) else { return nil }
-        let distanceMiles = distanceMeters.converted(to: .miles)
-        let distanceFeet = distanceMeters.converted(to: .feet)
-        let useMiles = (distanceMiles.value >= 0.25)
-        let distance = useMiles ? round(distanceMiles.value * 10) / 10.0 : round(distanceFeet.value)
-        
-        return "\(distance) \(useMiles ? "Miles" : "Feet")"
-    }
-    
-    func totalSteps(current: CLLocation) -> Int? {
-        guard let distanceMeters = distanceMeters(current: current) else { return nil }
+    func totalSteps() -> Int? {
+        guard let distanceMeters = distanceMeters() else { return nil }
         return distanceMeters.value.steps
     }
     
-    func stepsAway(current: CLLocation) -> String? {
-        guard let distanceMeters = distanceMeters(current: current) else { return nil }
+    func stepsAway() -> String? {
+        guard let distanceMeters = distanceMeters() else { return nil }
+
         return "~\(distanceMeters.value.steps) step\(distanceMeters.value.steps == 1 ? "" : "s")"
     }
     
@@ -198,8 +265,9 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
         return total
     }
     
-    func blockEstimate(current: CLLocation) -> Int? {
-        guard let distanceMeters = distanceMeters(current: current) else { return nil }
+    func blockEstimate() -> Int? {
+        guard let distanceMeters = distanceMeters() else { return nil }
+        
         let distanceFeet = distanceMeters.converted(to: .feet)
         return Int(distanceFeet.value/375.0)
     }
@@ -266,7 +334,7 @@ struct Hours: Codable, Hashable {
 
 extension MKRoute.Step {
     func naturalCurrentInstruction() -> String? {
-        guard let current = LocationAttendant.shared.current, let blocks = self.blocksLeft(current: current), let distanceLeft = self.distanceLeft(current: current) else { return self.instructions }
+        guard let blocks = self.blocksLeft(), let distanceLeft = self.distanceLeft() else { return self.instructions }
         let naturalStart = "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix), ") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix), " : ""))"
         
         return "\(naturalStart)\(self.instructions)"
@@ -280,7 +348,7 @@ extension MKRoute.Step {
     }
     
     func naturalCurrentIntro() -> String? {
-        guard let current = LocationAttendant.shared.current, let blocks = self.blocksLeft(current: current), let distanceLeft = self.distanceLeft(current: current) else { return self.instructions }
+        guard let blocks = self.blocksLeft(), let distanceLeft = self.distanceLeft() else { return self.instructions }
         return "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix)") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix)" : " "))"
     }
 }

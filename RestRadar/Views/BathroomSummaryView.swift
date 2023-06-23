@@ -43,9 +43,9 @@ struct BathroomSummaryView: View {
                     HStack {
                         VStack(alignment: .center, spacing: 10) {
                             Image(systemName: "hourglass")
-                                .font(.title3)
+                                .font(.title2)
                                 .foregroundColor(.primary)
-                            Text("\(bathroom.totalTime(current: current)) mins")
+                            Text("\(bathroom.totalTime() ?? 0) mins")
                                 .font(.caption)
                                 .foregroundColor(.primary)
                         }
@@ -53,12 +53,12 @@ struct BathroomSummaryView: View {
                         Divider()
                             .overlay(.primary)
 
-                        if let distanceString = bathroom.distanceString {
+                        if let distanceString = bathroom.distanceString(withUnit: true) {
                             VStack(alignment: .center, spacing: 10) {
                                 SettingsAttendant.shared.distanceMeasurement.image
                                     .font(.title3)
                                     .foregroundColor(.primary)
-                                Text("\(distanceString) \(SettingsAttendant.shared.distanceMeasurement.name.lowercased())")
+                                Text(distanceString)
                                     .font(.caption)
                                     .foregroundColor(.primary)
                             }
@@ -121,7 +121,6 @@ struct BathroomSummaryView: View {
         }
         .padding(EdgeInsets(top: 8, leading:12, bottom: 8, trailing: 12))
         .onAppear {
-            bathroomAttendant.getImage(bathroom: bathroom)
             bathroom.getDirections()
         }
     }

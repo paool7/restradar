@@ -30,7 +30,7 @@ struct HomeView: View {
                     ZStack() {
                         WalkingDistanceMapView(bathroom: bathroomAttendant.closestBathroom, walkingDistance: walkingDistance, current: current, currentHeading: currentHeading)
                             .frame(height: 220)
-                            .mask(LinearGradient(gradient: Gradient(colors: [.blacko, .black, .black, .black, .black, .black, .clear]), startPoint: .bottom, endPoint: .top))
+                            .mask(LinearGradient(gradient: Gradient(colors: [.clear, .black, .black, .black, .black, .black, .clear]), startPoint: .bottom, endPoint: .top))
                         ZStack(alignment: .bottom) {
                             Circle()
                                 .trim(from: 0.1, to: 0.9)

@@ -29,91 +29,89 @@ struct BathroomView: View {
                 }
                 
                 VStack(alignment: .center, spacing: 8) {
-                    if let current = locationAttendant.current {
-                        HStack {
-                            if bathroom.totalTime(current: current) > 0 {
-                                Spacer()
-                                VStack(alignment: .leading) {
-                                    HStack {
-                                        Text("\(bathroom.totalTime(current: current))")
-                                            .font(.largeTitle)
-                                            .minimumScaleFactor(0.5)
-                                            .foregroundColor(.primary)
-                                        Image(systemName: "hourglass")
-                                            .font(.title3)
-                                    }
-                                    Text("mins")
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                }.fixedSize(horizontal: true, vertical: true)
-                                Spacer()
-                            }
-                            
-                            Divider()
-                                .overlay(.primary)
+                    HStack {
+                        if bathroom.totalTime() ?? 0 > 0 {
                             Spacer()
                             VStack(alignment: .leading) {
                                 HStack {
-                                    if let distanceString = bathroom.distanceString {
-                                        Text(distanceString)
-                                            .lineLimit(1)
-                                            .font(.title)
-                                            .foregroundColor(.primary)
-                                    }
-                                    
-                                    SettingsAttendant.shared.distanceMeasurement.image
+                                    Text("\(bathroom.totalTime() ?? 0)")
+                                        .font(.largeTitle)
+                                        .minimumScaleFactor(0.5)
+                                        .foregroundColor(.primary)
+                                    Image(systemName: "hourglass")
                                         .font(.title3)
-                                        .foregroundColor(.primary)
                                 }
-                                Text(SettingsAttendant.shared.distanceMeasurement.name.lowercased())
-                                    .font(.caption)
-                                    .foregroundColor(.primary)
-                            }.fixedSize(horizontal: true, vertical: true)
-                            Spacer()
-                            
-                            if let code = bathroom.code {
-                                Divider()
-                                    .overlay(.primary)
-                                Spacer()
-                                VStack(alignment: .center) {
-                                    HStack(alignment:.center) {
-                                        Text("\(code)")
-                                            .font(.largeTitle)
-                                            .minimumScaleFactor(0.5)
-                                            .foregroundColor(.primary)
-                                        Image(systemName: "lock.shield")
-                                            .font(.title3)
-                                    }
-                                    Text("code")
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                }.fixedSize(horizontal: true, vertical: true)
-                                Spacer()
-                            }
-                            
-                            Divider()
-                                .overlay(.primary)
-                            Spacer()
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack {
-                                    Text("In")
-                                        .lineLimit(1)
-                                        .font(.title)
-                                        .foregroundColor(.primary)
-                                    bathroom.category.image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(height: UIFont.preferredFont(forTextStyle: .title2).pointSize)
-                                        .foregroundColor(.primary)
-                                }
-                                Text(bathroom.category.rawValue.lowercased())
+                                Text("mins")
                                     .font(.caption)
                                     .foregroundColor(.primary)
                             }.fixedSize(horizontal: true, vertical: true)
                             Spacer()
                         }
-                        .frame(height: 50)
+                        
+                        Divider()
+                            .overlay(.primary)
+                        Spacer()
+                        VStack(alignment: .leading) {
+                            HStack {
+                                if let distanceString = bathroom.distanceString(withUnit: false) {
+                                    Text(distanceString)
+                                        .lineLimit(1)
+                                        .font(.title)
+                                        .foregroundColor(.primary)
+                                }
+                                
+                                SettingsAttendant.shared.distanceMeasurement.image
+                                    .font(.title3)
+                                    .foregroundColor(.primary)
+                            }
+                            Text(SettingsAttendant.shared.distanceMeasurement.name.lowercased())
+                                .font(.caption)
+                                .foregroundColor(.primary)
+                        }.fixedSize(horizontal: true, vertical: true)
+                        Spacer()
+                        
+                        if let code = bathroom.code {
+                            Divider()
+                                .overlay(.primary)
+                            Spacer()
+                            VStack(alignment: .center) {
+                                HStack(alignment:.center) {
+                                    Text("\(code)")
+                                        .font(.largeTitle)
+                                        .minimumScaleFactor(0.5)
+                                        .foregroundColor(.primary)
+                                    Image(systemName: "lock.shield")
+                                        .font(.title3)
+                                }
+                                Text("code")
+                                    .font(.caption)
+                                    .foregroundColor(.primary)
+                            }.fixedSize(horizontal: true, vertical: true)
+                            Spacer()
+                        }
+                        
+                        Divider()
+                            .overlay(.primary)
+                        Spacer()
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Text("In")
+                                    .lineLimit(1)
+                                    .font(.title)
+                                    .foregroundColor(.primary)
+                                bathroom.category.image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: UIFont.preferredFont(forTextStyle: .title2).pointSize)
+                                    .foregroundColor(.primary)
+                            }
+                            Text(bathroom.category.rawValue.lowercased())
+                                .font(.caption)
+                                .foregroundColor(.primary)
+                        }.fixedSize(horizontal: true, vertical: true)
+                        Spacer()
                     }
+                    .frame(height: 50)
                     //                    Divider()
                     //                        .overlay(.primary)
                     
@@ -157,14 +155,16 @@ struct BathroomView: View {
             ToolbarItem(placement: .bottomBar) {
                 HStack(spacing: -2) {
                     Button {
-                        let coordinate = CLLocationCoordinate2DMake(bathroom.coordinate.latitude, bathroom.coordinate.longitude)
-                        let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil))
-                        mapItem.name = self.bathroom.name
-                        mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeWalking])
-                        
-                        //                    if let url = URL(string: "comgooglemaps://?saddr=&daddr=\(location.coordinate.latitude),\(location.coordinate.longitude)&directionsmode=driving") {
-                        //                            UIApplication.shared.open(url, options: [:])
-                        //                        }
+                        if SettingsAttendant.shared.mapProvider == .apple {
+                            let coordinate = CLLocationCoordinate2DMake(bathroom.coordinate.latitude, bathroom.coordinate.longitude)
+                            let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil))
+                            mapItem.name = self.bathroom.name
+                            mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeWalking])
+                        } else {
+                            if let url = URL(string: "comgooglemaps://?saddr=&daddr=\(bathroom.coordinate.latitude),\(bathroom.coordinate.longitude)&directionsmode=walking") {
+                                    UIApplication.shared.open(url, options: [:])
+                            }
+                        }
                     } label: {
                         Group {
                             HStack(spacing: 4) {

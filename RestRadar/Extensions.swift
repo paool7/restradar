@@ -200,7 +200,9 @@ extension MKRoute.Step {
         return nil
     }
     
-    func blocksLeft(current: CLLocation) -> Int? {
+    func blocksLeft() -> Int? {
+        guard let current = LocationAttendant.shared.current else { return nil }
+
         if let direction = self.direction, let lastLat = self.coordinates.1?.latitude, let lastLong = self.coordinates.1?.longitude {
             let blockWidth = direction.blockWidth
             let distanceLeft = current.distance(from: CLLocation(latitude: lastLat, longitude: lastLong))
@@ -213,7 +215,9 @@ extension MKRoute.Step {
         return nil
     }
     
-    func distanceLeft(current: CLLocation) -> CLLocationDistance? {
+    func distanceLeft() -> CLLocationDistance? {
+        guard let current = LocationAttendant.shared.current else { return nil }
+
         if let lastLat = self.coordinates.1?.latitude, let lastLong = self.coordinates.1?.longitude {
             return CLLocation(latitude: lastLat, longitude: lastLong).distance(from: current)
         }

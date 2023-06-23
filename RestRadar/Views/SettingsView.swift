@@ -16,10 +16,7 @@ struct SettingsView: View {
     @ObservedObject var locationAttendant = LocationAttendant.shared
     
     @State private(set) var selectedAppIcon: AppIcon = .primary
-    
-    let availableModes = TransportMode.allCases
-    let themes = [Theme.sunsetsunrise, Theme.random]
-    
+        
     @State var dollarProduct: StoreProduct?
     @State var dollar3Product: StoreProduct?
     @State var dollar5Product: StoreProduct?
@@ -37,13 +34,18 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section {
+                Picker("Preferred Maps App:", selection: $attendant.mapProvider) {
+                    ForEach(MapProvider.allCases, id: \.self) {
+                        Text($0.name)
+                    }
+                }
                 Picker("Transport Method:", selection: $attendant.transportMode) {
-                    ForEach(availableModes, id: \.self) {
+                    ForEach(TransportMode.allCases, id: \.self) {
                         Text($0.name)
                     }
                 }
                 
-                Picker("Distance Measurement:", selection: $attendant.distanceMeasurement) {
+                Picker("Distance Unit:", selection: $attendant.distanceMeasurement) {
                     ForEach(DistanceMeasurement.allCases, id: \.self) {
                         Text($0.name)
                     }
@@ -65,23 +67,22 @@ struct SettingsView: View {
                     Text("\(SettingsAttendant.shared.transportMode.name) Speed is used to estimate travel time to nearby bathrooms.\nStep Length is used to estimate step distance from nearby bathrooms.")
                         .font(.footnote)
                         .foregroundColor(.secondary)
-                    Stepper("Step Length: \(String(format: "%.1f", attendant.stepLength)) feet", value: $attendant.walkingSpeed, in: 0.1...8.0, step: 0.1)
+                    Stepper("Step Length: \(String(format: "%.1f", attendant.stepLength)) feet", value: $attendant.stepLength, in: 0.1...8.0, step: 0.1)
                     Text("Step Length is used to estimate step distance from nearby bathrooms.")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }
                 
-                //                TextField("Compass Heading Filter", text: $attendant.headingStringValue)
-                //                    .keyboardType(.numberPad)
-                //                Text("The minimum angular change in degrees relative to the last heading required to update the compass.")
-                //                    .font(.caption)
-                //                    .foregroundColor(.secondary)
+                Stepper("Compass Heading Filter: \(String(format: "%.1f", attendant.headingFilter))", value: $attendant.headingFilter, in: 0.0...45.0, step: 1.0)
+                Text("The minimum angular change in degrees relative to the last heading required to update the compass. Adjusting this will reduce map movement as you move.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             } header: {
                 Text("Tuning:")
             }
             
             Section {
-                Text("Please submit any bugs, issues, or ideas for improvements or new features and I will get back to you as soon as possible.")
+                Text("Please submit any bugs, issues, questions, or ideas and I will get back to you as soon as possible.")
                     .font(.footnote)
                     .foregroundColor(.secondary)
                 Button(action: {
@@ -95,7 +96,7 @@ struct SettingsView: View {
                 }
                 
                 if !self.purchasedProductIdentifiers.contains(where: { $0 == self.productIdentifiers[2] && $0 == self.productIdentifiers[1] && $0 == self.productIdentifiers[0] }) {
-                    Text("You can also support the continued development of this app with an optional tip.")
+                    Text("You can support the continued development of this app with an optional tip.\n(Alternate app icons will also be unlocked)")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }
@@ -106,7 +107,7 @@ struct SettingsView: View {
                         self.makePurchase(product: product)
                     } label: {
                         HStack(spacing: 4) {
-                            Text("1 Dollar Tip")
+                            Text("$1 Tip 🍪")
                             if self.purchasingDollarProduct {
                                 ProgressView()
                             }
@@ -121,7 +122,7 @@ struct SettingsView: View {
                         self.makePurchase(product: product)
                     } label: {
                         HStack(spacing: 4) {
-                            Text("3 Dollar Tip")
+                            Text("$3 Tip 🧁")
                             if self.purchasingDollar3Product {
                                 ProgressView()
                             }
@@ -135,7 +136,7 @@ struct SettingsView: View {
                         self.makePurchase(product: product)
                     } label: {
                         HStack(spacing: 4) {
-                            Text("5 Dollar Tip")
+                            Text("$5 Tip 🍰")
                             if self.purchasingDollar5Product {
                                 ProgressView()
                             }
@@ -146,20 +147,10 @@ struct SettingsView: View {
             } header: {
                 Text("Support:")
             }.alert(isPresented: $showingAlert) {
-                Alert(title: Text("Thank you so much for your generosity!"), message: Text("Please submit any ideas for fixes, improvements, or new features and I will make them a priority.\n\nAlternative app icons have also been unlocked!"), dismissButton: .default(Text("Ok")))
+                Alert(title: Text("Thank you so much for your generosity!"), message: Text("Please submit any ideas for fixes, improvements, or new features and I will make them a priority.\n\nAlternate app icons have been unlocked!"), dismissButton: .default(Text("Ok")))
             }
             
             Section {
-                //                Picker("Buttons:", selection: $attendant.primaryHand) {
-                //                    ForEach(Handed.allCases, id: \.self) {
-                //                        Text($0.name)
-                //                    }
-                //                }
-                //
-                //                Text("Important buttons will appear on the specified side of the screen.")
-                //                    .font(.footnote)
-                //                    .foregroundColor(.secondary)
-                
                 if !purchasedProductIdentifiers.isEmpty {
                     VStack(alignment: .leading) {
                         Text("App Icon: ")
@@ -188,7 +179,7 @@ struct SettingsView: View {
                 Text("Theme:")
                     .foregroundColor(.primary)
                 Picker("Colors:", selection: $attendant.gradientTheme) {
-                    ForEach(themes, id: \.self) {
+                    ForEach(Theme.allCases, id: \.self) {
                         Text($0.name)
                     }
                 }
