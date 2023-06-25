@@ -8,6 +8,7 @@
 import Foundation
 import CoreLocation
 import SwiftCSV
+import TelemetryClient
 
 struct LibraryListItemModel: Decodable {
     let name: String
@@ -39,6 +40,7 @@ struct Constants {
     
     guard let playgroundData = Constants.playgroundList.data(using: .utf8), let libraryData = Constants.libraryList.data(using: .utf8), let targetData = Constants.targetStoreList.data(using: .utf8) else {
         print("Error: Cannot convert string to Data")
+        TelemetryManager.send("Error", with: ["type": "BathroomData", "message": "Cannot convert string to Data"])
         return []
     }
     
@@ -72,6 +74,7 @@ struct Constants {
         return fullList
     } catch {
         print(error)
+        TelemetryManager.send("Error", with: ["type": "BathroomData", "message": error.localizedDescription])
     }
     
     

@@ -1,6 +1,7 @@
-import SwiftUI
-import UIKit
 import MessageUI
+import SwiftUI
+import TelemetryClient
+import UIKit
 
 struct MailView: UIViewControllerRepresentable {
 
@@ -26,6 +27,7 @@ struct MailView: UIViewControllerRepresentable {
             }
             guard error == nil else {
                 self.result = .failure(error!)
+                TelemetryManager.send("Error", with: ["type": "Email", "message": error!.localizedDescription])
                 return
             }
             self.result = .success(result)

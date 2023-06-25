@@ -27,7 +27,7 @@ enum Category: String, Equatable {
     var image: Image {
         switch self {
         case .store:
-            return Image("storefront_17")
+            return Image(systemName: "cart")
         case .park:
             return Image(systemName: "tree")
         case .library:
@@ -349,6 +349,6 @@ extension MKRoute.Step {
     
     func naturalCurrentIntro() -> String? {
         guard let blocks = self.blocksLeft(), let distanceLeft = self.distanceLeft() else { return self.instructions }
-        return "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix)") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix)" : " "))"
+        return "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix), ") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix), " : " "))"
     }
 }

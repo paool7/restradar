@@ -18,6 +18,18 @@
 		2224C66429D1D18400222FD4 /* CompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C66329D1D18400222FD4 /* CompassView.swift */; };
 		222881A12A4535650098B788 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881A02A4535650098B788 /* Rational.swift */; };
 		222881A22A4536200098B788 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881A02A4535650098B788 /* Rational.swift */; };
+		222881A42A46046D0098B788 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2B29FA0AB300AFD64F /* AppIcon.swift */; };
+		222881A72A46071B0098B788 /* Karte in Frameworks */ = {isa = PBXBuildFile; productRef = 222881A62A46071B0098B788 /* Karte */; };
+		222881A92A460D7C0098B788 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881A82A460D7C0098B788 /* Theme.swift */; };
+		222881AB2A460D860098B788 /* TransportMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881AA2A460D860098B788 /* TransportMode.swift */; };
+		222881AD2A460DA40098B788 /* DistanceUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881AC2A460DA40098B788 /* DistanceUnit.swift */; };
+		222881AE2A460DBD0098B788 /* DistanceUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881AC2A460DA40098B788 /* DistanceUnit.swift */; };
+		222881AF2A460DBD0098B788 /* TransportMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881AA2A460D860098B788 /* TransportMode.swift */; };
+		222881B02A460DBD0098B788 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881A82A460D7C0098B788 /* Theme.swift */; };
+		222881B22A460DCC0098B788 /* MapProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881B12A460DCC0098B788 /* MapProvider.swift */; };
+		222881B42A4613840098B788 /* Karte in Frameworks */ = {isa = PBXBuildFile; productRef = 222881B32A4613840098B788 /* Karte */; };
+		222881B72A461D630098B788 /* TelemetryClient in Frameworks */ = {isa = PBXBuildFile; productRef = 222881B62A461D630098B788 /* TelemetryClient */; };
+		222881B92A462ADE0098B788 /* TelemetryClient in Frameworks */ = {isa = PBXBuildFile; productRef = 222881B82A462ADE0098B788 /* TelemetryClient */; };
 		222AD8B429E2362700A18E76 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B329E2362700A18E76 /* SettingsView.swift */; };
 		222AD8B629E2392000A18E76 /* SettingsAttendant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B529E2392000A18E76 /* SettingsAttendant.swift */; };
 		222AD8B829E27DF500A18E76 /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B729E27DF500A18E76 /* LocationSearchView.swift */; };
@@ -45,7 +57,6 @@
 		2242AC2529EB44D200AFD64F /* Shiny in Frameworks */ = {isa = PBXBuildFile; productRef = 2242AC2429EB44D200AFD64F /* Shiny */; };
 		2242AC2729EB8E4900AFD64F /* CompactStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2629EB8E4900AFD64F /* CompactStatsView.swift */; };
 		2242AC2929F775C700AFD64F /* BathroomSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2829F775C700AFD64F /* BathroomSummaryView.swift */; };
-		2242AC2A29F9E5DB00AFD64F /* BathroomSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2829F775C700AFD64F /* BathroomSummaryView.swift */; };
 		2242AC2C29FA0AB300AFD64F /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2B29FA0AB300AFD64F /* AppIcon.swift */; };
 		225BDBB22A171FD500FB0DA5 /* BathroomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221CCF782A04A7B800B0E171 /* BathroomList.swift */; };
 		225BDBB52A212C1D00FB0DA5 /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 225BDBB42A212C1D00FB0DA5 /* SwiftCSV */; };
@@ -107,6 +118,10 @@
 		2224C65B29CFCB4B00222FD4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2224C66329D1D18400222FD4 /* CompassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassView.swift; sourceTree = "<group>"; };
 		222881A02A4535650098B788 /* Rational.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rational.swift; sourceTree = "<group>"; };
+		222881A82A460D7C0098B788 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		222881AA2A460D860098B788 /* TransportMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportMode.swift; sourceTree = "<group>"; };
+		222881AC2A460DA40098B788 /* DistanceUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceUnit.swift; sourceTree = "<group>"; };
+		222881B12A460DCC0098B788 /* MapProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapProvider.swift; sourceTree = "<group>"; };
 		222AD8B329E2362700A18E76 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		222AD8B529E2392000A18E76 /* SettingsAttendant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAttendant.swift; sourceTree = "<group>"; };
 		222AD8B729E27DF500A18E76 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
@@ -149,7 +164,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				225BDBB72A212F1600FB0DA5 /* SwiftCSV in Frameworks */,
+				222881B92A462ADE0098B788 /* TelemetryClient in Frameworks */,
 				2242AC2529EB44D200AFD64F /* Shiny in Frameworks */,
+				222881B42A4613840098B788 /* Karte in Frameworks */,
 				22E6908B2A28214F00DBF2D9 /* RevenueCat in Frameworks */,
 				2242AC1429E8495D00AFD64F /* Solar in Frameworks */,
 				2242ABFB29E843E300AFD64F /* SwiftUI.framework in Frameworks */,
@@ -161,10 +178,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				222881A72A46071B0098B788 /* Karte in Frameworks */,
 				2242AC2329EB448600AFD64F /* Shiny in Frameworks */,
 				225BDBB52A212C1D00FB0DA5 /* SwiftCSV in Frameworks */,
 				22E690892A28214300DBF2D9 /* RevenueCat in Frameworks */,
 				22E690862A28205F00DBF2D9 /* StoreKit.framework in Frameworks */,
+				222881B72A461D630098B788 /* TelemetryClient in Frameworks */,
 				2242742E29E60E2D00F2C196 /* Solar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -221,6 +240,10 @@
 				2242AC2B29FA0AB300AFD64F /* AppIcon.swift */,
 				22C9436629C64A0100E41651 /* Bathroom.swift */,
 				222881A02A4535650098B788 /* Rational.swift */,
+				222881A82A460D7C0098B788 /* Theme.swift */,
+				222881AA2A460D860098B788 /* TransportMode.swift */,
+				222881AC2A460DA40098B788 /* DistanceUnit.swift */,
+				222881B12A460DCC0098B788 /* MapProvider.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -307,6 +330,8 @@
 				2242AC2429EB44D200AFD64F /* Shiny */,
 				225BDBB62A212F1600FB0DA5 /* SwiftCSV */,
 				22E6908A2A28214F00DBF2D9 /* RevenueCat */,
+				222881B32A4613840098B788 /* Karte */,
+				222881B82A462ADE0098B788 /* TelemetryClient */,
 			);
 			productName = ClosestBathroomWidgetExtension;
 			productReference = 2242ABF629E843E300AFD64F /* ClosestBathroomWidgetExtension.appex */;
@@ -332,6 +357,8 @@
 				2242AC2229EB448600AFD64F /* Shiny */,
 				225BDBB42A212C1D00FB0DA5 /* SwiftCSV */,
 				22E690882A28214300DBF2D9 /* RevenueCat */,
+				222881A62A46071B0098B788 /* Karte */,
+				222881B62A461D630098B788 /* TelemetryClient */,
 			);
 			productName = G2G;
 			productReference = 22F2520E29B57B990010223E /* RestRadar.app */;
@@ -369,6 +396,8 @@
 				2242AC2129EB448600AFD64F /* XCRemoteSwiftPackageReference "shiny" */,
 				225BDBB32A212C1D00FB0DA5 /* XCRemoteSwiftPackageReference "SwiftCSV" */,
 				22E690872A28214300DBF2D9 /* XCRemoteSwiftPackageReference "purchases-ios" */,
+				222881A52A46071B0098B788 /* XCRemoteSwiftPackageReference "Karte" */,
+				222881B52A461D630098B788 /* XCRemoteSwiftPackageReference "SwiftClient" */,
 			);
 			productRefGroup = 22F2520F29B57B990010223E /* Products */;
 			projectDirPath = "";
@@ -413,6 +442,8 @@
 			files = (
 				2242AC1229E8483A00AFD64F /* Extensions.swift in Sources */,
 				2242AC0F29E8481900AFD64F /* LocationSearchView.swift in Sources */,
+				222881AF2A460DBD0098B788 /* TransportMode.swift in Sources */,
+				222881A42A46046D0098B788 /* AppIcon.swift in Sources */,
 				2242AC0C29E8455A00AFD64F /* BathroomAttendant.swift in Sources */,
 				222881A22A4536200098B788 /* Rational.swift in Sources */,
 				2242AC1729E85BFF00AFD64F /* MapView.swift in Sources */,
@@ -422,11 +453,12 @@
 				22D691B72A055BCA00291E83 /* BathroomList.swift in Sources */,
 				2242AC0E29E8463F00AFD64F /* Bathroom.swift in Sources */,
 				2242AC1029E8482800AFD64F /* Annotation.swift in Sources */,
+				222881B02A460DBD0098B788 /* Theme.swift in Sources */,
 				2207D0792A33CC5600948AEB /* DirectionsSummaryView.swift in Sources */,
 				2242AC1629E85BE500AFD64F /* CompassView.swift in Sources */,
+				222881AE2A460DBD0098B788 /* DistanceUnit.swift in Sources */,
 				2242AC1529E85BE300AFD64F /* CircleLabel.swift in Sources */,
 				2242AC0029E843E300AFD64F /* ClosestBathroomWidget.swift in Sources */,
-				2242AC2A29F9E5DB00AFD64F /* BathroomSummaryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,6 +466,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				222881A92A460D7C0098B788 /* Theme.swift in Sources */,
 				2224C65629CFC10600222FD4 /* MapView.swift in Sources */,
 				2242AC2C29FA0AB300AFD64F /* AppIcon.swift in Sources */,
 				22D43DD629D47B730085CA4C /* DirectionsView.swift in Sources */,
@@ -448,6 +481,7 @@
 				220D17BC2A36A77900DECB69 /* WalkingDistanceMapView.swift in Sources */,
 				222AD8B629E2392000A18E76 /* SettingsAttendant.swift in Sources */,
 				2242AC2729EB8E4900AFD64F /* CompactStatsView.swift in Sources */,
+				222881B22A460DCC0098B788 /* MapProvider.swift in Sources */,
 				2242AC2929F775C700AFD64F /* BathroomSummaryView.swift in Sources */,
 				2224C65C29CFCB4B00222FD4 /* Extensions.swift in Sources */,
 				222AD8B429E2362700A18E76 /* SettingsView.swift in Sources */,
@@ -457,6 +491,8 @@
 				225BDBB22A171FD500FB0DA5 /* BathroomList.swift in Sources */,
 				2224C65829CFC2E400222FD4 /* Annotation.swift in Sources */,
 				22108B3F29D24203004EB964 /* CircleLabel.swift in Sources */,
+				222881AD2A460DA40098B788 /* DistanceUnit.swift in Sources */,
+				222881AB2A460D860098B788 /* TransportMode.swift in Sources */,
 				22F2521229B57B990010223E /* RestRadarApp.swift in Sources */,
 				2242AC1D29EA52CF00AFD64F /* FilteringView.swift in Sources */,
 				2207D0782A33CC5600948AEB /* DirectionsSummaryView.swift in Sources */,
@@ -763,6 +799,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		222881A52A46071B0098B788 /* XCRemoteSwiftPackageReference "Karte" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kiliankoe/Karte";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.1;
+			};
+		};
+		222881B52A461D630098B788 /* XCRemoteSwiftPackageReference "SwiftClient" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TelemetryDeck/SwiftClient";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.3;
+			};
+		};
 		2242742C29E60E2D00F2C196 /* XCRemoteSwiftPackageReference "Solar" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ceeK/Solar.git";
@@ -798,6 +850,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		222881A62A46071B0098B788 /* Karte */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 222881A52A46071B0098B788 /* XCRemoteSwiftPackageReference "Karte" */;
+			productName = Karte;
+		};
+		222881B32A4613840098B788 /* Karte */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 222881A52A46071B0098B788 /* XCRemoteSwiftPackageReference "Karte" */;
+			productName = Karte;
+		};
+		222881B62A461D630098B788 /* TelemetryClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 222881B52A461D630098B788 /* XCRemoteSwiftPackageReference "SwiftClient" */;
+			productName = TelemetryClient;
+		};
+		222881B82A462ADE0098B788 /* TelemetryClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 222881B52A461D630098B788 /* XCRemoteSwiftPackageReference "SwiftClient" */;
+			productName = TelemetryClient;
+		};
 		2242742D29E60E2D00F2C196 /* Solar */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2242742C29E60E2D00F2C196 /* XCRemoteSwiftPackageReference "Solar" */;

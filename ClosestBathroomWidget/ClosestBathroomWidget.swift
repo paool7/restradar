@@ -8,6 +8,7 @@
 import WidgetKit
 import SwiftUI
 import CoreLocation
+import TelemetryClient
 
 struct ClosestBathoomEntry: TimelineEntry {
     let date: Date
@@ -105,11 +106,7 @@ struct ClosestBathroomWidgetView: View {
             if entry.size == .systemSmall {
                 Divider()
                     .overlay(.white)
-                HStack {
-                    Spacer()
-                    DirectionsSummaryView(bathroom: entry.bathroom)
-                    Spacer()
-                }
+                DirectionsSummaryView(bathroom: entry.bathroom)
                 .padding(EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 0))
             }
         }
@@ -167,6 +164,11 @@ struct ClosestBathroomTimelineProvider: TimelineProvider {
 @main
 struct ClosestBathroomWidget: Widget {
     let kind = "com.paool.bathroom.ClosestBathroomView"
+    
+    init() {
+        let configuration = TelemetryManagerConfiguration(appID: "0C0E329B-8526-4904-91D6-941255115F8B")
+        TelemetryManager.initialize(with: configuration)
+    }
     
     var body: some WidgetConfiguration {
         StaticConfiguration(

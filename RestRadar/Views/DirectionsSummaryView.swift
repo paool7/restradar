@@ -20,38 +20,27 @@ struct DirectionsSummaryView: View {
                 let firstStep = bathroom.directions[currentIndex]
                 let firstImage = bathroom.imageFor(step: firstStep)
                 
-                if firstImage != "figure.walk.departure" {
-                    VStack {
-                        Image(systemName: "figure.walk.departure")
-                            .foregroundColor(.primary)
-                            .font(.title2)
-                            .bold()
-                            .frame(height: UIFont.preferredFont(forTextStyle: .title2).pointSize)
-                        Text(SettingsAttendant.shared.transportMode.verb)
+                Image(systemName: firstImage)
+                    .foregroundColor(.primary)
+                    .font(.title2)
+                    .bold()
+                VStack {
+                    if let intro = firstStep.naturalCurrentIntro() {
+                        Text("\(intro)")
                             .lineLimit(1)
                             .font(.caption)
                             .foregroundColor(.primary)
-                            .frame(height: UIFont.preferredFont(forTextStyle: .caption1).pointSize)
-                            
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    Text(firstStep.instructions)
+                        .lineLimit(2)
+                        .font(.caption)
+                        .foregroundColor(.primary)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                ForEach(bathroom.directions, id: \.hash) { step in
-                    let stepIndex = bathroom.directions.firstIndex(of: step) ?? currentIndex
-                    if (stepIndex >= currentIndex) && ((stepIndex - currentIndex) < 3)  {
-                        VStack(alignment: .center) {
-                            Image(systemName: bathroom.imageFor(step: step))
-                                .foregroundColor(.primary)
-                                .font(.title2)
-                                .frame(height: UIFont.preferredFont(forTextStyle: .title2).pointSize)
-                            Text(bathroom.summaryFor(step: step))
-                                .lineLimit(1)
-                                .font(.caption)
-                                .foregroundColor(.primary)
-                                .frame(height: UIFont.preferredFont(forTextStyle: .caption1).pointSize)
-                        }
-                    }
-                }
-            }.scaledToFill()
+            }
         }
     }
 }

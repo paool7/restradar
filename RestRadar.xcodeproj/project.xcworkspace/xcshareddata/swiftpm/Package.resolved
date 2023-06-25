@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "karte",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kiliankoe/Karte",
+      "state" : {
+        "revision" : "bb5af904ac38d3ecdbf742c29ab1b5cd0f6a00d6",
+        "version" : "4.1.1"
+      }
+    },
+    {
       "identity" : "purchases-ios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios.git",
@@ -25,6 +34,15 @@
       "state" : {
         "revision" : "c2b96f2d5fb7f835b91cefac5e83101f54643901",
         "version" : "3.0.1"
+      }
+    },
+    {
+      "identity" : "swiftclient",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/TelemetryDeck/SwiftClient",
+      "state" : {
+        "revision" : "cb34730027fcf560005aad57f2b53506064b228f",
+        "version" : "1.4.3"
       }
     },
     {

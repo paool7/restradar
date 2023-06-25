@@ -5,11 +5,12 @@
 //  Created by Paul Dippold on 3/19/23.
 //
 
-import Foundation
 import CoreLocation
+import Foundation
 import MapKit
-import SwiftUI
 import Solar
+import SwiftUI
+import TelemetryClient
 
 class LocationAttendant: NSObject, ObservableObject {
     static var shared = LocationAttendant()
@@ -109,6 +110,7 @@ class LocationAttendant: NSObject, ObservableObject {
             
             if let error = error {
                 print(error)
+                TelemetryManager.send("Error", with: ["type": "GetLocation", "message": error.localizedDescription])
             }
             completion(location)
         }
@@ -134,6 +136,7 @@ class LocationAttendant: NSObject, ObservableObject {
             }
         } catch {
             print("Distance directions calculation error\n \(error.localizedDescription)")
+            TelemetryManager.send("Error", with: ["type": "CalculateDirectionsAsync", "message": error.localizedDescription])
             return ([], nil)
         }
     }
@@ -150,6 +153,7 @@ class LocationAttendant: NSObject, ObservableObject {
         directions.calculate { (response, error) in
             if let error = error {
                 print("Distance directions calculation error\n \(error.localizedDescription)")
+                TelemetryManager.send("Error", with: ["type": "CalculateDirections", "message": error.localizedDescription])
                 return
             }
             if let routes = response?.routes, let shortestRoute = routes.sorted(by: { $0.expectedTravelTime < $1.expectedTravelTime}).first {
@@ -162,6 +166,20 @@ class LocationAttendant: NSObject, ObservableObject {
         self.locationManager.requestLocation()
         while self.current == nil && self.currentHeading == nil { }
         return current!
+    }
+    
+    func getScene(location: CLLocationCoordinate2D?) async -> MKLookAroundScene? {
+        if let latitude = location?.latitude, let longitude = location?.longitude {
+            let sceneRequest = MKLookAroundSceneRequest(coordinate: .init(latitude: latitude, longitude: longitude))
+            
+            do {
+                return try await sceneRequest.scene
+            } catch {
+                return nil
+            }
+        } else {
+            return nil
+        }
     }
 }
 
@@ -185,5 +203,7 @@ extension LocationAttendant: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Error:\(error)")
+        TelemetryManager.send("Error", with: ["type": "LocationManager", "message": error.localizedDescription])
     }
+    
 }

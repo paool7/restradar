@@ -9,124 +9,9 @@ import Foundation
 import MapKit
 import EventKit
 import SwiftUI
+import Karte
 
 let userDefaults = UserDefaults(suiteName: "group.com.paool.bathroom")
-
-enum Handed: Int, CaseIterable {
-    case right
-    case left
-    
-    var name: String {
-        switch self {
-        case .right:
-            return "Right"
-        case .left:
-            return "Left"
-        }
-    }
-}
-
-enum Theme: Int, CaseIterable {
-    case sunsetsunrise = 0
-    case random = 1
-    
-    var name: String {
-        switch self {
-        case .sunsetsunrise:
-            return "Sunrise to Sunset"
-        case .random:
-            return "Assortment"
-        }
-    }
-}
-
-enum TransportMode: Int, CaseIterable {
-    case walking
-    case wheelchair
-    
-    var name: String {
-        switch self {
-        case .wheelchair:
-            return "Wheelchair"
-        case .walking:
-            return "Walking"
-        }
-    }
-    
-    var image: Image {
-        switch self {
-        case .wheelchair:
-            return Image(systemName: "figure.roll")
-        case .walking:
-            return Image(systemName: "figure.walk.motion")
-        }
-    }
-    
-    var verb: String {
-        switch self {
-        case .wheelchair:
-            return "Wheel"
-        case .walking:
-            return "Walk"
-        }
-    }
-    
-}
-
-enum DistanceMeasurement: Int, CaseIterable {
-    case blocks
-    case meterskilometers
-    case milesfeet
-    case steps
-
-    var name: String {
-        switch self {
-        case .milesfeet:
-            return "Feet/Miles"
-        case .blocks:
-            return "Blocks"
-        case .steps:
-            return "Steps"
-        case .meterskilometers:
-            return "Meters/Kilometers"
-        }
-    }
-    
-    var image: Image {
-        switch self {
-        case .milesfeet, .meterskilometers:
-            return Image(systemName: "point.topleft.down.curvedto.point.filled.bottomright.up")
-        case .blocks:
-            return Image(systemName: "building.2")
-        case .steps:
-            return Image(systemName: "shoeprints.fill")
-        }
-    }
-}
-
-enum MapProvider: Int, CaseIterable {
-    case apple
-    case google
-
-    var name: String {
-        switch self {
-        case .apple:
-            return "Apple"
-        case .google:
-            return "Google"
-        }
-    }
-    
-    var image: Image {
-        switch self {
-        case .apple:
-            return Image(systemName: "apple.logo")
-        case .google:
-            return Image(systemName: "g.circle")
-        }
-    }
-    
-}
 
 class SettingsAttendant: ObservableObject {
     static let shared = SettingsAttendant()
@@ -144,7 +29,8 @@ class SettingsAttendant: ObservableObject {
     static let gradientThemeKey = "GradientThemeSetting"
     static let handKey = "PrimaryHandSettings"
     static let stepKey = "StepLengthSetting"
-    static let mapKey = "MapProviderSetting"
+    static let mapKey = "MapAppProviderSetting"
+    static let appIconKey = "SelectedAlternateAppIconSetting"
 
     static let defaultWheelchairSpeed = 4.0
     static let defaultElectricWheelchairSpeed = 5.0
@@ -220,15 +106,15 @@ class SettingsAttendant: ObservableObject {
         }
     }
     
-    @Published var primaryHand: Handed {
+    @Published var mapProvider: Karte.App {
         didSet {
-            userDefaults?.set(primaryHand.rawValue, forKey: SettingsAttendant.handKey)
+            userDefaults?.set(mapProvider.rawValue, forKey: SettingsAttendant.mapKey)
         }
     }
     
-    @Published var mapProvider: MapProvider {
+    @Published var selectedAppIcon: AppIcon {
         didSet {
-            userDefaults?.set(mapProvider.rawValue, forKey: SettingsAttendant.mapKey)
+            userDefaults?.set(selectedAppIcon.rawValue, forKey: SettingsAttendant.appIconKey)
         }
     }
     
@@ -256,16 +142,16 @@ class SettingsAttendant: ObservableObject {
         let storedGradientTheme = userDefaults?.object(forKey: SettingsAttendant.gradientThemeKey) as? Int
         gradientTheme = Theme(rawValue: storedGradientTheme ?? 0) ?? Theme.sunsetsunrise
         
-        let storedPrimaryHand = userDefaults?.object(forKey: SettingsAttendant.handKey) as? Int
-        primaryHand = Handed(rawValue: storedPrimaryHand ?? 0) ?? Handed.right
-        
         let storedStepLength = userDefaults?.object(forKey: SettingsAttendant.stepKey) as? Double
         stepLength = storedStepLength ?? SettingsAttendant.defaultStepLength
         
         let storedDistanceMeasurement = userDefaults?.object(forKey: SettingsAttendant.distanceMeasurementKey) as? Int ?? 0
         distanceMeasurement = DistanceMeasurement(rawValue: storedDistanceMeasurement) ?? .blocks
         
-        let storedMapProvider = userDefaults?.object(forKey: SettingsAttendant.mapKey) as? Int ?? 0
-        mapProvider = MapProvider(rawValue: storedMapProvider) ?? .apple
+        let storedMapProvider = userDefaults?.object(forKey: SettingsAttendant.mapKey) as? String ?? "appleMaps"
+        mapProvider = Karte.App(rawValue: storedMapProvider) ?? .appleMaps
+        
+        let storedAppIcon = userDefaults?.object(forKey: SettingsAttendant.appIconKey) as? String ?? "AppIcon-18"
+        selectedAppIcon = AppIcon(rawValue: storedAppIcon) ?? .primary
     }
 }

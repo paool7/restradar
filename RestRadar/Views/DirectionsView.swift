@@ -5,8 +5,10 @@
 //  Created by Paul Dippold on 3/29/23.
 //
 
-import SwiftUI
+import Karte
 import MapKit
+import SwiftUI
+import TelemetryClient
 
 struct DirectionsView: View {
     @StateObject private var bathroomAttendant = BathroomAttendant.shared
@@ -15,34 +17,94 @@ struct DirectionsView: View {
     @StateObject var bathroom: Bathroom
     
     var body: some View {
-        VStack {
-            VStack(alignment: .center) {
-                Button {
-                    if SettingsAttendant.shared.mapProvider == .apple {
-                        let coordinate = CLLocationCoordinate2DMake(bathroom.coordinate.latitude, bathroom.coordinate.longitude)
-                        let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil))
-                        mapItem.name = self.bathroom.name
-                        mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeWalking])
-                    } else {
-                        if let url = URL(string: "comgooglemaps://?saddr=&daddr=\(bathroom.coordinate.latitude),\(bathroom.coordinate.longitude)&directionsmode=walking") {
-                                UIApplication.shared.open(url, options: [:])
+        VStack {            
+            HStack {
+                if bathroom.totalTime() ?? 0 > 0 {
+                    Spacer()
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("\(bathroom.totalTime() ?? 0)")
+                                .font(.title)
+                                .minimumScaleFactor(0.5)
+                                .foregroundColor(.primary)
+                            Image(systemName: "hourglass")
+                                .font(.title3)
                         }
+                        Text("mins")
+                            .font(.caption)
+                            .foregroundColor(.primary)
+                    }.fixedSize(horizontal: true, vertical: true)
+                    Spacer()
+                }
+                
+                Divider()
+                    .overlay(.primary)
+                Spacer()
+                VStack(alignment: .leading) {
+                    HStack {
+                        if let distanceString = bathroom.distanceString(withUnit: false) {
+                            Text(distanceString)
+                                .lineLimit(1)
+                                .font(.title)
+                                .foregroundColor(.primary)
+                        }
+                        
+                        SettingsAttendant.shared.distanceMeasurement.image
+                            .font(.title3)
+                            .foregroundColor(.primary)
                     }
-                } label: {
-                    CompassView(bathroom: bathroom)
-                        .frame(height: 325)
+                    Text(SettingsAttendant.shared.distanceMeasurement.name.lowercased())
+                        .font(.caption)
+                        .foregroundColor(.primary)
+                }.fixedSize(horizontal: true, vertical: true)
+                Spacer()
+                
+                if let code = bathroom.code {
+                    Divider()
+                        .overlay(.primary)
+                    Spacer()
+                    VStack(alignment: .center) {
+                        HStack(alignment:.center) {
+                            Text("\(code)")
+                                .font(.largeTitle)
+                                .minimumScaleFactor(0.5)
+                                .foregroundColor(.primary)
+                            Image(systemName: "lock.open.trianglebadge.exclamationmark")
+                                .font(.title3)
+                        }
+                        Text("code")
+                            .font(.caption)
+                            .foregroundColor(.primary)
+                    }.fixedSize(horizontal: true, vertical: true)
+                    Spacer()
                 }
-            }
-            Divider()
-                .overlay(.primary)
-            if let nextStep = bathroom.currentRouteStep(), let intro = nextStep.naturalCurrentIntro() {
-                HStack {
-                    Text("\(intro)")
-                        .font(.title2)
-                        .bold()
-                }
+                
+                Divider()
+                    .overlay(.primary)
+                Spacer()
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text("In")
+                            .lineLimit(1)
+                            .font(.title)
+                            .foregroundColor(.primary)
+                        bathroom.category.image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: UIFont.preferredFont(forTextStyle: .title2).pointSize)
+                            .foregroundColor(.primary)
+                    }
+                    Text(bathroom.category.rawValue.lowercased())
+                        .font(.caption)
+                        .foregroundColor(.primary)
+                }.fixedSize(horizontal: true, vertical: true)
                 Spacer()
             }
+            .frame(height: 50)
+            
+            Divider()
+                .overlay(.primary)
+
             if !bathroom.directions.isEmpty {
                 ForEach(bathroom.directions, id: \.hash) { step in
                     if let naturalInstructions = step.naturalInstructions, let index = bathroom.indexFor(step: step), index >= bathroom.currentRouteStepIndex {
@@ -51,7 +113,9 @@ struct DirectionsView: View {
                                 .font(step == bathroom.currentRouteStep() ? .title2 : .title3)
                                 .if(step == bathroom.currentRouteStep()) {$0.bold() }
                                 .foregroundColor(.primary)
-                            Text(step == bathroom.currentRouteStep() ? step.instructions : naturalInstructions)
+                            
+                            let intro = step == bathroom.currentRouteStep() ? step.naturalCurrentIntro() ?? "" : ""
+                            Text(intro + (step == bathroom.currentRouteStep() ? step.instructions : naturalInstructions))
                                 .font(step == bathroom.currentRouteStep() ? .title2 : .title3)
                                 .if(step == bathroom.currentRouteStep()) { $0.bold() }
                                 .fixedSize(horizontal: false, vertical: true)

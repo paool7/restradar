@@ -120,33 +120,11 @@ class BathroomAttendant: ObservableObject {
         return bathroomList.first
     }
     
-    func getImage(bathroom: Bathroom) {
-        if bathroom.image == nil {
-            let options = MKMapSnapshotter.Options()
-            options.region = MKCoordinateRegion(center: bathroom.coordinate, latitudinalMeters: 115, longitudinalMeters: 115)
-            options.mapType = .standard
-            options.showsBuildings = true
-//            options.size = CGSize(width: 100, height: 100)
-            
-            let snapshotter = MKMapSnapshotter(options: options)
-            snapshotter.start { snapshot, error in
-                if let snapshot = snapshot {
-                    bathroom.image = Image(uiImage: snapshot.image)
-                } else if let error = error {
-                    print("Something went wrong \(error.localizedDescription)")
-                }
-            }
-        }
-    }
-    
     func recalculateWalkingDistance() {
-        if let current = LocationAttendant.shared.current {
-
-            let bathrooms = self.visibleBathrooms.sorted(by: {$0.distanceMeters()?.converted(to: .meters).value ?? 0.0 < $1.distanceMeters()?.converted(to: .meters).value ?? 0.0 })
-            if let last = bathrooms.last, let distance = last.distanceMeters()?.converted(to: .meters).value {
-                self.walkingDistance = distance
-                self.walkingTime = last.totalTime()
-            }
+        let bathrooms = self.visibleBathrooms.sorted(by: {$0.distanceMeters()?.converted(to: .meters).value ?? 0.0 < $1.distanceMeters()?.converted(to: .meters).value ?? 0.0 })
+        if let last = bathrooms.last, let distance = last.distanceMeters()?.converted(to: .meters).value {
+            self.walkingDistance = distance
+            self.walkingTime = last.totalTime()
         }
     }
 }
