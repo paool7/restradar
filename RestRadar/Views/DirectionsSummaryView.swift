@@ -21,24 +21,15 @@ struct DirectionsSummaryView: View {
                 let firstImage = bathroom.imageFor(step: firstStep)
                 
                 Image(systemName: firstImage)
-                    .foregroundColor(.primary)
-                    .font(.title2)
+                    .foregroundColor(.white)
+                    .font(.title3)
                     .bold()
-                VStack {
-                    if let intro = firstStep.naturalCurrentIntro() {
-                        Text("\(intro)")
-                            .lineLimit(1)
-                            .font(.caption)
-                            .foregroundColor(.primary)
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    Text(firstStep.instructions)
+                if let intro = firstStep.naturalSummaryIntro() {
+                    Text("\(intro)")
                         .lineLimit(2)
-                        .font(.caption)
-                        .foregroundColor(.primary)
+                        .font(.subheadline)
+                        .foregroundColor(.white)
                         .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
         }

@@ -32,11 +32,20 @@ struct HomeView: View {
                             .frame(height: 225)
                             .mask(LinearGradient(gradient: Gradient(colors: [.clear, .black, .black, .black, .black, .black, .clear]), startPoint: .bottom, endPoint: .top))
                         ZStack(alignment: .bottom) {
-                            Circle()
-                                .trim(from: 0.1, to: 0.9)
-                                .rotation(.degrees(90))
-                                .stroke(Gradient.forCurrentTime()  ?? .iridescent2, style: .init(lineWidth: 4))
-                                .frame(width: 215, height: 215)
+                            ZStack {
+                                Circle()
+                                    .trim(from: 0.1, to: 0.9)
+                                    .rotation(.degrees(90))
+                                    .stroke(Color.black.opacity(0.6), style: .init(lineWidth: 6))
+                                    .cornerRadius(107.5)
+                                    .frame(width: 215, height: 215)
+                                Circle()
+                                    .trim(from: 0.1, to: 0.9)
+                                    .rotation(.degrees(90))
+                                    .stroke(Color.white, style: .init(lineWidth: 1))
+                                    .cornerRadius(107.5)
+                                    .frame(width: 215, height: 215)
+                            }
                             VStack {
                                 HStack {
                                     SettingsAttendant.shared.transportMode.image
@@ -95,7 +104,7 @@ struct HomeView: View {
             }
             .padding(4)
             .toolbar {
-                ToolbarItemGroup(placement: .bottomBar) {
+                ToolbarItem(placement: .bottomBar) {
                     HStack(spacing: -2) {
                         Spacer()
                         
@@ -152,11 +161,6 @@ struct HomeView: View {
                         //                        }
                     }
                 }
-            }
-            .onAppear {
-                let appearance = UITabBarAppearance()
-                appearance.backgroundEffect = UIBlurEffect(style: .light)
-                UITabBar.appearance().scrollEdgeAppearance = appearance
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("RestRadar")

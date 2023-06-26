@@ -17,7 +17,7 @@ struct ClosestBathoomEntry: TimelineEntry {
 }
 
 @available(iOSApplicationExtension 17.0, *)
-struct ClosestBathroomWidgetView: View {
+struct ClosestBathroomLockScreenWidgetView: View {
     let entry: ClosestBathoomEntry
     
     let locationAttendant = LocationAttendant.shared
@@ -32,87 +32,148 @@ struct ClosestBathroomWidgetView: View {
                     .font(.headline)
                     .bold()
                     .foregroundColor(.white)
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: entry.size == .systemSmall ? 4 : 0, trailing: 0))
             }
+            
             HStack {
-                if entry.size != .systemSmall {
-                    Spacer()
-                }
+                
+                Spacer()
                 VStack(alignment: .leading) {
                     HStack(alignment: .center) {
                         Text("\(entry.bathroom.totalTime() ?? 0)")
-                            .font(entry.size == .systemSmall ? .largeTitle : .headline)
+                            .font(.headline)
                             .minimumScaleFactor(0.5)
                             .foregroundColor(.white)
                         Image(systemName: "hourglass")
                             .foregroundColor(.white)
-                            .font(entry.size == .systemSmall ? .title3 : .subheadline)
+                            .font(.subheadline)
                     }.frame(maxWidth: .infinity)
-                    if entry.size == .systemSmall {
-                        Text("mins")
-                            .font(.caption)
-                            .minimumScaleFactor(0.5)
-                            .foregroundColor(.white)
-                    }
                 }.fixedSize(horizontal: true, vertical: false)
-                if entry.size == .systemSmall {
-                    Spacer()
-                }
+
                 Divider()
                     .overlay(.white)
-                if entry.size == .systemSmall {
-                    Spacer()
-                }
+
                 VStack(alignment: .leading) {
                     HStack(alignment:.center) {
                         Text("\(entry.bathroom.totalBlocks)")
-                            .font(entry.size == .systemSmall ? .largeTitle : .headline)
+                            .font(.headline)
                             .minimumScaleFactor(0.5)
                             .foregroundColor(.white)
                         Image(systemName: "building.2")
                             .foregroundColor(.white)
-                            .font(entry.size == .systemSmall ? .title3 : .subheadline)
+                            .font(.subheadline)
                     }.frame(maxWidth: .infinity)
-                    if entry.size == .systemSmall {
-                        Text("blocks")
-                            .font(.caption)
-                            .minimumScaleFactor(0.5)
-                            .foregroundColor(.white)
-                    }
                 }.fixedSize(horizontal: true, vertical: false)
 
-                if entry.size != .systemSmall {
-                    Divider()
-                        .overlay(.white)
-                    
-                    HStack(alignment: .center) {
-                        Text("In")
-                            .font(.headline)
-                            .minimumScaleFactor(0.25)
-                            .foregroundColor(.white)
-                        entry.bathroom.category.image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: UIFont.preferredFont(forTextStyle: .subheadline).pointSize)
-                            .foregroundColor(.white)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .fixedSize(horizontal: true, vertical: false)
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .padding(EdgeInsets(top: 0, leading: 0, bottom: entry.size == .systemSmall ? 4 : 0, trailing: 0))
-
-            if entry.size == .systemSmall {
                 Divider()
                     .overlay(.white)
-                DirectionsSummaryView(bathroom: entry.bathroom)
-                .padding(EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 0))
+                
+                HStack(alignment: .center) {
+                    Text("In")
+                        .font(.headline)
+                        .minimumScaleFactor(0.25)
+                        .foregroundColor(.white)
+                    entry.bathroom.category.image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: UIFont.preferredFont(forTextStyle: .subheadline).pointSize)
+                        .foregroundColor(.white)
+                }
+                .frame(maxWidth: .infinity)
+                .fixedSize(horizontal: true, vertical: false)
             }
+            .frame(maxWidth: .infinity)
         }
         .containerBackground(for: .widget, content: {
-            if entry.size == .systemSmall, let gradient = Gradient.forCurrentTime() {
-                LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
+            Color.clear
+        })
+        .widgetURL({
+            if let url = URL(string: "restradar://\(entry.bathroom.id)") {
+                return url
+            }
+             return nil
+        }())
+    }
+}
+
+@available(iOSApplicationExtension 17.0, *)
+struct ClosestBathroomWidgetView: View {
+    let entry: ClosestBathoomEntry
+    
+    let locationAttendant = LocationAttendant.shared
+    let bathroomAttendant = BathroomAttendant.shared
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(entry.bathroom.name)
+                    .minimumScaleFactor(0.5)
+                    .lineLimit(2)
+                    .font(.headline)
+                    .bold()
+                    .foregroundColor(.white)
+                
+             Spacer()
+                VStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(entry.bathroom.category.backgroundColor)
+                        .overlay {
+                            entry.bathroom.category.image
+                                .font(.subheadline)
+                                .foregroundColor(entry.bathroom.category.backgroundColor.accessibleFontColor)
+                        }
+                        .aspectRatio(1.0, contentMode: .fit)
+                        .frame(height: UIFont.preferredFont(forTextStyle: .subheadline).pointSize * 2 )
+                }
+            }
+            Divider()
+                .overlay(.primary)
+            HStack {
+                VStack(alignment: .leading) {
+                    HStack() {
+                        Text("\(entry.bathroom.totalTime() ?? 0)")
+                            .font(.largeTitle)
+                            .minimumScaleFactor(0.5)
+                            .foregroundColor(.white)
+                        Image(systemName: "hourglass")
+                            .foregroundColor(.white)
+                            .font( .title3)
+                    }
+                    Text("mins")
+                        .font(.caption)
+                        .minimumScaleFactor(0.5)
+                        .foregroundColor(.white)
+                }
+                
+                Divider()
+                    .overlay(.primary)
+                VStack(alignment: .leading) {
+                    HStack {
+                        if let distanceString = entry.bathroom.distanceString(withUnit: false) {
+                            Text(distanceString)
+                                .lineLimit(1)
+                                .font(.largeTitle)
+                                .minimumScaleFactor(0.5)
+                                .foregroundColor(.white)
+                        }
+                        
+                        SettingsAttendant.shared.distanceMeasurement.image
+                            .font(.title3)
+                            .foregroundColor(.white)
+                    }
+                    Text(SettingsAttendant.shared.distanceMeasurement.name.lowercased())
+                        .font(.caption)
+                        .minimumScaleFactor(0.5)
+                        .foregroundColor(.white)
+                }
+            }
+            Divider()
+                .overlay(.primary)
+            DirectionsSummaryView(bathroom: entry.bathroom)
+                .padding(EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 0))
+        }
+        .containerBackground(for: .widget, content: {
+            if let gradient = Gradient.forCurrentTime(), let first = gradient.stops.first?.color, let last = gradient.stops.last?.color {
+                Color.blend(color1: first, color2: last)
             }
         })
         .widgetURL({
@@ -143,7 +204,7 @@ struct ClosestBathroomTimelineProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         Task {
             _ = try await locationAttendant.fetchLocation()
-            _ = try await locationAttendant.getDirections(toId: BathroomAttendant.shared.closestBathroom.id)
+            _ = try await BathroomAttendant.shared.closestBathroom.getDirections()
             
             let nextUpdate = Calendar.current.date(
                 byAdding: DateComponents(minute: 5),
@@ -175,9 +236,12 @@ struct ClosestBathroomWidget: Widget {
             kind: kind,
             provider: ClosestBathroomTimelineProvider()
         ) { entry in
-            
             if #available(iOSApplicationExtension 17.0, *) {
-                ClosestBathroomWidgetView(entry: entry)
+                if entry.size == .systemSmall {
+                    ClosestBathroomWidgetView(entry: entry)
+                } else {
+                    ClosestBathroomLockScreenWidgetView(entry: entry)
+                }
             } else {
                 // Fallback on earlier versions
             }

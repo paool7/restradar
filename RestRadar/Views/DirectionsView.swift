@@ -17,7 +17,9 @@ struct DirectionsView: View {
     @StateObject var bathroom: Bathroom
     
     var body: some View {
-        VStack {            
+        VStack {
+            Divider()
+                .overlay(.primary)
             HStack {
                 if bathroom.totalTime() ?? 0 > 0 {
                     Spacer()
@@ -59,46 +61,27 @@ struct DirectionsView: View {
                 }.fixedSize(horizontal: true, vertical: true)
                 Spacer()
                 
-                if let code = bathroom.code {
+                if let current = locationAttendant.current {
                     Divider()
                         .overlay(.primary)
                     Spacer()
                     VStack(alignment: .center) {
-                        HStack(alignment:.center) {
-                            Text("\(code)")
-                                .font(.largeTitle)
-                                .minimumScaleFactor(0.5)
+                        HStack {
+                            Text(current.coordinate.angle(bathroom.coordinate).compassRepresentation)
+                                .font(.title)
                                 .foregroundColor(.primary)
-                            Image(systemName: "lock.open.trianglebadge.exclamationmark")
+                            Image(systemName: "location.north.line")
                                 .font(.title3)
+                                .rotationEffect(Angle(degrees: current.coordinate.angle(bathroom.coordinate)))
                         }
-                        Text("code")
+                        Text("direction")
+                            .lineLimit(1)
                             .font(.caption)
                             .foregroundColor(.primary)
+                            .scaledToFill()
                     }.fixedSize(horizontal: true, vertical: true)
                     Spacer()
                 }
-                
-                Divider()
-                    .overlay(.primary)
-                Spacer()
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Text("In")
-                            .lineLimit(1)
-                            .font(.title)
-                            .foregroundColor(.primary)
-                        bathroom.category.image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: UIFont.preferredFont(forTextStyle: .title2).pointSize)
-                            .foregroundColor(.primary)
-                    }
-                    Text(bathroom.category.rawValue.lowercased())
-                        .font(.caption)
-                        .foregroundColor(.primary)
-                }.fixedSize(horizontal: true, vertical: true)
-                Spacer()
             }
             .frame(height: 50)
             

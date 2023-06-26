@@ -481,8 +481,8 @@
             filePath = "ClosestBathroomWidget/ClosestBathroomWidget.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
+            startingLineNumber = "209"
+            endingLineNumber = "209"
             landmarkName = "getTimeline(in:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -880,73 +880,9 @@
             filePath = "RestRadar/Attendants/BathroomAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
+            startingLineNumber = "97"
+            endingLineNumber = "97"
             landmarkName = "filterBathrooms(onlyFavorites:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "67EF2904-1D79-411A-AE01-18187882697C"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RestRadar/Attendants/BathroomAttendant.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "filterBathrooms(onlyFavorites:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "60472D9A-77CB-4928-8608-B68CF679E628"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RestRadar/Attendants/LocationAttendant.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "196"
-            endingLineNumber = "196"
-            landmarkName = "locationManager(_:didUpdateLocations:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "C5B13303-6EC2-43A2-8F84-48EFC240BF74"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RestRadar/Attendants/LocationAttendant.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
-            landmarkName = "locationManager(_:didUpdateLocations:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "761DD5FD-567E-4D9D-9A76-D7089084E1D6"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RestRadar/Attendants/LocationAttendant.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "190"
-            endingLineNumber = "190"
-            landmarkName = "locationManager(_:didChangeAuthorization:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1040,8 +976,8 @@
             filePath = "RestRadar/Attendants/BathroomAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
+            startingLineNumber = "94"
+            endingLineNumber = "94"
             landmarkName = "filterBathrooms(onlyFavorites:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1056,28 +992,43 @@
             filePath = "RestRadar/Attendants/LocationAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
             landmarkName = "getLocation(from:completion:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 986a4ebfc6a73789"
+                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 6c336a6602c608df"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Array&lt;__C.CLPlacemark&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in RestRadar.LocationAttendant.getLocation(from: Swift.String, completion: (Swift.Optional&lt;__C.CLLocation&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "RestRadar.LocationAttendant.getDirections(toId: Swift.String) async throws -&gt; Swift.Optional&lt;RestRadar.Bathroom&gt;"
                   moduleName = "RestRadar"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Attendants/LocationAttendant.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "112"
-                  endingLineNumber = "112"
-                  offsetFromSymbolStart = "596">
+                  startingLineNumber = "78"
+                  endingLineNumber = "78"
+                  offsetFromSymbolStart = "88">
                </Location>
                <Location
-                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 986a4ebfc6a73789"
+                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 2c79e797cd6e7ef5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for RestRadar.LocationAttendant.getDirections(toId: Swift.String) async throws -&gt; Swift.Optional&lt;RestRadar.Bathroom&gt;"
+                  moduleName = "RestRadar"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Attendants/LocationAttendant.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "78"
+                  endingLineNumber = "78"
+                  offsetFromSymbolStart = "108">
+               </Location>
+               <Location
+                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 986a4ebfc6a73c0c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1087,12 +1038,12 @@
                   urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Attendants/LocationAttendant.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "112"
-                  endingLineNumber = "112"
+                  startingLineNumber = "77"
+                  endingLineNumber = "77"
                   offsetFromSymbolStart = "712">
                </Location>
                <Location
-                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 5f1ad3dcf2e810e5"
+                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 5f1ad3dcf2e81b60"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1102,8 +1053,8 @@
                   urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Attendants/LocationAttendant.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "112"
-                  endingLineNumber = "112"
+                  startingLineNumber = "77"
+                  endingLineNumber = "77"
                   offsetFromSymbolStart = "712">
                </Location>
             </Locations>
@@ -1119,8 +1070,8 @@
             filePath = "RestRadar/Attendants/LocationAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
             landmarkName = "getLocation(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1135,8 +1086,8 @@
             filePath = "RestRadar/Attendants/LocationAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
             landmarkName = "getLocation(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1209,63 +1160,16 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "48C47899-33DC-492F-BEBA-B7F141BBA26F"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RestRadar/BathroomList.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
             landmarkName = "getBathrooms()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "48C47899-33DC-492F-BEBA-B7F141BBA26F - 162227303ae0e934"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static RestRadar.Constants.getBathrooms() -&gt; Swift.Array&lt;RestRadar.Bathroom&gt;"
-                  moduleName = "RestRadar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/BathroomList.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78"
-                  offsetFromSymbolStart = "2392">
-               </Location>
-               <Location
-                  uuid = "48C47899-33DC-492F-BEBA-B7F141BBA26F - 162227303ae0e9f6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static RestRadar.Constants.getBathrooms() -&gt; Swift.Array&lt;RestRadar.Bathroom&gt;"
-                  moduleName = "RestRadar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/BathroomList.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "76"
-                  endingLineNumber = "76"
-                  offsetFromSymbolStart = "2340">
-               </Location>
-               <Location
-                  uuid = "48C47899-33DC-492F-BEBA-B7F141BBA26F - 7559c9d30a375d3a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static ClosestBathroomWidgetExtension.Constants.getBathrooms() -&gt; Swift.Array&lt;ClosestBathroomWidgetExtension.Bathroom&gt;"
-                  moduleName = "ClosestBathroomWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/BathroomList.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "76"
-                  endingLineNumber = "76"
-                  offsetFromSymbolStart = "2340">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1278,8 +1182,8 @@
             filePath = "RestRadar/BathroomList.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
             landmarkName = "Constants"
             landmarkType = "14">
          </BreakpointContent>
@@ -1287,39 +1191,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E4A1A296-F5CF-4818-8B2C-D0F428BF027A"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RestRadar/Attendants/BathroomAttendant.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
-            landmarkName = "filterBathrooms(onlyFavorites:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "E207F21C-BFDA-4EF1-ABA3-635F67D5B840"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RestRadar/Attendants/BathroomAttendant.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
-            landmarkName = "filterBathrooms(onlyFavorites:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "4A1AACAC-1688-4A16-9665-CC59295FBD7C"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -1335,6 +1207,22 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "4A1AACAC-1688-4A16-9665-CC59295FBD7C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RestRadar/Attendants/BathroomAttendant.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
+            landmarkName = "filterBathrooms(onlyFavorites:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
             uuid = "DFB44B1C-BDCA-4839-B318-792D098E0347"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -1342,8 +1230,8 @@
             filePath = "RestRadar/Attendants/BathroomAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
             landmarkName = "filterBathrooms(onlyFavorites:)"
             landmarkType = "7">
             <Locations>
@@ -1383,38 +1271,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "11B2BD7D-2EC4-40CF-BD35-C325D6B075F2"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RestRadar/Models/Bathroom.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "288"
-            endingLineNumber = "288"
-            landmarkName = "currentRouteStep()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "7288D33C-C2E8-4965-8816-FE3178ED3A91"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RestRadar/Models/Bathroom.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "284"
-            endingLineNumber = "284"
-            landmarkName = "currentRouteStep()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "FC75DB68-7113-4D13-9571-BBB9F8424509"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -1422,58 +1278,10 @@
             filePath = "ClosestBathroomWidget/ClosestBathroomWidget.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
             landmarkName = "body"
             landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "8ED7DDF1-1EB1-4866-8981-E2DD4079294F"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RestRadar/Views/SettingsView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "301"
-            endingLineNumber = "301"
-            landmarkName = "makePurchase(product:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "8ED7DDF1-1EB1-4866-8981-E2DD4079294F - 5a24f1cca3b3d318"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;RevenueCat.CustomerInfo&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; () in closure #1 @Swift.MainActor @Sendable (Swift.Optional&lt;RevenueCat.StoreTransaction&gt;, Swift.Optional&lt;RevenueCat.CustomerInfo&gt;, Swift.Optional&lt;__C.NSError&gt;, Swift.Bool) -&gt; () in RestRadar.SettingsView.makePurchase(product: RevenueCat.StoreProduct) -&gt; ()"
-                  moduleName = "RestRadar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Views/SettingsView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "328"
-                  endingLineNumber = "328"
-                  offsetFromSymbolStart = "572">
-               </Location>
-               <Location
-                  uuid = "8ED7DDF1-1EB1-4866-8981-E2DD4079294F - 5a24f1cca3b3d318"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;RevenueCat.CustomerInfo&gt;, Swift.Optional&lt;__C.NSError&gt;) -&gt; () in closure #1 @Swift.MainActor @Sendable (Swift.Optional&lt;RevenueCat.StoreTransaction&gt;, Swift.Optional&lt;RevenueCat.CustomerInfo&gt;, Swift.Optional&lt;__C.NSError&gt;, Swift.Bool) -&gt; () in RestRadar.SettingsView.makePurchase(product: RevenueCat.StoreProduct) -&gt; ()"
-                  moduleName = "RestRadar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Views/SettingsView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "328"
-                  endingLineNumber = "328"
-                  offsetFromSymbolStart = "472">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1502,8 +1310,8 @@
             filePath = "RestRadar/Views/BathroomView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1518,8 +1326,8 @@
             filePath = "RestRadar/Views/HomeView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
+            startingLineNumber = "97"
+            endingLineNumber = "97"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1534,8 +1342,8 @@
             filePath = "RestRadar/Models/Bathroom.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
             landmarkName = "distanceString(withUnit:)"
             landmarkType = "7">
             <Locations>
@@ -1570,6 +1378,212 @@
                   offsetFromSymbolStart = "2556">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6F690A6F-1D2C-459D-8F9F-DD2AB90B7D3C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RestRadar/Models/Bathroom.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
+            landmarkName = "backgroundColor"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0FAE4CD8-998B-4A04-9FD2-DE243218C0B6"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RestRadar/Models/Bathroom.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "backgroundColor"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BF4CDAF9-EB8E-49CA-B843-6E17428E97B9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RestRadar/Models/Bathroom.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "backgroundColor"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1AB33ECE-4CA7-43A4-8C3C-9121A69DD738"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RestRadar/Models/Bathroom.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "backgroundColor"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1698AFA9-B317-4BB9-9FB1-97BFA4434C49"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RestRadar/Models/Bathroom.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "backgroundColor"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "19EE2CC5-9036-4DF9-B203-2D2C10E52758"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RestRadar/Models/Bathroom.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "backgroundColor"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "19EE2CC5-9036-4DF9-B203-2D2C10E52758 - 88ed3c8bfa031003"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RestRadar.Category.backgroundColor.getter : SwiftUI.Color"
+                  moduleName = "RestRadar"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Models/Bathroom.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "40"
+                  endingLineNumber = "40"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  uuid = "19EE2CC5-9036-4DF9-B203-2D2C10E52758 - 88ed3c8bfa031003"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RestRadar.Category.backgroundColor.getter : SwiftUI.Color"
+                  moduleName = "RestRadar"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Models/Bathroom.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "40"
+                  endingLineNumber = "40"
+                  offsetFromSymbolStart = "128">
+               </Location>
+               <Location
+                  uuid = "19EE2CC5-9036-4DF9-B203-2D2C10E52758 - 88ed3c8bfa031003"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RestRadar.Category.backgroundColor.getter : SwiftUI.Color"
+                  moduleName = "RestRadar"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Models/Bathroom.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "40"
+                  endingLineNumber = "40"
+                  offsetFromSymbolStart = "300">
+               </Location>
+               <Location
+                  uuid = "19EE2CC5-9036-4DF9-B203-2D2C10E52758 - 88ed3c8bfa031003"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RestRadar.Category.backgroundColor.getter : SwiftUI.Color"
+                  moduleName = "RestRadar"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Models/Bathroom.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "40"
+                  endingLineNumber = "40"
+                  offsetFromSymbolStart = "356">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5C8B4245-9FF2-43E4-9585-1A092AB70184"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RestRadar/Models/Bathroom.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "backgroundColor"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8CACAC52-B9A9-46D7-AF61-83BDFF83115A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RestRadar/Gradients.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "forCurrentTime()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B01FE501-FE13-4440-AD01-7B4CF2375E7A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RestRadar/Gradients.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "gradient(forHour:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

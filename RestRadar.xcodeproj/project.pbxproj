@@ -14,7 +14,6 @@
 		22108B3F29D24203004EB964 /* CircleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22108B3E29D24203004EB964 /* CircleLabel.swift */; };
 		2224C65629CFC10600222FD4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65529CFC10600222FD4 /* MapView.swift */; };
 		2224C65829CFC2E400222FD4 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65729CFC2E400222FD4 /* Annotation.swift */; };
-		2224C65C29CFCB4B00222FD4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65B29CFCB4B00222FD4 /* Extensions.swift */; };
 		2224C66429D1D18400222FD4 /* CompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C66329D1D18400222FD4 /* CompassView.swift */; };
 		222881A12A4535650098B788 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881A02A4535650098B788 /* Rational.swift */; };
 		222881A22A4536200098B788 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881A02A4535650098B788 /* Rational.swift */; };
@@ -30,10 +29,31 @@
 		222881B42A4613840098B788 /* Karte in Frameworks */ = {isa = PBXBuildFile; productRef = 222881B32A4613840098B788 /* Karte */; };
 		222881B72A461D630098B788 /* TelemetryClient in Frameworks */ = {isa = PBXBuildFile; productRef = 222881B62A461D630098B788 /* TelemetryClient */; };
 		222881B92A462ADE0098B788 /* TelemetryClient in Frameworks */ = {isa = PBXBuildFile; productRef = 222881B82A462ADE0098B788 /* TelemetryClient */; };
+		222881BC2A4927590098B788 /* MKRouteStep+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881BB2A4927590098B788 /* MKRouteStep+Extensions.swift */; };
+		222881BE2A49277F0098B788 /* KarteApp+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881BD2A49277F0098B788 /* KarteApp+Extensions.swift */; };
+		222881C02A4927C50098B788 /* MKRouteStep+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881BB2A4927590098B788 /* MKRouteStep+Extensions.swift */; };
+		222881C22A49CDB00098B788 /* SKProduct+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881C12A49CDB00098B788 /* SKProduct+Extensions.swift */; };
+		222881C42A49CDF30098B788 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881C32A49CDF30098B788 /* Color+Extensions.swift */; };
+		222881C52A49CE2E0098B788 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881C32A49CDF30098B788 /* Color+Extensions.swift */; };
+		222881C72A49CF060098B788 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881C62A49CF060098B788 /* View+Extensions.swift */; };
+		222881C82A49CF190098B788 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881C62A49CF060098B788 /* View+Extensions.swift */; };
+		222881CA2A49CF260098B788 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881C92A49CF260098B788 /* String+Extensions.swift */; };
+		222881CC2A49CF950098B788 /* CLLocationCoordinate2D+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881CB2A49CF950098B788 /* CLLocationCoordinate2D+Extensions.swift */; };
+		222881CD2A49CFD00098B788 /* CLLocationCoordinate2D+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881CB2A49CF950098B788 /* CLLocationCoordinate2D+Extensions.swift */; };
+		222881CF2A49D0420098B788 /* UIScreen+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881CE2A49D0420098B788 /* UIScreen+Extensions.swift */; };
+		222881D22A49D0810098B788 /* CLLocationDistance+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881D12A49D0810098B788 /* CLLocationDistance+Extensions.swift */; };
+		222881D32A49D0850098B788 /* CLLocationDistance+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881D12A49D0810098B788 /* CLLocationDistance+Extensions.swift */; };
+		222881D52A49D0AD0098B788 /* CLLocationDirection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881D42A49D0AD0098B788 /* CLLocationDirection+Extensions.swift */; };
+		222881D62A49D0B30098B788 /* CLLocationDirection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881D42A49D0AD0098B788 /* CLLocationDirection+Extensions.swift */; };
+		222881D82A49D0DF0098B788 /* BinaryFloatingPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881D72A49D0DF0098B788 /* BinaryFloatingPoint+Extensions.swift */; };
+		222881D92A49D0DF0098B788 /* BinaryFloatingPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881D72A49D0DF0098B788 /* BinaryFloatingPoint+Extensions.swift */; };
+		222881DB2A49D10B0098B788 /* StepDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881DA2A49D10B0098B788 /* StepDirection.swift */; };
+		222881DC2A49D10B0098B788 /* StepDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881DA2A49D10B0098B788 /* StepDirection.swift */; };
+		222881DE2A49E1D70098B788 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881DD2A49E1D70098B788 /* RatingView.swift */; };
 		222AD8B429E2362700A18E76 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B329E2362700A18E76 /* SettingsView.swift */; };
 		222AD8B629E2392000A18E76 /* SettingsAttendant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B529E2392000A18E76 /* SettingsAttendant.swift */; };
 		222AD8B829E27DF500A18E76 /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B729E27DF500A18E76 /* LocationSearchView.swift */; };
-		2242742B29E5A8ED00F2C196 /* Gradients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242742A29E5A8ED00F2C196 /* Gradients.swift */; };
+		2242742B29E5A8ED00F2C196 /* Gradient+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242742A29E5A8ED00F2C196 /* Gradient+Extensions.swift */; };
 		2242742E29E60E2D00F2C196 /* Solar in Frameworks */ = {isa = PBXBuildFile; productRef = 2242742D29E60E2D00F2C196 /* Solar */; };
 		2242ABF929E843E300AFD64F /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2242ABF829E843E300AFD64F /* WidgetKit.framework */; };
 		2242ABFB29E843E300AFD64F /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2242ABFA29E843E300AFD64F /* SwiftUI.framework */; };
@@ -45,8 +65,7 @@
 		2242AC0E29E8463F00AFD64F /* Bathroom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C9436629C64A0100E41651 /* Bathroom.swift */; };
 		2242AC0F29E8481900AFD64F /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222AD8B729E27DF500A18E76 /* LocationSearchView.swift */; };
 		2242AC1029E8482800AFD64F /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65729CFC2E400222FD4 /* Annotation.swift */; };
-		2242AC1129E8483000AFD64F /* Gradients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242742A29E5A8ED00F2C196 /* Gradients.swift */; };
-		2242AC1229E8483A00AFD64F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C65B29CFCB4B00222FD4 /* Extensions.swift */; };
+		2242AC1129E8483000AFD64F /* Gradient+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242742A29E5A8ED00F2C196 /* Gradient+Extensions.swift */; };
 		2242AC1429E8495D00AFD64F /* Solar in Frameworks */ = {isa = PBXBuildFile; productRef = 2242AC1329E8495D00AFD64F /* Solar */; };
 		2242AC1529E85BE300AFD64F /* CircleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22108B3E29D24203004EB964 /* CircleLabel.swift */; };
 		2242AC1629E85BE500AFD64F /* CompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224C66329D1D18400222FD4 /* CompassView.swift */; };
@@ -55,19 +74,19 @@
 		2242AC1D29EA52CF00AFD64F /* FilteringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC1C29EA52CF00AFD64F /* FilteringView.swift */; };
 		2242AC2329EB448600AFD64F /* Shiny in Frameworks */ = {isa = PBXBuildFile; productRef = 2242AC2229EB448600AFD64F /* Shiny */; };
 		2242AC2529EB44D200AFD64F /* Shiny in Frameworks */ = {isa = PBXBuildFile; productRef = 2242AC2429EB44D200AFD64F /* Shiny */; };
-		2242AC2729EB8E4900AFD64F /* CompactStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2629EB8E4900AFD64F /* CompactStatsView.swift */; };
 		2242AC2929F775C700AFD64F /* BathroomSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2829F775C700AFD64F /* BathroomSummaryView.swift */; };
 		2242AC2C29FA0AB300AFD64F /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2B29FA0AB300AFD64F /* AppIcon.swift */; };
 		225BDBB22A171FD500FB0DA5 /* BathroomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221CCF782A04A7B800B0E171 /* BathroomList.swift */; };
 		225BDBB52A212C1D00FB0DA5 /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 225BDBB42A212C1D00FB0DA5 /* SwiftCSV */; };
 		225BDBB72A212F1600FB0DA5 /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 225BDBB62A212F1600FB0DA5 /* SwiftCSV */; };
-		225BDBBF2A2131C200FB0DA5 /* queenslibraries.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBBE2A2131C200FB0DA5 /* queenslibraries.csv */; };
-		225BDBC02A2131C200FB0DA5 /* queenslibraries.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBBE2A2131C200FB0DA5 /* queenslibraries.csv */; };
 		225BDBC82A213DAE00FB0DA5 /* libraries.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBC72A213DAE00FB0DA5 /* libraries.csv */; };
 		225BDBC92A213DAE00FB0DA5 /* libraries.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBC72A213DAE00FB0DA5 /* libraries.csv */; };
 		225BDBCB2A215C6B00FB0DA5 /* targets.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBCA2A215C6B00FB0DA5 /* targets.csv */; };
 		225BDBCC2A215C6B00FB0DA5 /* targets.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBCA2A215C6B00FB0DA5 /* targets.csv */; };
 		228ED6D02A2D3EAD00F3D293 /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228ED6CF2A2D3EAD00F3D293 /* MailView.swift */; };
+		22B4867B2A49ECA6001C2CA1 /* EntryCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B4867A2A49ECA6001C2CA1 /* EntryCodeView.swift */; };
+		22B4867C2A49ED73001C2CA1 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881DD2A49E1D70098B788 /* RatingView.swift */; };
+		22B4867D2A49ED76001C2CA1 /* EntryCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B4867A2A49ECA6001C2CA1 /* EntryCodeView.swift */; };
 		22C9436729C64A0100E41651 /* Bathroom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C9436629C64A0100E41651 /* Bathroom.swift */; };
 		22C9436929C64EB100E41651 /* BathroomAttendant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C9436829C64EB100E41651 /* BathroomAttendant.swift */; };
 		22C9436B29C7937700E41651 /* LocationAttendant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C9436A29C7937700E41651 /* LocationAttendant.swift */; };
@@ -115,17 +134,29 @@
 		221CCF782A04A7B800B0E171 /* BathroomList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomList.swift; sourceTree = "<group>"; };
 		2224C65529CFC10600222FD4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		2224C65729CFC2E400222FD4 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
-		2224C65B29CFCB4B00222FD4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2224C66329D1D18400222FD4 /* CompassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassView.swift; sourceTree = "<group>"; };
 		222881A02A4535650098B788 /* Rational.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rational.swift; sourceTree = "<group>"; };
 		222881A82A460D7C0098B788 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		222881AA2A460D860098B788 /* TransportMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportMode.swift; sourceTree = "<group>"; };
 		222881AC2A460DA40098B788 /* DistanceUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceUnit.swift; sourceTree = "<group>"; };
 		222881B12A460DCC0098B788 /* MapProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapProvider.swift; sourceTree = "<group>"; };
+		222881BB2A4927590098B788 /* MKRouteStep+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKRouteStep+Extensions.swift"; sourceTree = "<group>"; };
+		222881BD2A49277F0098B788 /* KarteApp+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KarteApp+Extensions.swift"; sourceTree = "<group>"; };
+		222881C12A49CDB00098B788 /* SKProduct+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+Extensions.swift"; sourceTree = "<group>"; };
+		222881C32A49CDF30098B788 /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
+		222881C62A49CF060098B788 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
+		222881C92A49CF260098B788 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		222881CB2A49CF950098B788 /* CLLocationCoordinate2D+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Extensions.swift"; sourceTree = "<group>"; };
+		222881CE2A49D0420098B788 /* UIScreen+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extensions.swift"; sourceTree = "<group>"; };
+		222881D12A49D0810098B788 /* CLLocationDistance+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationDistance+Extensions.swift"; sourceTree = "<group>"; };
+		222881D42A49D0AD0098B788 /* CLLocationDirection+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationDirection+Extensions.swift"; sourceTree = "<group>"; };
+		222881D72A49D0DF0098B788 /* BinaryFloatingPoint+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BinaryFloatingPoint+Extensions.swift"; sourceTree = "<group>"; };
+		222881DA2A49D10B0098B788 /* StepDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepDirection.swift; sourceTree = "<group>"; };
+		222881DD2A49E1D70098B788 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		222AD8B329E2362700A18E76 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		222AD8B529E2392000A18E76 /* SettingsAttendant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAttendant.swift; sourceTree = "<group>"; };
 		222AD8B729E27DF500A18E76 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
-		2242742A29E5A8ED00F2C196 /* Gradients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gradients.swift; sourceTree = "<group>"; };
+		2242742A29E5A8ED00F2C196 /* Gradient+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gradient+Extensions.swift"; sourceTree = "<group>"; };
 		2242742F29E66B0600F2C196 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2242ABF629E843E300AFD64F /* ClosestBathroomWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClosestBathroomWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		2242ABF829E843E300AFD64F /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -135,13 +166,12 @@
 		2242AC0329E843E400AFD64F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2242AC0729E843E500AFD64F /* ClosestBathroomWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClosestBathroomWidgetExtension.entitlements; sourceTree = "<group>"; };
 		2242AC1C29EA52CF00AFD64F /* FilteringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringView.swift; sourceTree = "<group>"; };
-		2242AC2629EB8E4900AFD64F /* CompactStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactStatsView.swift; sourceTree = "<group>"; };
 		2242AC2829F775C700AFD64F /* BathroomSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomSummaryView.swift; sourceTree = "<group>"; };
 		2242AC2B29FA0AB300AFD64F /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
-		225BDBBE2A2131C200FB0DA5 /* queenslibraries.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = queenslibraries.csv; sourceTree = "<group>"; };
 		225BDBC72A213DAE00FB0DA5 /* libraries.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libraries.csv; sourceTree = "<group>"; };
 		225BDBCA2A215C6B00FB0DA5 /* targets.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = targets.csv; sourceTree = "<group>"; };
 		228ED6CF2A2D3EAD00F3D293 /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
+		22B4867A2A49ECA6001C2CA1 /* EntryCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryCodeView.swift; sourceTree = "<group>"; };
 		22C9436629C64A0100E41651 /* Bathroom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bathroom.swift; sourceTree = "<group>"; };
 		22C9436829C64EB100E41651 /* BathroomAttendant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomAttendant.swift; sourceTree = "<group>"; };
 		22C9436A29C7937700E41651 /* LocationAttendant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAttendant.swift; sourceTree = "<group>"; };
@@ -191,6 +221,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		222881BA2A4927460098B788 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				222881D72A49D0DF0098B788 /* BinaryFloatingPoint+Extensions.swift */,
+				222881C32A49CDF30098B788 /* Color+Extensions.swift */,
+				222881CB2A49CF950098B788 /* CLLocationCoordinate2D+Extensions.swift */,
+				222881D42A49D0AD0098B788 /* CLLocationDirection+Extensions.swift */,
+				222881D12A49D0810098B788 /* CLLocationDistance+Extensions.swift */,
+				2242742A29E5A8ED00F2C196 /* Gradient+Extensions.swift */,
+				222881BD2A49277F0098B788 /* KarteApp+Extensions.swift */,
+				222881BB2A4927590098B788 /* MKRouteStep+Extensions.swift */,
+				222881C12A49CDB00098B788 /* SKProduct+Extensions.swift */,
+				222881C92A49CF260098B788 /* String+Extensions.swift */,
+				222881CE2A49D0420098B788 /* UIScreen+Extensions.swift */,
+				222881C62A49CF060098B788 /* View+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		2242ABF729E843E300AFD64F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -214,13 +263,12 @@
 		2242AC2E29FC807800AFD64F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				2242AC2829F775C700AFD64F /* BathroomSummaryView.swift */,
-				2207D0772A33CC5600948AEB /* DirectionsSummaryView.swift */,
 				22DE02EB29C8084F00C21D67 /* BathroomView.swift */,
+				2242AC2829F775C700AFD64F /* BathroomSummaryView.swift */,
 				22108B3E29D24203004EB964 /* CircleLabel.swift */,
-				2242AC2629EB8E4900AFD64F /* CompactStatsView.swift */,
 				2224C66329D1D18400222FD4 /* CompassView.swift */,
 				22D43DD529D47B730085CA4C /* DirectionsView.swift */,
+				2207D0772A33CC5600948AEB /* DirectionsSummaryView.swift */,
 				2242AC1C29EA52CF00AFD64F /* FilteringView.swift */,
 				22F2521329B57B990010223E /* HomeView.swift */,
 				222AD8B729E27DF500A18E76 /* LocationSearchView.swift */,
@@ -229,6 +277,8 @@
 				220D17B92A3589F500DECB69 /* LookAroundView.swift */,
 				222AD8B329E2362700A18E76 /* SettingsView.swift */,
 				228ED6CF2A2D3EAD00F3D293 /* MailView.swift */,
+				222881DD2A49E1D70098B788 /* RatingView.swift */,
+				22B4867A2A49ECA6001C2CA1 /* EntryCodeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -244,6 +294,7 @@
 				222881AA2A460D860098B788 /* TransportMode.swift */,
 				222881AC2A460DA40098B788 /* DistanceUnit.swift */,
 				222881B12A460DCC0098B788 /* MapProvider.swift */,
+				222881DA2A49D10B0098B788 /* StepDirection.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -286,15 +337,13 @@
 				22ECB1142A01443F00A74320 /* RestRadar.entitlements */,
 				2242742F29E66B0600F2C196 /* Info.plist */,
 				22F2521129B57B990010223E /* RestRadarApp.swift */,
+				2242AC3029FC80A300AFD64F /* Attendants */,
+				222881BA2A4927460098B788 /* Extensions */,
 				2242AC2F29FC808600AFD64F /* Models */,
 				2242AC2E29FC807800AFD64F /* Views */,
-				2242AC3029FC80A300AFD64F /* Attendants */,
-				2224C65B29CFCB4B00222FD4 /* Extensions.swift */,
-				2242742A29E5A8ED00F2C196 /* Gradients.swift */,
 				221CCF782A04A7B800B0E171 /* BathroomList.swift */,
 				225BDBC72A213DAE00FB0DA5 /* libraries.csv */,
 				225BDBCA2A215C6B00FB0DA5 /* targets.csv */,
-				225BDBBE2A2131C200FB0DA5 /* queenslibraries.csv */,
 				22F2521529B57B990010223E /* Assets.xcassets */,
 				22F2521729B57B990010223E /* Preview Content */,
 			);
@@ -416,7 +465,6 @@
 			files = (
 				225BDBC92A213DAE00FB0DA5 /* libraries.csv in Resources */,
 				2242AC0229E843E400AFD64F /* Assets.xcassets in Resources */,
-				225BDBC02A2131C200FB0DA5 /* queenslibraries.csv in Resources */,
 				225BDBCC2A215C6B00FB0DA5 /* targets.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -426,7 +474,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				225BDBC82A213DAE00FB0DA5 /* libraries.csv in Resources */,
-				225BDBBF2A2131C200FB0DA5 /* queenslibraries.csv in Resources */,
 				225BDBCB2A215C6B00FB0DA5 /* targets.csv in Resources */,
 				22F2521929B57B990010223E /* Preview Assets.xcassets in Resources */,
 				22F2521629B57B990010223E /* Assets.xcassets in Resources */,
@@ -440,23 +487,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2242AC1229E8483A00AFD64F /* Extensions.swift in Sources */,
+				222881CD2A49CFD00098B788 /* CLLocationCoordinate2D+Extensions.swift in Sources */,
 				2242AC0F29E8481900AFD64F /* LocationSearchView.swift in Sources */,
+				22B4867D2A49ED76001C2CA1 /* EntryCodeView.swift in Sources */,
+				222881C82A49CF190098B788 /* View+Extensions.swift in Sources */,
+				22B4867C2A49ED73001C2CA1 /* RatingView.swift in Sources */,
+				222881DC2A49D10B0098B788 /* StepDirection.swift in Sources */,
 				222881AF2A460DBD0098B788 /* TransportMode.swift in Sources */,
 				222881A42A46046D0098B788 /* AppIcon.swift in Sources */,
 				2242AC0C29E8455A00AFD64F /* BathroomAttendant.swift in Sources */,
 				222881A22A4536200098B788 /* Rational.swift in Sources */,
 				2242AC1729E85BFF00AFD64F /* MapView.swift in Sources */,
-				2242AC1129E8483000AFD64F /* Gradients.swift in Sources */,
+				2242AC1129E8483000AFD64F /* Gradient+Extensions.swift in Sources */,
 				2242AC0D29E8456500AFD64F /* LocationAttendant.swift in Sources */,
 				2242AC1829E9072000AFD64F /* SettingsAttendant.swift in Sources */,
+				222881D62A49D0B30098B788 /* CLLocationDirection+Extensions.swift in Sources */,
+				222881D32A49D0850098B788 /* CLLocationDistance+Extensions.swift in Sources */,
 				22D691B72A055BCA00291E83 /* BathroomList.swift in Sources */,
+				222881C52A49CE2E0098B788 /* Color+Extensions.swift in Sources */,
 				2242AC0E29E8463F00AFD64F /* Bathroom.swift in Sources */,
 				2242AC1029E8482800AFD64F /* Annotation.swift in Sources */,
 				222881B02A460DBD0098B788 /* Theme.swift in Sources */,
+				222881D92A49D0DF0098B788 /* BinaryFloatingPoint+Extensions.swift in Sources */,
 				2207D0792A33CC5600948AEB /* DirectionsSummaryView.swift in Sources */,
 				2242AC1629E85BE500AFD64F /* CompassView.swift in Sources */,
 				222881AE2A460DBD0098B788 /* DistanceUnit.swift in Sources */,
+				222881C02A4927C50098B788 /* MKRouteStep+Extensions.swift in Sources */,
 				2242AC1529E85BE300AFD64F /* CircleLabel.swift in Sources */,
 				2242AC0029E843E300AFD64F /* ClosestBathroomWidget.swift in Sources */,
 			);
@@ -469,30 +525,42 @@
 				222881A92A460D7C0098B788 /* Theme.swift in Sources */,
 				2224C65629CFC10600222FD4 /* MapView.swift in Sources */,
 				2242AC2C29FA0AB300AFD64F /* AppIcon.swift in Sources */,
+				222881C72A49CF060098B788 /* View+Extensions.swift in Sources */,
+				222881CA2A49CF260098B788 /* String+Extensions.swift in Sources */,
 				22D43DD629D47B730085CA4C /* DirectionsView.swift in Sources */,
+				222881CC2A49CF950098B788 /* CLLocationCoordinate2D+Extensions.swift in Sources */,
 				22DE02EC29C8084F00C21D67 /* BathroomView.swift in Sources */,
 				22C9436B29C7937700E41651 /* LocationAttendant.swift in Sources */,
 				222881A12A4535650098B788 /* Rational.swift in Sources */,
+				222881BE2A49277F0098B788 /* KarteApp+Extensions.swift in Sources */,
 				2224C66429D1D18400222FD4 /* CompassView.swift in Sources */,
 				222AD8B829E27DF500A18E76 /* LocationSearchView.swift in Sources */,
+				222881DB2A49D10B0098B788 /* StepDirection.swift in Sources */,
 				228ED6D02A2D3EAD00F3D293 /* MailView.swift in Sources */,
 				220D17BA2A3589F500DECB69 /* LookAroundView.swift in Sources */,
 				22C9436729C64A0100E41651 /* Bathroom.swift in Sources */,
+				222881C42A49CDF30098B788 /* Color+Extensions.swift in Sources */,
 				220D17BC2A36A77900DECB69 /* WalkingDistanceMapView.swift in Sources */,
 				222AD8B629E2392000A18E76 /* SettingsAttendant.swift in Sources */,
-				2242AC2729EB8E4900AFD64F /* CompactStatsView.swift in Sources */,
 				222881B22A460DCC0098B788 /* MapProvider.swift in Sources */,
+				222881D22A49D0810098B788 /* CLLocationDistance+Extensions.swift in Sources */,
 				2242AC2929F775C700AFD64F /* BathroomSummaryView.swift in Sources */,
-				2224C65C29CFCB4B00222FD4 /* Extensions.swift in Sources */,
 				222AD8B429E2362700A18E76 /* SettingsView.swift in Sources */,
-				2242742B29E5A8ED00F2C196 /* Gradients.swift in Sources */,
+				2242742B29E5A8ED00F2C196 /* Gradient+Extensions.swift in Sources */,
 				22C9436929C64EB100E41651 /* BathroomAttendant.swift in Sources */,
+				222881DE2A49E1D70098B788 /* RatingView.swift in Sources */,
+				222881D52A49D0AD0098B788 /* CLLocationDirection+Extensions.swift in Sources */,
 				22F2521429B57B990010223E /* HomeView.swift in Sources */,
+				222881D82A49D0DF0098B788 /* BinaryFloatingPoint+Extensions.swift in Sources */,
+				22B4867B2A49ECA6001C2CA1 /* EntryCodeView.swift in Sources */,
+				222881C22A49CDB00098B788 /* SKProduct+Extensions.swift in Sources */,
 				225BDBB22A171FD500FB0DA5 /* BathroomList.swift in Sources */,
 				2224C65829CFC2E400222FD4 /* Annotation.swift in Sources */,
 				22108B3F29D24203004EB964 /* CircleLabel.swift in Sources */,
 				222881AD2A460DA40098B788 /* DistanceUnit.swift in Sources */,
 				222881AB2A460D860098B788 /* TransportMode.swift in Sources */,
+				222881CF2A49D0420098B788 /* UIScreen+Extensions.swift in Sources */,
+				222881BC2A4927590098B788 /* MKRouteStep+Extensions.swift in Sources */,
 				22F2521229B57B990010223E /* RestRadarApp.swift in Sources */,
 				2242AC1D29EA52CF00AFD64F /* FilteringView.swift in Sources */,
 				2207D0782A33CC5600948AEB /* DirectionsSummaryView.swift in Sources */,

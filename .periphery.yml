@@ -1,0 +1,8 @@
+project: RestRadar.xcodeproj
+retain_objc_accessible: true
+schemes:
+- ClosestBathroomWidgetExtension
+- RestRadar
+targets:
+- ClosestBathroomWidgetExtension
+- RestRadar

@@ -7,6 +7,7 @@
 
 import Karte
 import MapKit
+import MessageUI
 import SafariServices
 import Shiny
 import SwiftUI
@@ -18,7 +19,9 @@ struct BathroomView: View {
     @StateObject var bathroom: Bathroom
     
     @State var scene: MKLookAroundScene?
-    
+    @State var result: Result<MFMailComposeResult, Error>? = nil
+    @State var isShowingMailView = false
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 8) {
@@ -42,6 +45,51 @@ struct BathroomView: View {
                 }
                 
                 VStack(alignment: .center, spacing: 8) {
+                    HStack {
+                        Group {
+                            Spacer()
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Text("In")
+                                        .lineLimit(1)
+                                        .font(.title)
+                                        .foregroundColor(.primary)
+                                    bathroom.category.image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(height: UIFont.preferredFont(forTextStyle: .title2).pointSize)
+                                        .foregroundColor(.primary)
+                                }
+                                Text(bathroom.category.rawValue.lowercased())
+                                    .font(.caption)
+                                    .foregroundColor(.primary)
+                            }.fixedSize(horizontal: true, vertical: true)
+                            Spacer()
+                        }
+                        
+                        if bathroom.category == .store {
+                            Group {
+                                Divider()
+                                    .overlay(.primary)
+                                Spacer()
+                                EntryCodeView(bathroom: bathroom)
+                                Spacer()
+                            }
+                        }
+
+                        Group {
+                            Divider()
+                                .overlay(.primary)
+                            Spacer()
+                            RatingView(bathroom: bathroom).fixedSize(horizontal: true, vertical: true)
+                            Spacer()
+                        }
+                    }
+                    .frame(height: 50)
+                    
+                    Divider()
+                        .overlay(.primary)
+                    
                     LookAroundView(scene: self.$scene)
                         .cornerRadius(8)
                         .clipped()
@@ -84,9 +132,6 @@ struct BathroomView: View {
                                 Image(systemName: "map")
                                     .foregroundColor(.primary)
                                     .font(.headline)
-                                Text("Maps")
-                                    .foregroundColor(.primary)
-                                    .font(.headline)
                             }.padding(6)
                         }.background {
                             RoundedRectangle(cornerRadius: 12)
@@ -103,9 +148,6 @@ struct BathroomView: View {
                                     Image(systemName: "safari")
                                         .foregroundColor(.primary)
                                         .font(.headline)
-                                    Text("Info")
-                                        .foregroundColor(.primary)
-                                        .font(.headline)
                                 }.padding(6)
                             }.background {
                                 RoundedRectangle(cornerRadius: 12)
@@ -115,6 +157,24 @@ struct BathroomView: View {
                     }
                     
                     Spacer()
+                    
+                    Button {
+                        self.isShowingMailView.toggle()
+                    } label: {
+                        Group {
+                            HStack(spacing: 4) {
+                                Image(systemName: "questionmark.bubble")
+                                    .foregroundColor(.primary)
+                                    .font(.headline)
+                            }.padding(6)
+                        }.background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                        }
+                    }.disabled(!MFMailComposeViewController.canSendMail())
+                        .sheet(isPresented: $isShowingMailView) {
+                            MailView(result: self.$result, subject: "\(bathroom.id)")
+                        }
                                         
                     let isFavorite = bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id })
                     Button {
@@ -132,14 +192,6 @@ struct BathroomView: View {
                                     .clipped()
                                     .id("\(isFavorite)")
                                     .transition(AnyTransition.opacity)
-                                if !isFavorite {
-                                    Text("Save")
-                                        .font(.headline)
-                                        .foregroundColor(.primary)
-                                        .clipped()
-                                        .id("\(isFavorite)")
-                                        .transition(AnyTransition.opacity)
-                                }
                             }.padding(6)
                                 .clipped()
                         }.background {

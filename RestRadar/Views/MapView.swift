@@ -46,7 +46,7 @@ struct MapView: UIViewRepresentable {
       mapView.preferredConfiguration = configuration
       
       let camera = MKMapCamera()
-      if let current = locationAttendant.current, let distance = bathroom.distanceMeters()?.value {
+      if let distance = bathroom.distanceMeters()?.value {
           camera.centerCoordinateDistance = distance*2.5
       }
       mapView.camera = camera
@@ -67,7 +67,7 @@ struct MapView: UIViewRepresentable {
       if let current = locationAttendant.current {
           camera.centerCoordinate = current.coordinate.midpointTo(location: bathroom.coordinate)
       }
-      if let current = locationAttendant.current, let distance = bathroom.distanceMeters()?.value {
+      if let distance = bathroom.distanceMeters()?.value {
           camera.centerCoordinateDistance = distance*2.5
       }
       uiView.removeOverlays(uiView.overlays)

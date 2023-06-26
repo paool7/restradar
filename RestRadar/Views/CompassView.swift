@@ -16,7 +16,7 @@ struct CompassView: View {
     
     var body: some View {
         if let current = locationAttendant.current, let currentHeading = locationAttendant.currentHeading {
-            CompassShapeView(rotation: currentHeading.angle(current.coordinate, bathroom.coordinate))
+            CompassShapeView(rotation: current.coordinate.angle(bathroom.coordinate, offset: currentHeading))
                 .aspectRatio(contentMode: .fit)
                 .frame(maxWidth: .infinity)
                 .overlay {

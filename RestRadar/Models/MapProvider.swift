@@ -9,14 +9,6 @@ import Foundation
 import SwiftUI
 import Karte
 
-extension Karte.App {
-    var supportsWalking: Bool {
-        if self == .appleMaps || self == .googleMaps { return true }
-        return false
-    }
-}
-
-
 enum MapProvider: Int, CaseIterable {
     case apple
     case google

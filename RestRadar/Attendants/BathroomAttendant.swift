@@ -91,9 +91,6 @@ class BathroomAttendant: ObservableObject {
     }
     
     func filterBathrooms(onlyFavorites: Bool) {
-        guard let current = LocationAttendant.shared.current else {
-            return
-        }
         var bathroomList = onlyFavorites ? favoriteBathrooms : self.allBathrooms
         bathroomList = bathroomList.sorted(by: { $0.distanceMeters()?.value ?? 1000 < $1.distanceMeters()?.value ?? 1000 })
         

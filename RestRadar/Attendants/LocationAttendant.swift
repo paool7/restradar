@@ -64,41 +64,6 @@ class LocationAttendant: NSObject, ObservableObject {
         self.locationManager.stopUpdatingLocation()
     }
     
-    func getDirections(to toId: String) {
-        if let current = self.current, let index = BathroomAttendant.shared.allBathrooms.firstIndex(where: {$0.id == toId}) {
-            let bathroom = BathroomAttendant.shared.allBathrooms[index]
-            self.getTravelDirections(sourceLocation: current.coordinate, endLocation: BathroomAttendant.shared.allBathrooms[index].coordinate) { directions, route in
-                bathroom.directions = directions
-                bathroom.route = route
-                if let travelTime = route?.expectedTravelTime {
-                    let travelMinutes = Int(travelTime/60)
-                    bathroom.directionsEta = "\(travelMinutes) minute\(travelMinutes == 1 ? "" : "s")"
-                }
-                BathroomAttendant.shared.allBathrooms[index] = bathroom
-            }
-        }
-    }
-    
-    func getDirections(toId: String) async throws -> Bathroom? {
-        if let current = self.current, let index = BathroomAttendant.shared.allBathrooms.firstIndex(where: {$0.id == toId}) {
-            let bathroom = BathroomAttendant.shared.allBathrooms[index]
-            do {
-                let result = try await self.getTravelDirections(sourceLocation: current.coordinate, endLocation: BathroomAttendant.shared.allBathrooms[index].coordinate)
-                bathroom.directions = result.directions
-                bathroom.route = result.route
-                if let travelTime = result.route?.expectedTravelTime {
-                        let travelMinutes = Int(travelTime/60)
-                        bathroom.directionsEta = "\(travelMinutes) minute\(travelMinutes == 1 ? "" : "s")"
-                }
-                BathroomAttendant.shared.allBathrooms[index] = bathroom
-                return bathroom
-            } catch {
-                return nil
-            }
-        }
-        return nil
-    }
-    
     func getLocation(from address: String, completion: @escaping (_ location: CLLocation?)-> Void) {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address) { (placemarks, error) in

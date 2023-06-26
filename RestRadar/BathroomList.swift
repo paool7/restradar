@@ -64,13 +64,8 @@ struct Constants {
             
             return Bathroom(name: item.name, accessibility: Accessibility(rawValue: item.accessibility ?? "unknown") ?? .unknown, coordinate: coordinate, address: item.address, id: item.id, url: item.url, category: .store)
         }
-        
-        for bathroom in playgroundBathrooms {
-            print(bathroom.description)
-        }
          
         let fullList = Array(Set((libraryBathrooms + playgroundBathrooms + targetStoreBathrooms)))
-        print(fullList.count)
         return fullList
     } catch {
         print(error)

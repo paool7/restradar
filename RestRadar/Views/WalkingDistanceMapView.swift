@@ -33,9 +33,9 @@ struct WalkingDistanceMapView: UIViewRepresentable {
       let mapView = MKMapView(frame: UIScreen.main.bounds)
       mapView.showsUserLocation = true
       mapView.isUserInteractionEnabled = false
+      mapView.backgroundColor = .secondarySystemBackground
       mapView.delegate = context.coordinator
 
-      mapView.backgroundColor = .secondarySystemBackground
       
       let configuration = MKStandardMapConfiguration(emphasisStyle: .default)
       mapView.preferredConfiguration = configuration
@@ -50,24 +50,19 @@ struct WalkingDistanceMapView: UIViewRepresentable {
   }
   
   func updateUIView(_ uiView: MKMapView, context: Context) {
+      uiView.camera.heading = currentHeading
+      uiView.camera.centerCoordinate = current.coordinate
+      uiView.camera.centerCoordinateDistance = walkingDistance*4
+
+      for annotation in uiView.annotations {
+          if !bathroomAttendant.visibleBathrooms.contains(where: {$0.annotation?.coordinate.latitude == annotation.coordinate.latitude && $0.annotation?.coordinate.longitude == annotation.coordinate.longitude}) {
+              uiView.removeAnnotation(annotation)
+          }
+      }
       
-      UIView.animate(withDuration: 0.1) {
-          uiView.camera.heading = currentHeading
-          uiView.camera.centerCoordinate = current.coordinate
-          uiView.camera.centerCoordinateDistance = walkingDistance*4
-      } completion: { success in
-          DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-              for annotation in uiView.annotations {
-                  if !bathroomAttendant.visibleBathrooms.contains(where: {$0.annotation?.coordinate.latitude == annotation.coordinate.latitude && $0.annotation?.coordinate.longitude == annotation.coordinate.longitude}) {
-                      uiView.removeAnnotation(annotation)
-                  }
-              }
-              
-              for visibleBathroom in bathroomAttendant.visibleBathrooms {
-                  if let annotation = visibleBathroom.annotation, !uiView.annotations.contains(where: {$0.coordinate.latitude == annotation.coordinate.latitude && $0.coordinate.longitude == annotation.coordinate.longitude}) {
-                      uiView.addAnnotation(annotation)
-                  }
-              }
+      for visibleBathroom in bathroomAttendant.visibleBathrooms {
+          if let annotation = visibleBathroom.annotation, !uiView.annotations.contains(where: {$0.coordinate.latitude == annotation.coordinate.latitude && $0.coordinate.longitude == annotation.coordinate.longitude}) {
+              uiView.addAnnotation(annotation)
           }
       }
   }

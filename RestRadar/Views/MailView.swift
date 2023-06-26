@@ -4,9 +4,10 @@ import TelemetryClient
 import UIKit
 
 struct MailView: UIViewControllerRepresentable {
-
     @Environment(\.presentationMode) var presentation
     @Binding var result: Result<MFMailComposeResult, Error>?
+    
+    var subject = "RestRadar"
 
     class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
 
@@ -43,7 +44,7 @@ struct MailView: UIViewControllerRepresentable {
         let vc = MFMailComposeViewController()
         vc.mailComposeDelegate = context.coordinator
         vc.setToRecipients(["paoolideas@gmail.com"])
-        vc.setSubject("RestRadar")
+        vc.setSubject(self.subject)
         return vc
     }
 

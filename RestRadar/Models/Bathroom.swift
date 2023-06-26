@@ -22,7 +22,6 @@ enum Category: String, Equatable {
     case library = "Library"
     case store = "Store"
     case playground = "Playground"
-    case unknown = "Unknown"
     
     var image: Image {
         switch self {
@@ -34,9 +33,31 @@ enum Category: String, Equatable {
             return Image(systemName: "books.vertical")
         case .playground:
             return Image(systemName: "figure.play")
-        case .unknown:
-            return Image(systemName: "oval.portrait.tophalf.filled")
         }
+    }
+    
+    var backgroundColor: Color {
+        if let gradient = Gradient.forCurrentTime(), let first = gradient.stops.first?.color, let last = gradient.stops.last?.color {
+            switch self {
+            case .store:
+                return first
+            case .park:
+                if gradient.stops.count >= 3 {
+                    return gradient.stops[1].color
+                } else {
+                    return Color.blend(color1: first, intensity1: 0.25, color2: last, intensity2: 0.75)
+                }
+            case .library:
+                if gradient.stops.count >= 4 {
+                    return gradient.stops[2].color
+                } else {
+                    return Color.blend(color1: first, intensity1: 0.75, color2: last, intensity2: 0.25)
+                }
+            case .playground:
+                return last
+            }
+        }
+        return Gradient.iridescent.stops.first!.color
     }
 }
 
@@ -44,7 +65,6 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     var code: String?
     var category: Category
     var address: String?
-    var hours: Hours?
     var id: String
     var name: String
     var accessibility: Accessibility = .unknown
@@ -52,49 +72,33 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
 
     @Published var coordinate: CLLocationCoordinate2D
     @Published var directions: [MKRoute.Step] = []
-    @Published var directionsEta: String?
-    @Published var heading: Double = 0.0
     @Published var route: MKRoute?
-    @Published var image: Image?
+    @Published var visitRating: Bool?
+
+    init(name: String, accessibility: Accessibility, coordinate: CLLocationCoordinate2D, address: String? = nil, code: String? = nil, id: String, url: String?, category: Category) {
+        self.name = name
+        self.accessibility = accessibility
+        self.address = address
+        self.code = code
+        self.id = id
+        self.coordinate = coordinate
+        self.url = url
+        self.category = category
+    }
     
-    func distanceUnitString() -> String? {
-        switch SettingsAttendant.shared.distanceMeasurement {
-        case .blocks:
-            let blocks = blockEstimate() ?? 0
-            return blocks == 1 ? "block" : "blocks"
-        case .steps:
-            return "step\(self.totalTime() ?? 0 == 1 ? "" : "s")"
-        case .milesfeet:
-            guard let distanceMiles = self.distance(unit: .miles),
-                  let distanceFeet = self.distance(unit: .feet) else { return nil }
-            
-            let feetString = distanceFeet == 1.0 ? "foot" : "feet"
-            let milesString = distanceMiles == 1.0 ? "mile" : "miles"
-            if distanceMiles > 1.0 {
-                return milesString
-            } else {
-                if distanceFeet <= 100 {
-                    return feetString
-                } else {
-                    return "mile"
-                }
-            }
-            
-        case .meterskilometers:
-            guard let distanceKilometers = self.distance(unit: .kilometers),
-                  let distanceMeters = self.distance(unit: .meters) else { return nil }
-            
-            let metersString = distanceMeters == 1.0 ? "meter" : "meters"
-            let kilometersString = distanceKilometers == 1.0 ? "km" : "kms"
-            if distanceKilometers > 1.0 {
-                return kilometersString
-            } else {
-                if distanceMeters <= 100 {
-                    return metersString
-                } else {
-                    return "km"
-                }
-            }
+    public func hash(into hasher: inout Hasher) {
+        return hasher.combine(id)
+    }
+    
+    static func ==(lhs: Bathroom, rhs: Bathroom) -> Bool {
+        return (lhs.id == rhs.id && lhs.directions == rhs.directions && lhs.coordinate.latitude == rhs.coordinate.latitude && lhs.coordinate.longitude == rhs.coordinate.longitude && lhs.visitRating == rhs.visitRating && lhs.address == rhs.address)
+    }
+    
+    var description : String {
+        get {
+            return """
+            { "name": \"\(name)\", "id": "\(self.id)", "lat": \(self.coordinate.latitude.description), "lng": \(self.coordinate.longitude.description), "accessibility": \"\(accessibility.rawValue)\", "address": \"\(address ?? "")\", "url": \"\(url ?? "")\" },
+            """
         }
     }
     
@@ -145,11 +149,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
             LocationAttendant.shared.getTravelDirections(sourceLocation: current.coordinate, endLocation: self.coordinate) { directions, route in
                 self.directions = directions
                 self.route = route
-                if let travelTime = route?.expectedTravelTime {
-                    let travelMinutes = Int(travelTime/60)
-                    self.directionsEta = "\(travelMinutes) minute\(travelMinutes == 1 ? "" : "s")"
-                }
-                
+
                 if let index = BathroomAttendant.shared.allBathrooms.firstIndex(of: self) {
                     BathroomAttendant.shared.allBathrooms[index] = self
                 }
@@ -164,10 +164,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
             let result = try await LocationAttendant.shared.getTravelDirections(sourceLocation: current.coordinate, endLocation: self.coordinate)
             self.directions = result.directions
             self.route = result.route
-            if let travelTime = result.route?.expectedTravelTime {
-                    let travelMinutes = Int(travelTime/60)
-                    self.directionsEta = "\(travelMinutes) minute\(travelMinutes == 1 ? "" : "s")"
-            }
+
             return true
         } catch {
             return false
@@ -197,13 +194,6 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
         }
         return summary
     }
-        
-//    func heading(current: CLLocation) -> Double {
-//        if let firstStep = directions.first {
-//            return firstStep.streetHeading
-//        }
-//        return 0.0
-//    }
 
     var annotation: Annotation? {
         return Annotation(title: name, coordinate: coordinate)
@@ -232,15 +222,6 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
         let locationDistance = location.distance(from: current)
         
         return locationDistance.travelTime
-    }
-    
-    func timeAway() -> String? {
-        guard let current = LocationAttendant.shared.current else { return nil }
-
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        let locationDistance = location.distance(from: current)
-        
-        return "\(locationDistance.travelTime) minute\(locationDistance.travelTime == 1 ? "" : "s")"
     }
     
     func totalSteps() -> Int? {
@@ -296,59 +277,5 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
         guard let currentStep = self.currentRouteStep() else { return 0 }
         
         return self.directions.firstIndex(of: currentStep) ?? 0
-    }
-    
-    init(name: String, accessibility: Accessibility, coordinate: CLLocationCoordinate2D, address: String? = nil, code: String? = nil, hours: Hours? = nil, id: String, url: String?, category: Category) {
-        self.name = name
-        self.accessibility = accessibility
-        self.address = address
-        self.code = code
-        self.hours = hours
-        self.id = id
-        self.coordinate = coordinate
-        self.url = url
-        self.category = category        
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        return hasher.combine(id)
-    }
-    
-    static func ==(lhs: Bathroom, rhs: Bathroom) -> Bool {
-        return (lhs.id == rhs.id && lhs.directions == rhs.directions && lhs.coordinate.latitude == rhs.coordinate.latitude && lhs.coordinate.longitude == rhs.coordinate.longitude && lhs.hours == rhs.hours && lhs.address == rhs.address)
-    }
-    
-    var description : String {
-        get {
-            return """
-            { "name": \"\(name)\", "id": "\(self.id)", "lat": \(self.coordinate.latitude.description), "lng": \(self.coordinate.longitude.description), "accessibility": \"\(accessibility.rawValue)\", "address": \"\(address ?? "")\", "url": \"\(url ?? "")\" },
-            """
-        }
-    }
-}
-
-struct Hours: Codable, Hashable {
-    var open: Date
-    var close: Date
-}
-
-extension MKRoute.Step {
-    func naturalCurrentInstruction() -> String? {
-        guard let blocks = self.blocksLeft(), let distanceLeft = self.distanceLeft() else { return self.instructions }
-        let naturalStart = "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix), ") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix), " : ""))"
-        
-        return "\(naturalStart)\(self.instructions)"
-    }
-    
-    var naturalInstructions: String? {
-        guard let blocks = self.blocks else { return self.instructions }
-        let naturalStart = "\(blocks > 0 ? ("\(blocks) block\(blocks == 1 ? "" : "s") later, ") : (self.distance.steps > 10 ? "\(self.distance.steps) step\(self.distance.steps == 1 ? "" : "s") later, " : ""))"
-        
-        return "\(naturalStart)\(self.instructions)"
-    }
-    
-    func naturalCurrentIntro() -> String? {
-        guard let blocks = self.blocksLeft(), let distanceLeft = self.distanceLeft() else { return self.instructions }
-        return "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix), ") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix), " : " "))"
     }
 }

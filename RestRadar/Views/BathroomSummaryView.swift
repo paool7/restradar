@@ -21,11 +21,11 @@ struct BathroomSummaryView: View {
         VStack(alignment: .leading) {
             HStack {
                 RoundedRectangle(cornerRadius: 8)
-                    .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                    .fill(bathroom.category.backgroundColor)
                     .overlay {
                         bathroom.category.image
                             .font(.title3)
-                            .foregroundColor(.primary)
+                            .foregroundColor(bathroom.category.backgroundColor.accessibleFontColor)
                     }
                     .aspectRatio(1.0, contentMode: .fit)
                     .frame(height: UIFont.preferredFont(forTextStyle: .title2).pointSize * 2 )
@@ -79,7 +79,7 @@ struct BathroomSummaryView: View {
                             Image(systemName: "arrowshape.up.circle")
                                 .font(.title2)
                                 .foregroundColor(.primary)
-                                .rotationEffect(Angle(degrees: currentHeading.angle(current.coordinate, bathroom.coordinate)))
+                                .rotationEffect(Angle(degrees: current.coordinate.angle(bathroom.coordinate, offset: currentHeading)))
                             Text("direction")
                                 .lineLimit(1)
                                 .font(.caption)
@@ -118,17 +118,6 @@ struct BathroomSummaryView: View {
             }
         }
         .padding(8)
-        .onAppear {
-            bathroom.getDirections()
-
-            if self.scene == nil || !isLoadingScene {
-                self.isLoadingScene = true
-                Task {
-                    let scene = await LocationAttendant.shared.getScene(location: .init(latitude: bathroom.coordinate.latitude, longitude: bathroom.coordinate.longitude))
-                    self.scene = scene
-                }
-            }
-        }
     }
 }
 
