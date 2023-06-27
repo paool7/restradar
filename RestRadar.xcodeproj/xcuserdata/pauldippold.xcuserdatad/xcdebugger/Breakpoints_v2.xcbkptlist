@@ -474,22 +474,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "DCEAB658-4B5D-457D-B539-2F083AFB2EC8"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ClosestBathroomWidget/ClosestBathroomWidget.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "210"
-            endingLineNumber = "210"
-            landmarkName = "getTimeline(in:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "8EC55CED-2521-4415-8604-59FD88161F8E"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -998,34 +982,19 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 6c336a6602c608df"
+                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 986a4ebfc6a73c0c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "RestRadar.LocationAttendant.getDirections(toId: Swift.String) async throws -&gt; Swift.Optional&lt;RestRadar.Bathroom&gt;"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Array&lt;__C.CLPlacemark&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in RestRadar.LocationAttendant.getLocation(from: Swift.String, completion: (Swift.Optional&lt;__C.CLLocation&gt;) -&gt; ()) -&gt; ()"
                   moduleName = "RestRadar"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Attendants/LocationAttendant.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78"
-                  offsetFromSymbolStart = "88">
-               </Location>
-               <Location
-                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 2c79e797cd6e7ef5"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for RestRadar.LocationAttendant.getDirections(toId: Swift.String) async throws -&gt; Swift.Optional&lt;RestRadar.Bathroom&gt;"
-                  moduleName = "RestRadar"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Attendants/LocationAttendant.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78"
-                  offsetFromSymbolStart = "108">
+                  startingLineNumber = "77"
+                  endingLineNumber = "77"
+                  offsetFromSymbolStart = "764">
                </Location>
                <Location
                   uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 986a4ebfc6a73c0c"
@@ -1040,22 +1009,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "77"
                   endingLineNumber = "77"
-                  offsetFromSymbolStart = "712">
-               </Location>
-               <Location
-                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 5f1ad3dcf2e81b60"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Array&lt;__C.CLPlacemark&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ClosestBathroomWidgetExtension.LocationAttendant.getLocation(from: Swift.String, completion: (Swift.Optional&lt;__C.CLLocation&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "ClosestBathroomWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Attendants/LocationAttendant.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "77"
-                  endingLineNumber = "77"
-                  offsetFromSymbolStart = "712">
+                  offsetFromSymbolStart = "512">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1278,8 +1232,8 @@
             filePath = "ClosestBathroomWidget/ClosestBathroomWidget.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "182"
-            endingLineNumber = "182"
+            startingLineNumber = "175"
+            endingLineNumber = "175"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1303,22 +1257,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2C1473AC-2E0A-48E6-9941-BC10BEC6A3F7"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RestRadar/Views/HomeView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
-            landmarkName = "body"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "743F6DAA-6541-4BE0-9FBF-22D88C2A24B6"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -1326,8 +1264,8 @@
             filePath = "RestRadar/Models/Bathroom.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
             landmarkName = "distanceString(withUnit:)"
             landmarkType = "7">
             <Locations>
@@ -1406,8 +1344,8 @@
             filePath = "RestRadar/Models/Bathroom.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
             landmarkName = "isClean"
             landmarkType = "24">
          </BreakpointContent>
@@ -1537,6 +1475,22 @@
                   offsetFromSymbolStart = "632">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A19DBCC9-303E-4345-82F4-7B91D045604A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RestRadar/Views/DirectionsSummaryView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "body"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -34,7 +34,7 @@ class SettingsAttendant: ObservableObject {
 
     static let defaultWheelchairSpeed = 4.0
     static let defaultElectricWheelchairSpeed = 5.0
-    static let defaultWalkingSpeed = 3.0
+    static let defaultWalkingSpeed = 2.0
     static let defaultStepLength = 2.5
 
     let eventStore = EKEventStore()

@@ -76,7 +76,7 @@ struct BathroomSummaryView: View {
                     
                     if let currentHeading = locationAttendant.currentHeading, let current = locationAttendant.current {
                         VStack(alignment: .center, spacing: 10) {
-                            Image(systemName: "arrowshape.up.circle")
+                            Image(systemName: "arrow.up.to.line.circle")
                                 .font(.title2)
                                 .foregroundColor(.primary)
                                 .rotationEffect(Angle(degrees: current.coordinate.angle(bathroom.coordinate, offset: currentHeading)))

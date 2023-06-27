@@ -206,7 +206,7 @@ struct BathroomView: View {
                                 .shiny(Gradient.forCurrentTime() ?? .iridescent2)
                         }
                     }
-                    .animation(.bouncy, value: isFavorite)
+                    .animation(.linear, value: isFavorite)
                 }
             }
         }

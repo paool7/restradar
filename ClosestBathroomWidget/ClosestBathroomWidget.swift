@@ -16,7 +16,6 @@ struct ClosestBathoomEntry: TimelineEntry {
     let size: WidgetFamily
 }
 
-@available(iOSApplicationExtension 17.0, *)
 struct ClosestBathroomLockScreenWidgetView: View {
     let entry: ClosestBathoomEntry
     
@@ -35,7 +34,6 @@ struct ClosestBathroomLockScreenWidgetView: View {
             }
             
             HStack {
-                
                 Spacer()
                 VStack(alignment: .leading) {
                     HStack(alignment: .center) {
@@ -83,9 +81,6 @@ struct ClosestBathroomLockScreenWidgetView: View {
             }
             .frame(maxWidth: .infinity)
         }
-        .containerBackground(for: .widget, content: {
-            Color.clear
-        })
         .widgetURL({
             if let url = URL(string: "restradar://\(entry.bathroom.id)") {
                 return url
@@ -95,8 +90,7 @@ struct ClosestBathroomLockScreenWidgetView: View {
     }
 }
 
-@available(iOSApplicationExtension 17.0, *)
-struct ClosestBathroomWidgetView: View {
+struct ClosestBathroomHomeScreenWidgetView: View {
     let entry: ClosestBathoomEntry
     
     let locationAttendant = LocationAttendant.shared
@@ -170,19 +164,33 @@ struct ClosestBathroomWidgetView: View {
                 .overlay(.white)
             DirectionsSummaryView(bathroom: entry.bathroom)
                 .padding(EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 0))
-        }
-        .containerBackground(for: .widget, content: {
-            if let gradient = Gradient.forCurrentTime() {
-                LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
-                    .opacity(0.8)
+        }.padding(16)
+            .background {
+                if let gradient = Gradient.forCurrentTime() {
+                    LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
+                }
             }
-        })
         .widgetURL({
             if let url = URL(string: "restradar://\(entry.bathroom.id)") {
                 return url
             }
              return nil
         }())
+    }
+}
+
+struct ClosestBathroomWidgetView: View {
+    let entry: ClosestBathoomEntry
+    
+    let locationAttendant = LocationAttendant.shared
+    let bathroomAttendant = BathroomAttendant.shared
+    
+    var body: some View {
+        if entry.size == .systemSmall {
+            ClosestBathroomHomeScreenWidgetView(entry: entry)
+        } else {
+            ClosestBathroomLockScreenWidgetView(entry: entry)
+        }
     }
 }
 
@@ -237,15 +245,7 @@ struct ClosestBathroomWidget: Widget {
             kind: kind,
             provider: ClosestBathroomTimelineProvider()
         ) { entry in
-            if #available(iOSApplicationExtension 17.0, *) {
-                if entry.size == .systemSmall {
-                    ClosestBathroomWidgetView(entry: entry)
-                } else {
-                    ClosestBathroomLockScreenWidgetView(entry: entry)
-                }
-            } else {
-                // Fallback on earlier versions
-            }
+            ClosestBathroomWidgetView(entry: entry)
         }
         .configurationDisplayName("Closest Bathroom")
         .description("Find the closest bathroom near you.")

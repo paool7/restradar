@@ -51,14 +51,14 @@ struct EntryCodeView: View {
                         })
                         Button("Cancel", role: .cancel, action: {})
                     }, message: {
-                        Text("If a code was required to unlock the bathroom door please enter it here. Otherwise select \"No Code\".")
+                        Text("Was there a code to unlock the bathroom door?")
                     })
                     
                     Image(systemName: "lock.open.trianglebadge.exclamationmark")
                         .font(.title2)
                         .foregroundColor(.primary)
                 }
-                Text("entry code")
+                Text("code?")
                     .lineLimit(1)
                     .font(.caption)
                     .foregroundColor(.primary)

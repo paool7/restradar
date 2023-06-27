@@ -27,6 +27,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     var accessibility: Accessibility = .unknown
     var url: String?
 
+    @Published var travelTime: TimeInterval?
     @Published var coordinate: CLLocationCoordinate2D
     @Published var directions: [MKRoute.Step] = []
     @Published var route: MKRoute?
@@ -148,10 +149,11 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     
     func getDirections() {
         if let current = LocationAttendant.shared.current, self.directions.isEmpty {
-            LocationAttendant.shared.getTravelDirections(sourceLocation: current.coordinate, endLocation: self.coordinate) { directions, route in
+            LocationAttendant.shared.getTravelDirections(sourceLocation: current.coordinate, endLocation: self.coordinate) { directions, route, travelTime in
                 self.directions = directions
                 self.route = route
-
+                self.travelTime = travelTime
+                
                 if let index = BathroomAttendant.shared.allBathrooms.firstIndex(of: self) {
                     BathroomAttendant.shared.allBathrooms[index] = self
                 }
@@ -166,6 +168,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
             let result = try await LocationAttendant.shared.getTravelDirections(sourceLocation: current.coordinate, endLocation: self.coordinate)
             self.directions = result.directions
             self.route = result.route
+            self.travelTime = result.travelTime
 
             return true
         } catch {
@@ -218,12 +221,16 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     }
     
     func totalTime() -> Int? {
-        guard let current = LocationAttendant.shared.current else { return nil }
-
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        let locationDistance = location.distance(from: current)
-        
-        return locationDistance.travelTime
+        if let travelTime {
+            return Int(travelTime/60)
+        } else {
+            guard let current = LocationAttendant.shared.current else { return nil }
+            
+            let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            let locationDistance = location.distance(from: current)
+            
+            return locationDistance.travelTime
+        }
     }
     
     func totalSteps() -> Int? {

@@ -78,6 +78,8 @@
 		2250D06E2A4A293B005507AF /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2250D06D2A4A293B005507AF /* Category.swift */; };
 		2250D06F2A4A293B005507AF /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2250D06D2A4A293B005507AF /* Category.swift */; };
 		2250D0742A4A4CAC005507AF /* NewBathroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2250D0732A4A4CAC005507AF /* NewBathroomView.swift */; };
+		2250D07A2A4B2C64005507AF /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 2250D0792A4B2C64005507AF /* GoogleMobileAds */; };
+		2250D07C2A4B3136005507AF /* BannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2250D07B2A4B3136005507AF /* BannerViewController.swift */; };
 		225BDBB22A171FD500FB0DA5 /* BathroomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221CCF782A04A7B800B0E171 /* BathroomList.swift */; };
 		225BDBB52A212C1D00FB0DA5 /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 225BDBB42A212C1D00FB0DA5 /* SwiftCSV */; };
 		225BDBB72A212F1600FB0DA5 /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 225BDBB62A212F1600FB0DA5 /* SwiftCSV */; };
@@ -171,6 +173,7 @@
 		2242AC2B29FA0AB300AFD64F /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
 		2250D06D2A4A293B005507AF /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		2250D0732A4A4CAC005507AF /* NewBathroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewBathroomView.swift; sourceTree = "<group>"; };
+		2250D07B2A4B3136005507AF /* BannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerViewController.swift; sourceTree = "<group>"; };
 		225BDBC72A213DAE00FB0DA5 /* libraries.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libraries.csv; sourceTree = "<group>"; };
 		225BDBCA2A215C6B00FB0DA5 /* targets.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = targets.csv; sourceTree = "<group>"; };
 		228ED6CF2A2D3EAD00F3D293 /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
@@ -215,6 +218,7 @@
 				2242AC2329EB448600AFD64F /* Shiny in Frameworks */,
 				225BDBB52A212C1D00FB0DA5 /* SwiftCSV in Frameworks */,
 				22E690892A28214300DBF2D9 /* RevenueCat in Frameworks */,
+				2250D07A2A4B2C64005507AF /* GoogleMobileAds in Frameworks */,
 				22E690862A28205F00DBF2D9 /* StoreKit.framework in Frameworks */,
 				222881B72A461D630098B788 /* TelemetryClient in Frameworks */,
 				2242742E29E60E2D00F2C196 /* Solar in Frameworks */,
@@ -341,6 +345,7 @@
 				22ECB1142A01443F00A74320 /* RestRadar.entitlements */,
 				2242742F29E66B0600F2C196 /* Info.plist */,
 				22F2521129B57B990010223E /* RestRadarApp.swift */,
+				2250D07B2A4B3136005507AF /* BannerViewController.swift */,
 				2242AC3029FC80A300AFD64F /* Attendants */,
 				222881BA2A4927460098B788 /* Extensions */,
 				2242AC2F29FC808600AFD64F /* Models */,
@@ -412,6 +417,7 @@
 				22E690882A28214300DBF2D9 /* RevenueCat */,
 				222881A62A46071B0098B788 /* Karte */,
 				222881B62A461D630098B788 /* TelemetryClient */,
+				2250D0792A4B2C64005507AF /* GoogleMobileAds */,
 			);
 			productName = G2G;
 			productReference = 22F2520E29B57B990010223E /* RestRadar.app */;
@@ -451,6 +457,7 @@
 				22E690872A28214300DBF2D9 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 				222881A52A46071B0098B788 /* XCRemoteSwiftPackageReference "Karte" */,
 				222881B52A461D630098B788 /* XCRemoteSwiftPackageReference "SwiftClient" */,
+				2250D0782A4B2C64005507AF /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			productRefGroup = 22F2520F29B57B990010223E /* Products */;
 			projectDirPath = "";
@@ -533,6 +540,7 @@
 				222881C72A49CF060098B788 /* View+Extensions.swift in Sources */,
 				222881CA2A49CF260098B788 /* String+Extensions.swift in Sources */,
 				22D43DD629D47B730085CA4C /* DirectionsView.swift in Sources */,
+				2250D07C2A4B3136005507AF /* BannerViewController.swift in Sources */,
 				222881CC2A49CF950098B788 /* CLLocationCoordinate2D+Extensions.swift in Sources */,
 				22DE02EC29C8084F00C21D67 /* BathroomView.swift in Sources */,
 				22C9436B29C7937700E41651 /* LocationAttendant.swift in Sources */,
@@ -591,7 +599,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = ClosestBathroomWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = 2RHGHNZ58B;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClosestBathroomWidget/Info.plist;
@@ -604,7 +612,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.paool.bathroom.ClosestBathroomWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -622,7 +630,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = ClosestBathroomWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = 2RHGHNZ58B;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClosestBathroomWidget/Info.plist;
@@ -635,7 +643,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.paool.bathroom.ClosestBathroomWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -679,6 +687,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -701,6 +710,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 2023.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -743,6 +753,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -759,6 +770,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 2023.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -777,7 +789,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = RestRadar/RestRadar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_ASSET_PATHS = "\"RestRadar/Preview Content\"";
 				DEVELOPMENT_TEAM = 2RHGHNZ58B;
 				ENABLE_PREVIEWS = YES;
@@ -789,7 +801,6 @@
 				INFOPLIST_FILE = RestRadar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RestRadar;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Walking Speed is used to better estimate how long it will take to reach a bathroom.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "RestRadar only uses your location to determine how far away bathrooms are from you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -800,7 +811,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -825,7 +836,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = RestRadar/RestRadar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_ASSET_PATHS = "\"RestRadar/Preview Content\"";
 				DEVELOPMENT_TEAM = 2RHGHNZ58B;
 				ENABLE_PREVIEWS = YES;
@@ -837,7 +848,6 @@
 				INFOPLIST_FILE = RestRadar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RestRadar;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Walking Speed is used to better estimate how long it will take to reach a bathroom.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "RestRadar only uses your location to determine how far away bathrooms are from you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -848,7 +858,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -929,6 +939,14 @@
 				kind = branch;
 			};
 		};
+		2250D0782A4B2C64005507AF /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.7.0;
+			};
+		};
 		225BDBB32A212C1D00FB0DA5 /* XCRemoteSwiftPackageReference "SwiftCSV" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/swiftcsv/SwiftCSV.git";
@@ -987,6 +1005,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2242AC2129EB448600AFD64F /* XCRemoteSwiftPackageReference "shiny" */;
 			productName = Shiny;
+		};
+		2250D0792A4B2C64005507AF /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2250D0782A4B2C64005507AF /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 		225BDBB42A212C1D00FB0DA5 /* SwiftCSV */ = {
 			isa = XCSwiftPackageProductDependency;

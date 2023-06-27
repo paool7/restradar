@@ -82,27 +82,28 @@ struct HomeView: View {
                     }
                 }
             }
-                ScrollView(showsIndicators: false) {
-                    LazyVStack {
-                        ForEach(bathroomAttendant.filteredBathrooms) { bathroom in
-                            NavigationLink(destination: BathroomView(bathroom: bathroom)) {
-                                BathroomSummaryView(bathroom: bathroom)
-                                    .background {
-                                        Color(uiColor: .secondarySystemBackground)
+//            Banner(bannerID: "ca-app-pub-7487306403748963/2790855579", width: 300)
+            ScrollView(showsIndicators: false) {
+                LazyVStack {
+                    ForEach(bathroomAttendant.filteredBathrooms) { bathroom in
+                        NavigationLink(destination: BathroomView(bathroom: bathroom)) {
+                            BathroomSummaryView(bathroom: bathroom)
+                                .background {
+                                    Color(uiColor: .secondarySystemBackground)
+                                }
+                                .cornerRadius(16)
+                                .onAppear {
+                                    bathroomAttendant.visibleBathrooms.append(bathroom)
+                                }
+                                .onDisappear {
+                                    if let index = bathroomAttendant.visibleBathrooms.firstIndex(where: {$0.id == bathroom.id }) {
+                                        bathroomAttendant.visibleBathrooms.remove(at: index)
                                     }
-                                    .cornerRadius(16)
-                                    .onAppear {
-                                        bathroomAttendant.visibleBathrooms.append(bathroom)
-                                    }
-                                    .onDisappear {
-                                        if let index = bathroomAttendant.visibleBathrooms.firstIndex(where: {$0.id == bathroom.id }) {
-                                            bathroomAttendant.visibleBathrooms.remove(at: index)
-                                        }
-                                    }
-                            }
+                                }
                         }
                     }
                 }
+            }
             }
             .padding(4)
             .toolbar {

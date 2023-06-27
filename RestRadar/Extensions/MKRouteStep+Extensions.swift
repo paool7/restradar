@@ -18,7 +18,7 @@ extension MKRoute.Step {
     
     var naturalInstructions: String? {
         guard let blocks = self.blocks else { return self.instructions }
-        let naturalStart = "\(blocks > 0 ? ("\(blocks) block\(blocks == 1 ? "" : "s") later, ") : (self.distance.steps > 10 ? "\(self.distance.steps) step\(self.distance.steps == 1 ? "" : "s") later, " : ""))"
+        let naturalStart = "\(blocks > 0 ? ("\(blocks) block\(blocks == 1 ? "" : "s") later, ") : (self.distance.steps > 10 ? "\(self.distance.steps) step\(self.distance.steps == 1 ? "" : "s") later, " : self.instructions))"
         
         return "\(naturalStart)\(self.instructions)"
     }
@@ -30,7 +30,7 @@ extension MKRoute.Step {
     
     func naturalSummaryIntro() -> String? {
         guard let blocks = self.blocksLeft(), let distanceLeft = self.distanceLeft() else { return self.instructions }
-        return "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix)...") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix)..." : " "))"
+        return "\(blocks > 0 ? ("In \(blocks) block\(distanceLeft.blocksPostFix)...") : (distanceLeft.steps > 10 ? "In \(distanceLeft.steps) step\(distanceLeft.stepsPostFix)..." : self.instructions))"
     }
     
     var blocks: Int? {

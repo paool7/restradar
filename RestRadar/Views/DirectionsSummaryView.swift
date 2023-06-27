@@ -27,6 +27,7 @@ struct DirectionsSummaryView: View {
                 if let intro = firstStep.naturalSummaryIntro() {
                     Text("\(intro)")
                         .lineLimit(2)
+                        .minimumScaleFactor(0.5)
                         .font(.subheadline)
                         .foregroundColor(.white)
                         .multilineTextAlignment(.leading)

@@ -41,8 +41,8 @@ class LocationAttendant: NSObject, ObservableObject {
         self.startUpdating()
 
     #if targetEnvironment(simulator)
-        self.current = CLLocation(latitude: 40.652005801809445, longitude: -73.94718932404285)
-        self.currentHeading = -12.0 //6.162876129150391
+        self.current = CLLocation(latitude: 40.69274, longitude: -73.99030)
+        self.currentHeading = 0.0 //6.162876129150391
     #endif
     }
     
@@ -81,7 +81,7 @@ class LocationAttendant: NSObject, ObservableObject {
         }
     }
     
-    func getTravelDirections(sourceLocation: CLLocationCoordinate2D, endLocation: CLLocationCoordinate2D) async throws ->  (directions: [MKRoute.Step], route: MKRoute?) {
+    func getTravelDirections(sourceLocation: CLLocationCoordinate2D, endLocation: CLLocationCoordinate2D) async throws ->  (directions: [MKRoute.Step], route: MKRoute?, travelTime: TimeInterval?) {
         let request = MKDirections.Request()
         let source = MKPlacemark( coordinate: sourceLocation)
         let destination = MKPlacemark( coordinate: endLocation)
@@ -95,18 +95,18 @@ class LocationAttendant: NSObject, ObservableObject {
             let directions = try await directions.calculate()
             let routes = directions.routes
             if let shortestRoute = routes.sorted(by: { $0.expectedTravelTime < $1.expectedTravelTime}).first {
-                return (shortestRoute.steps, shortestRoute)
+                return (shortestRoute.steps, shortestRoute, shortestRoute.expectedTravelTime)
             } else {
-                return ([], nil)
+                return ([], nil, nil)
             }
         } catch {
             print("Distance directions calculation error\n \(error.localizedDescription)")
             TelemetryManager.send("Error", with: ["type": "CalculateDirectionsAsync", "message": error.localizedDescription])
-            return ([], nil)
+            return ([], nil, nil)
         }
     }
     
-    func getTravelDirections(sourceLocation: CLLocationCoordinate2D, endLocation: CLLocationCoordinate2D, completion: @escaping (_ directions: [MKRoute.Step], _ route: MKRoute?) -> (Void)) {
+    func getTravelDirections(sourceLocation: CLLocationCoordinate2D, endLocation: CLLocationCoordinate2D, completion: @escaping (_ directions: [MKRoute.Step], _ route: MKRoute?, _ travelTime: TimeInterval?) -> (Void)) {
         let request = MKDirections.Request()
         let source = MKPlacemark( coordinate: sourceLocation)
         let destination = MKPlacemark( coordinate: endLocation)
@@ -122,7 +122,7 @@ class LocationAttendant: NSObject, ObservableObject {
                 return
             }
             if let routes = response?.routes, let shortestRoute = routes.sorted(by: { $0.expectedTravelTime < $1.expectedTravelTime}).first {
-                completion(shortestRoute.steps, shortestRoute)
+                completion(shortestRoute.steps, shortestRoute, shortestRoute.expectedTravelTime)
             }
         }
     }
