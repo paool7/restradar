@@ -30,6 +30,15 @@ enum TransportMode: Int, CaseIterable {
         }
     }
     
+    var imageString: String {
+        switch self {
+        case .wheelchair:
+            return "figure.roll"
+        case .walking:
+            return "figure.walk.motion"
+        }
+    }
+    
     var verb: String {
         switch self {
         case .wheelchair:

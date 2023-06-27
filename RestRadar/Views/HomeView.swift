@@ -10,6 +10,7 @@ import MapKit
 import CoreLocation
 import Foundation
 import Shiny
+import TelemetryClient
 
 struct HomeView: View {
     @ObservedObject private var bathroomAttendant = BathroomAttendant.shared
@@ -22,7 +23,9 @@ struct HomeView: View {
     @State private var showSettings = false
     @State private var showBathroom = false
     @State var selectedBathroom: String = ""
-        
+    
+    @State private var showNewBathroom = false
+
     var body: some View {
         VStack(spacing: 2) {
             if let current = Binding<CLLocation>($locationAttendant.current), let currentHeading = Binding<Double>($locationAttendant.currentHeading), let walkingDistance = Binding<Double>($bathroomAttendant.walkingDistance), let walkingTime = bathroomAttendant.walkingTime {
@@ -79,7 +82,6 @@ struct HomeView: View {
                     }
                 }
             }
-
                 ScrollView(showsIndicators: false) {
                     LazyVStack {
                         ForEach(bathroomAttendant.filteredBathrooms) { bathroom in
@@ -104,10 +106,23 @@ struct HomeView: View {
             }
             .padding(4)
             .toolbar {
-                ToolbarItem(placement: .bottomBar) {
+                ToolbarItemGroup(placement: .bottomBar) {
                     HStack(spacing: -2) {
+                        Button {
+                            self.showNewBathroom.toggle()
+                        } label: {
+                            Group {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "square.and.pencil")
+                                        .foregroundColor(.primary)
+                                        .font(.headline)
+                                }.padding(6)
+                            }.background {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                            }
+                        }
                         Spacer()
-                        
                         if !bathroomAttendant.favoriteBathrooms.isEmpty {
                             Button {
                                 bathroomAttendant.onlyFavorites = !bathroomAttendant.onlyFavorites
@@ -138,39 +153,31 @@ struct HomeView: View {
                         }
                         
                         Button {
-                            self.showSettings = true
+                            self.showSettings.toggle()
                         } label: {
                             Group {
-                                Image(systemName: "gear")
-                                    .padding(6)
+                                HStack(spacing: 4) {
+                                    Image(systemName: "gear")
+                                }.padding(6)
                             }.background {
-                            RoundedRectangle(cornerRadius: 12)
-                                .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                                RoundedRectangle(cornerRadius: 12)
+                                    .shiny(Gradient.forCurrentTime() ?? .iridescent2)
                             }
                         }
-                        
-                        //                        Button {
-                        //                            self.showLocation = !self.showLocation
-                        //                        } label: {
-                        //                            Image(systemName: "location.magnifyingglass")
-                        //                                .if(locationAttendant.selectedSearchLocation != nil) { $0.shiny(.iridescent2) }
-                        //                                .foregroundColor(.primary)
-                        //                        }
-                        //                        .popover(isPresented: $showLocation, attachmentAnchor: .point(.trailing), arrowEdge: .top) {
-                        //                            LocationSearchView(locationService: locationAttendant.locationService)
-                        //                        }
                     }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("RestRadar")
-            .foregroundColor(.primary)
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .active {
                     locationAttendant.requestAuthorization()
                 } else if newPhase == .background {
                     locationAttendant.stopUpdating()
                 }
+            }
+            .navigationDestination(isPresented: $showNewBathroom) {
+                NewBathroomView(isPresented: $showNewBathroom)
             }
             .navigationDestination(isPresented: $showSettings) {
                 SettingsView()
@@ -182,7 +189,7 @@ struct HomeView: View {
             }.onOpenURL { url in
                 if let host = url.host(), bathroomAttendant.filteredBathrooms.contains(where: {$0.id == host}) {
                     self.selectedBathroom = host
-                    self.showBathroom = true
+                    self.showBathroom.toggle()
                 }
             }
     }

@@ -11,4 +11,12 @@ extension String {
     func removeNewLine() -> String {
         return self.replacingOccurrences(of: "\n", with: ", ")
     }
+    
+    func randomizeAndHyphenate() -> String {
+        var words = self.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+        words.shuffle()
+        
+        let hyphenated = words.joined(separator: "-")
+        return hyphenated
+    }
 }

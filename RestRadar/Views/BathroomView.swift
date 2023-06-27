@@ -15,7 +15,6 @@ import TelemetryClient
 
 struct BathroomView: View {
     @StateObject private var bathroomAttendant = BathroomAttendant.shared
-    @StateObject private var locationAttendant = LocationAttendant.shared
     @StateObject var bathroom: Bathroom
     
     @State var scene: MKLookAroundScene?
@@ -63,7 +62,7 @@ struct BathroomView: View {
                                 Text(bathroom.category.rawValue.lowercased())
                                     .font(.caption)
                                     .foregroundColor(.primary)
-                            }.fixedSize(horizontal: true, vertical: true)
+                            }
                             Spacer()
                         }
                         
@@ -81,7 +80,15 @@ struct BathroomView: View {
                             Divider()
                                 .overlay(.primary)
                             Spacer()
-                            RatingView(bathroom: bathroom).fixedSize(horizontal: true, vertical: true)
+                            RatingView(bathroom: bathroom, rating: $bathroom.isClean, ratingType: .clean)
+                            Spacer()
+                        }
+                        
+                        Group {
+                            Divider()
+                                .overlay(.primary)
+                            Spacer()
+                            RatingView(bathroom: bathroom, rating: $bathroom.isAccessible, ratingType: .accessible)
                             Spacer()
                         }
                     }
@@ -112,6 +119,9 @@ struct BathroomView: View {
             }
             .padding(8)
         }
+        .sheet(isPresented: $isShowingMailView) {
+            MailView(result: self.$result, subject: "\(bathroom.id)")
+        }
         .onAppear {
             if self.scene == nil {
                 Task {
@@ -122,7 +132,7 @@ struct BathroomView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .bottomBar) {
+            ToolbarItemGroup(placement: .bottomBar) {
                 HStack(spacing: -2) {
                     Button {
                         self.openMaps()
@@ -172,10 +182,7 @@ struct BathroomView: View {
                                 .shiny(Gradient.forCurrentTime() ?? .iridescent2)
                         }
                     }.disabled(!MFMailComposeViewController.canSendMail())
-                        .sheet(isPresented: $isShowingMailView) {
-                            MailView(result: self.$result, subject: "\(bathroom.id)")
-                        }
-                                        
+                    
                     let isFavorite = bathroomAttendant.favoriteBathrooms.contains(where: { $0.id == bathroom.id })
                     Button {
                         if let index = bathroomAttendant.favoriteBathrooms.firstIndex(where: { $0.id == bathroom.id }) {

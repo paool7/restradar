@@ -131,7 +131,7 @@ struct SettingsView: View {
                 Button(action: {
                     self.isShowingMailView.toggle()
                 }) {
-                    Text("Submit Issue or Idea")
+                    Label("Submit Issue or Idea", systemImage: "envelope")
                 }
                 .disabled(!MFMailComposeViewController.canSendMail())
                 .sheet(isPresented: $isShowingMailView) {
@@ -139,7 +139,7 @@ struct SettingsView: View {
                 }
                 
                 if !self.purchasedProductIdentifiers.contains(where: { $0 == self.productIdentifiers[2] && $0 == self.productIdentifiers[1] && $0 == self.productIdentifiers[0] }) {
-                    Text("You can support the continued development of this app with an optional tip.\n(Alternate app icons will also be unlocked)")
+                    Text("You can also support the continued development of this app with an optional tip.")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }

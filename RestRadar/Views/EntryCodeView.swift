@@ -47,9 +47,7 @@ struct EntryCodeView: View {
                             }
                         })
                         Button("No Code", action: {
-                            if !self.code.isEmpty {
-                                TelemetryManager.send("NoCode", with: ["buid": bathroom.id])
-                            }
+                            TelemetryManager.send("NoCode", with: ["buid": bathroom.id])
                         })
                         Button("Cancel", role: .cancel, action: {})
                     }, message: {

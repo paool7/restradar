@@ -13,69 +13,79 @@ import Shiny
 import SwiftUI
 import TelemetryClient
 
+enum RatingType: String, Identifiable, CaseIterable, Codable {
+    case clean
+    case accessible
+
+    var id: String { rawValue }
+    
+    var image: String {
+        switch self {
+        case .clean:
+            return "bubbles.and.sparkles"
+        case .accessible:
+            return "figure.roll"
+        }
+    }
+}
+
+enum Rating: String, Identifiable, CaseIterable, Codable {
+    case upvote = "Yes"
+    case downvote = "No"
+    case unknown = "Unknown"
+    
+    var id: String { rawValue }
+    
+    var image: String {
+        switch self {
+        case .upvote:
+            return "hand.thumbsup"
+        case .downvote:
+            return "hand.thumbsdown"
+        case .unknown:
+            return "questionmark"
+        }
+    }
+    
+    var boolValue: Bool? {
+        switch self {
+        case .upvote:
+            return true
+        case .downvote:
+            return false
+        case .unknown:
+            return nil
+        }
+    }
+}
+
 struct RatingView: View {
     @StateObject var bathroom: Bathroom
     
-    var type: String = "clean"
+    @Binding var rating: Rating
+    var ratingType: RatingType = .clean
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            VStack {
-                HStack {
-                    if bathroom.visitRating == true || bathroom.visitRating == nil {
-                        Button {
-                            if bathroom.visitRating == nil {
-                                TelemetryManager.send("Upvote", with: ["rating": "1", "buid": bathroom.id])
-                                bathroom.visitRating = true
-                            } else {
-                                bathroom.visitRating = nil
-                            }
-                        } label: {
-                            Group {
-                                Image(systemName: bathroom.visitRating == true ? "hand.thumbsup.fill" : "hand.thumbsup")
-                                    .foregroundColor(.primary)
-                                    .font(.headline)
-                                    .padding(6)
-                            }.background {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .shiny(Gradient.forCurrentTime() ?? .iridescent2)
-                            }
-                        }
-                    }
-                    
-                    if bathroom.visitRating == false || bathroom.visitRating == nil {
-                        Button {
-                            if bathroom.visitRating == nil {
-                                TelemetryManager.send("Downvote", with: ["rating": "0", "buid": bathroom.id])
-                                bathroom.visitRating = false
-                            } else {
-                                bathroom.visitRating = nil
-                            }
-                        } label: {
-                            Group {
-                                Image(systemName: bathroom.visitRating == false ? "hand.thumbsdown.fill" : "hand.thumbsdown")
-                                    .foregroundColor(.primary)
-                                    .font(.headline)
-                                    .padding(6)
-                            }.background {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .shiny(Gradient.forCurrentTime() ?? .iridescent2)
-                            }
-                        }
+        VStack(alignment: .center, spacing: 4) {
+            HStack(spacing: -8) {
+                Picker(selection: $rating, label: Text("\(ratingType.rawValue)?")) {
+                    ForEach(Rating.allCases) { rating in
+                        Label("", systemImage: rating.image).tag(rating as Rating)
                     }
                 }
-                Text("visit rating")
-                    .lineLimit(1)
-                    .font(.caption)
-                    .foregroundColor(.primary)
-                    .scaledToFill()
+                Image(systemName: ratingType.image)
+                    .font(.title3)
             }
+            Text("\(ratingType.rawValue)?")
+                .lineLimit(1)
+                .font(.caption)
+                .foregroundColor(.primary)
         }
     }
 }
 
 struct RatingView_Previews: PreviewProvider {
     static var previews: some View {
-        RatingView(bathroom: BathroomAttendant.shared.closestBathroom)
+        RatingView(bathroom: BathroomAttendant.shared.closestBathroom, rating: .constant(Rating.unknown), ratingType: .clean)
     }
 }

@@ -36,8 +36,7 @@ struct WalkingDistanceMapView: UIViewRepresentable {
       mapView.backgroundColor = .secondarySystemBackground
       mapView.delegate = context.coordinator
 
-      
-      let configuration = MKStandardMapConfiguration(emphasisStyle: .default)
+      let configuration = MKStandardMapConfiguration(emphasisStyle: .muted)
       mapView.preferredConfiguration = configuration
       
       let camera = MKMapCamera()

@@ -157,9 +157,18 @@ extension LocationAttendant: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let lastLocation = locations.last else { return }
-        if self.selectedSearchLocation == nil {
-            self.current = lastLocation            
-        }
+        self.current = lastLocation
+        
+        // TODO: Only update current location if we are outside of a certain radius from the last location. Reduces view invaldiations and updates.
+//        if let current = current {
+//            let currentRect = MKCircle(center: current.coordinate, radius: 6.0).boundingMapRect
+//            
+//            if !currentRect.contains(MKMapPoint(lastLocation.coordinate)) {
+//                self.current = lastLocation
+//            }
+//        } else {
+//            self.current = lastLocation
+//        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {

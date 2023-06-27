@@ -21,11 +21,11 @@ struct DirectionsView: View {
             Divider()
                 .overlay(.primary)
             HStack {
-                if bathroom.totalTime() ?? 0 > 0 {
+                if let totalTime = bathroom.totalTime() {
                     Spacer()
                     VStack(alignment: .leading) {
                         HStack {
-                            Text("\(bathroom.totalTime() ?? 0)")
+                            Text("\(totalTime)")
                                 .font(.title)
                                 .minimumScaleFactor(0.5)
                                 .foregroundColor(.primary)

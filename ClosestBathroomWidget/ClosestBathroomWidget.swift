@@ -126,7 +126,7 @@ struct ClosestBathroomWidgetView: View {
                 }
             }
             Divider()
-                .overlay(.primary)
+                .overlay(.white)
             HStack {
                 VStack(alignment: .leading) {
                     HStack() {
@@ -145,7 +145,7 @@ struct ClosestBathroomWidgetView: View {
                 }
                 
                 Divider()
-                    .overlay(.primary)
+                    .overlay(.white)
                 VStack(alignment: .leading) {
                     HStack {
                         if let distanceString = entry.bathroom.distanceString(withUnit: false) {
@@ -167,13 +167,14 @@ struct ClosestBathroomWidgetView: View {
                 }
             }
             Divider()
-                .overlay(.primary)
+                .overlay(.white)
             DirectionsSummaryView(bathroom: entry.bathroom)
                 .padding(EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 0))
         }
         .containerBackground(for: .widget, content: {
-            if let gradient = Gradient.forCurrentTime(), let first = gradient.stops.first?.color, let last = gradient.stops.last?.color {
-                Color.blend(color1: first, color2: last)
+            if let gradient = Gradient.forCurrentTime() {
+                LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
+                    .opacity(0.8)
             }
         })
         .widgetURL({

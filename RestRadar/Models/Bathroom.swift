@@ -9,56 +9,13 @@ import Foundation
 import SwiftUI
 import CoreLocation
 import MapKit
+import TelemetryClient
 
 enum Accessibility: String, Equatable {
     case full
     case partial
     case none
     case unknown
-}
-
-enum Category: String, Equatable {
-    case park = "Park"
-    case library = "Library"
-    case store = "Store"
-    case playground = "Playground"
-    
-    var image: Image {
-        switch self {
-        case .store:
-            return Image(systemName: "cart")
-        case .park:
-            return Image(systemName: "tree")
-        case .library:
-            return Image(systemName: "books.vertical")
-        case .playground:
-            return Image(systemName: "figure.play")
-        }
-    }
-    
-    var backgroundColor: Color {
-        if let gradient = Gradient.forCurrentTime(), let first = gradient.stops.first?.color, let last = gradient.stops.last?.color {
-            switch self {
-            case .store:
-                return first
-            case .park:
-                if gradient.stops.count >= 3 {
-                    return gradient.stops[1].color
-                } else {
-                    return Color.blend(color1: first, intensity1: 0.25, color2: last, intensity2: 0.75)
-                }
-            case .library:
-                if gradient.stops.count >= 4 {
-                    return gradient.stops[2].color
-                } else {
-                    return Color.blend(color1: first, intensity1: 0.75, color2: last, intensity2: 0.25)
-                }
-            case .playground:
-                return last
-            }
-        }
-        return Gradient.iridescent.stops.first!.color
-    }
 }
 
 class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
@@ -73,7 +30,32 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     @Published var coordinate: CLLocationCoordinate2D
     @Published var directions: [MKRoute.Step] = []
     @Published var route: MKRoute?
-    @Published var visitRating: Bool?
+    @Published var isClean: Rating {
+        didSet {
+            userDefaults?.setValue(isClean.boolValue, forKey: "\(id)-clean-rating")
+            switch isClean {
+            case .upvote:
+                TelemetryManager.send("Clean-Upvote", with: ["rating": "1", "buid": id])
+            case .downvote:
+                TelemetryManager.send("Clean-Downvote", with: ["rating": "0", "buid": id])
+            case .unknown:
+                break
+            }
+        }
+    }
+    @Published var isAccessible: Rating {
+        didSet {
+            userDefaults?.setValue(isAccessible.boolValue, forKey: "\(id)-accessible-rating")
+            switch isAccessible {
+            case .upvote:
+                TelemetryManager.send("Accessible-Upvote", with: ["rating": "1", "buid": id])
+            case .downvote:
+                TelemetryManager.send("Accessible-Downvote", with: ["rating": "0", "buid": id])
+            case .unknown:
+                break
+            }
+        }
+    }
 
     init(name: String, accessibility: Accessibility, coordinate: CLLocationCoordinate2D, address: String? = nil, code: String? = nil, id: String, url: String?, category: Category) {
         self.name = name
@@ -84,6 +66,26 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
         self.coordinate = coordinate
         self.url = url
         self.category = category
+        
+        if let cleanRating = userDefaults?.object(forKey: "\(id)-clean-rating") as? Bool {
+            if cleanRating {
+                self.isClean = .upvote
+            } else {
+                self.isClean = .downvote
+            }
+        } else {
+            isClean = .unknown
+        }
+        
+        if let accessibleRating = userDefaults?.object(forKey: "\(id)-accessible-rating") as? Bool {
+            if accessibleRating {
+                self.isAccessible = .upvote
+            } else {
+                self.isAccessible = .downvote
+            }
+        } else {
+            isAccessible = .unknown
+        }
     }
     
     public func hash(into hasher: inout Hasher) {
@@ -91,7 +93,7 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     }
     
     static func ==(lhs: Bathroom, rhs: Bathroom) -> Bool {
-        return (lhs.id == rhs.id && lhs.directions == rhs.directions && lhs.coordinate.latitude == rhs.coordinate.latitude && lhs.coordinate.longitude == rhs.coordinate.longitude && lhs.visitRating == rhs.visitRating && lhs.address == rhs.address)
+        return (lhs.id == rhs.id && lhs.directions == rhs.directions && lhs.coordinate.latitude == rhs.coordinate.latitude && lhs.coordinate.longitude == rhs.coordinate.longitude && lhs.isClean == rhs.isClean  && lhs.isAccessible == rhs.isAccessible && lhs.address == rhs.address)
     }
     
     var description : String {
@@ -174,11 +176,11 @@ class Bathroom: Identifiable, Equatable, ObservableObject, Hashable {
     func imageFor(step: MKRoute.Step) -> String {
         let isFirst = step == directions.first
         let isLast = step == directions.last
-        var imageName = "figure.walk.departure"
+        var imageName = "door.left.hand.open"
         if isLast {
-            imageName = step.instructions.lowercased().contains("on your right") ? "signpost.right" : (step.instructions.lowercased().contains("on your left") ? "signpost.left" : "mappin")
+            imageName = step.instructions.lowercased().contains("on your right") ? "door.sliding.right.hand.open" : (step.instructions.lowercased().contains("on your left") ? "door.sliding.left.hand.open" : "mappin")
         } else if !isFirst {
-            imageName = step.instructions.lowercased().contains("take a right") ? "arrow.turn.up.right" : (step.instructions.lowercased().contains("take a left") ? "arrow.turn.up.left" : "figure.walk.motion")
+            imageName = step.instructions.lowercased().contains("take a right") ? "arrow.turn.up.right" : (step.instructions.lowercased().contains("take a left") ? "arrow.turn.up.left" : SettingsAttendant.shared.transportMode.imageString)
         }
         return imageName
     }

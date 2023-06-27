@@ -25,7 +25,6 @@
 		222881AE2A460DBD0098B788 /* DistanceUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881AC2A460DA40098B788 /* DistanceUnit.swift */; };
 		222881AF2A460DBD0098B788 /* TransportMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881AA2A460D860098B788 /* TransportMode.swift */; };
 		222881B02A460DBD0098B788 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881A82A460D7C0098B788 /* Theme.swift */; };
-		222881B22A460DCC0098B788 /* MapProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881B12A460DCC0098B788 /* MapProvider.swift */; };
 		222881B42A4613840098B788 /* Karte in Frameworks */ = {isa = PBXBuildFile; productRef = 222881B32A4613840098B788 /* Karte */; };
 		222881B72A461D630098B788 /* TelemetryClient in Frameworks */ = {isa = PBXBuildFile; productRef = 222881B62A461D630098B788 /* TelemetryClient */; };
 		222881B92A462ADE0098B788 /* TelemetryClient in Frameworks */ = {isa = PBXBuildFile; productRef = 222881B82A462ADE0098B788 /* TelemetryClient */; };
@@ -76,6 +75,9 @@
 		2242AC2529EB44D200AFD64F /* Shiny in Frameworks */ = {isa = PBXBuildFile; productRef = 2242AC2429EB44D200AFD64F /* Shiny */; };
 		2242AC2929F775C700AFD64F /* BathroomSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2829F775C700AFD64F /* BathroomSummaryView.swift */; };
 		2242AC2C29FA0AB300AFD64F /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242AC2B29FA0AB300AFD64F /* AppIcon.swift */; };
+		2250D06E2A4A293B005507AF /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2250D06D2A4A293B005507AF /* Category.swift */; };
+		2250D06F2A4A293B005507AF /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2250D06D2A4A293B005507AF /* Category.swift */; };
+		2250D0742A4A4CAC005507AF /* NewBathroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2250D0732A4A4CAC005507AF /* NewBathroomView.swift */; };
 		225BDBB22A171FD500FB0DA5 /* BathroomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221CCF782A04A7B800B0E171 /* BathroomList.swift */; };
 		225BDBB52A212C1D00FB0DA5 /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 225BDBB42A212C1D00FB0DA5 /* SwiftCSV */; };
 		225BDBB72A212F1600FB0DA5 /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 225BDBB62A212F1600FB0DA5 /* SwiftCSV */; };
@@ -139,7 +141,6 @@
 		222881A82A460D7C0098B788 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		222881AA2A460D860098B788 /* TransportMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportMode.swift; sourceTree = "<group>"; };
 		222881AC2A460DA40098B788 /* DistanceUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceUnit.swift; sourceTree = "<group>"; };
-		222881B12A460DCC0098B788 /* MapProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapProvider.swift; sourceTree = "<group>"; };
 		222881BB2A4927590098B788 /* MKRouteStep+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKRouteStep+Extensions.swift"; sourceTree = "<group>"; };
 		222881BD2A49277F0098B788 /* KarteApp+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KarteApp+Extensions.swift"; sourceTree = "<group>"; };
 		222881C12A49CDB00098B788 /* SKProduct+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+Extensions.swift"; sourceTree = "<group>"; };
@@ -168,6 +169,8 @@
 		2242AC1C29EA52CF00AFD64F /* FilteringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringView.swift; sourceTree = "<group>"; };
 		2242AC2829F775C700AFD64F /* BathroomSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BathroomSummaryView.swift; sourceTree = "<group>"; };
 		2242AC2B29FA0AB300AFD64F /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
+		2250D06D2A4A293B005507AF /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		2250D0732A4A4CAC005507AF /* NewBathroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewBathroomView.swift; sourceTree = "<group>"; };
 		225BDBC72A213DAE00FB0DA5 /* libraries.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libraries.csv; sourceTree = "<group>"; };
 		225BDBCA2A215C6B00FB0DA5 /* targets.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = targets.csv; sourceTree = "<group>"; };
 		228ED6CF2A2D3EAD00F3D293 /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
@@ -269,16 +272,17 @@
 				2224C66329D1D18400222FD4 /* CompassView.swift */,
 				22D43DD529D47B730085CA4C /* DirectionsView.swift */,
 				2207D0772A33CC5600948AEB /* DirectionsSummaryView.swift */,
+				22B4867A2A49ECA6001C2CA1 /* EntryCodeView.swift */,
 				2242AC1C29EA52CF00AFD64F /* FilteringView.swift */,
 				22F2521329B57B990010223E /* HomeView.swift */,
 				222AD8B729E27DF500A18E76 /* LocationSearchView.swift */,
-				2224C65529CFC10600222FD4 /* MapView.swift */,
-				220D17BB2A36A77900DECB69 /* WalkingDistanceMapView.swift */,
 				220D17B92A3589F500DECB69 /* LookAroundView.swift */,
-				222AD8B329E2362700A18E76 /* SettingsView.swift */,
 				228ED6CF2A2D3EAD00F3D293 /* MailView.swift */,
+				2224C65529CFC10600222FD4 /* MapView.swift */,
+				2250D0732A4A4CAC005507AF /* NewBathroomView.swift */,
 				222881DD2A49E1D70098B788 /* RatingView.swift */,
-				22B4867A2A49ECA6001C2CA1 /* EntryCodeView.swift */,
+				222AD8B329E2362700A18E76 /* SettingsView.swift */,
+				220D17BB2A36A77900DECB69 /* WalkingDistanceMapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -289,12 +293,12 @@
 				2224C65729CFC2E400222FD4 /* Annotation.swift */,
 				2242AC2B29FA0AB300AFD64F /* AppIcon.swift */,
 				22C9436629C64A0100E41651 /* Bathroom.swift */,
+				2250D06D2A4A293B005507AF /* Category.swift */,
+				222881AC2A460DA40098B788 /* DistanceUnit.swift */,
 				222881A02A4535650098B788 /* Rational.swift */,
+				222881DA2A49D10B0098B788 /* StepDirection.swift */,
 				222881A82A460D7C0098B788 /* Theme.swift */,
 				222881AA2A460D860098B788 /* TransportMode.swift */,
-				222881AC2A460DA40098B788 /* DistanceUnit.swift */,
-				222881B12A460DCC0098B788 /* MapProvider.swift */,
-				222881DA2A49D10B0098B788 /* StepDirection.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -512,6 +516,7 @@
 				2207D0792A33CC5600948AEB /* DirectionsSummaryView.swift in Sources */,
 				2242AC1629E85BE500AFD64F /* CompassView.swift in Sources */,
 				222881AE2A460DBD0098B788 /* DistanceUnit.swift in Sources */,
+				2250D06F2A4A293B005507AF /* Category.swift in Sources */,
 				222881C02A4927C50098B788 /* MKRouteStep+Extensions.swift in Sources */,
 				2242AC1529E85BE300AFD64F /* CircleLabel.swift in Sources */,
 				2242AC0029E843E300AFD64F /* ClosestBathroomWidget.swift in Sources */,
@@ -532,6 +537,7 @@
 				22DE02EC29C8084F00C21D67 /* BathroomView.swift in Sources */,
 				22C9436B29C7937700E41651 /* LocationAttendant.swift in Sources */,
 				222881A12A4535650098B788 /* Rational.swift in Sources */,
+				2250D0742A4A4CAC005507AF /* NewBathroomView.swift in Sources */,
 				222881BE2A49277F0098B788 /* KarteApp+Extensions.swift in Sources */,
 				2224C66429D1D18400222FD4 /* CompassView.swift in Sources */,
 				222AD8B829E27DF500A18E76 /* LocationSearchView.swift in Sources */,
@@ -542,7 +548,6 @@
 				222881C42A49CDF30098B788 /* Color+Extensions.swift in Sources */,
 				220D17BC2A36A77900DECB69 /* WalkingDistanceMapView.swift in Sources */,
 				222AD8B629E2392000A18E76 /* SettingsAttendant.swift in Sources */,
-				222881B22A460DCC0098B788 /* MapProvider.swift in Sources */,
 				222881D22A49D0810098B788 /* CLLocationDistance+Extensions.swift in Sources */,
 				2242AC2929F775C700AFD64F /* BathroomSummaryView.swift in Sources */,
 				222AD8B429E2362700A18E76 /* SettingsView.swift in Sources */,
@@ -564,6 +569,7 @@
 				22F2521229B57B990010223E /* RestRadarApp.swift in Sources */,
 				2242AC1D29EA52CF00AFD64F /* FilteringView.swift in Sources */,
 				2207D0782A33CC5600948AEB /* DirectionsSummaryView.swift in Sources */,
+				2250D06E2A4A293B005507AF /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -676,6 +682,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/AppLovinQualityService",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -736,6 +746,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/AppLovinQualityService",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -767,12 +781,16 @@
 				DEVELOPMENT_ASSET_PATHS = "\"RestRadar/Preview Content\"";
 				DEVELOPMENT_TEAM = 2RHGHNZ58B;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(inherited)",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RestRadar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RestRadar;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Walking Speed is used to better estimate how long it will take to reach a bathroom.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "RestRadar only uses your location to determine how far away bathrooms are from you. It will never be tracked or stored.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "RestRadar only uses your location to determine how far away bathrooms are from you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -783,6 +801,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.paool.bathroom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -807,12 +829,16 @@
 				DEVELOPMENT_ASSET_PATHS = "\"RestRadar/Preview Content\"";
 				DEVELOPMENT_TEAM = 2RHGHNZ58B;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(inherited)",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RestRadar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RestRadar;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Walking Speed is used to better estimate how long it will take to reach a bathroom.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "RestRadar only uses your location to determine how far away bathrooms are from you. It will never be tracked or stored.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "RestRadar only uses your location to determine how far away bathrooms are from you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -823,6 +849,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.paool.bathroom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

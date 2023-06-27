@@ -214,14 +214,6 @@ struct Constants {
 //        }
 //    }
     
-    static func randomizeAndHyphenateWords(in input: String) -> String {
-        var words = input.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
-        words.shuffle()
-        
-        let hyphenated = words.joined(separator: "-")
-        return hyphenated
-    }
-    
     static let targetStoreList = """
     [
     { "name": "Tribeca Target", "id": "York,-Greenwich-St,-New-NY-10007-2377-2558B19662D-1DE8-41B0-83FC-D7278E9D6D55", "lat": 40.714528, "lng": -74.011265, "accessibility": "unknown", "address": "255 Greenwich St, New York, NY 10007-2377", "url": "https://www.target.com/sl/tribeca/3229" },
