@@ -87,6 +87,7 @@
 		225BDBC92A213DAE00FB0DA5 /* libraries.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBC72A213DAE00FB0DA5 /* libraries.csv */; };
 		225BDBCB2A215C6B00FB0DA5 /* targets.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBCA2A215C6B00FB0DA5 /* targets.csv */; };
 		225BDBCC2A215C6B00FB0DA5 /* targets.csv in Resources */ = {isa = PBXBuildFile; fileRef = 225BDBCA2A215C6B00FB0DA5 /* targets.csv */; };
+		2268F8782A4B720300CA2058 /* privacy.html in Resources */ = {isa = PBXBuildFile; fileRef = 2268F8772A4B720300CA2058 /* privacy.html */; };
 		228ED6D02A2D3EAD00F3D293 /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228ED6CF2A2D3EAD00F3D293 /* MailView.swift */; };
 		22B4867B2A49ECA6001C2CA1 /* EntryCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B4867A2A49ECA6001C2CA1 /* EntryCodeView.swift */; };
 		22B4867C2A49ED73001C2CA1 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222881DD2A49E1D70098B788 /* RatingView.swift */; };
@@ -176,6 +177,7 @@
 		2250D07B2A4B3136005507AF /* BannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerViewController.swift; sourceTree = "<group>"; };
 		225BDBC72A213DAE00FB0DA5 /* libraries.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libraries.csv; sourceTree = "<group>"; };
 		225BDBCA2A215C6B00FB0DA5 /* targets.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = targets.csv; sourceTree = "<group>"; };
+		2268F8772A4B720300CA2058 /* privacy.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = privacy.html; sourceTree = "<group>"; };
 		228ED6CF2A2D3EAD00F3D293 /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
 		22B4867A2A49ECA6001C2CA1 /* EntryCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryCodeView.swift; sourceTree = "<group>"; };
 		22C9436629C64A0100E41651 /* Bathroom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bathroom.swift; sourceTree = "<group>"; };
@@ -353,6 +355,7 @@
 				221CCF782A04A7B800B0E171 /* BathroomList.swift */,
 				225BDBC72A213DAE00FB0DA5 /* libraries.csv */,
 				225BDBCA2A215C6B00FB0DA5 /* targets.csv */,
+				2268F8772A4B720300CA2058 /* privacy.html */,
 				22F2521529B57B990010223E /* Assets.xcassets */,
 				22F2521729B57B990010223E /* Preview Content */,
 			);
@@ -484,6 +487,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2268F8782A4B720300CA2058 /* privacy.html in Resources */,
 				225BDBC82A213DAE00FB0DA5 /* libraries.csv in Resources */,
 				225BDBCB2A215C6B00FB0DA5 /* targets.csv in Resources */,
 				22F2521929B57B990010223E /* Preview Assets.xcassets in Resources */,
@@ -687,7 +691,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -753,7 +757,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
