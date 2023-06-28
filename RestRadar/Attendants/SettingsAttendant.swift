@@ -5,11 +5,11 @@
 //  Created by Paul Dippold on 4/8/23.
 //
 
-import Foundation
-import MapKit
 import EventKit
-import SwiftUI
+import Foundation
 import Karte
+import MapKit
+import SwiftUI
 
 let userDefaults = UserDefaults(suiteName: "group.com.paool.bathroom")
 

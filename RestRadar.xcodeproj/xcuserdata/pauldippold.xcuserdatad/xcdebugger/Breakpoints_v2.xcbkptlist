@@ -976,13 +976,13 @@
             filePath = "RestRadar/Attendants/LocationAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
             landmarkName = "getLocation(from:completion:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 986a4ebfc6a73c0c"
+                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 986a4ebfc6a73beb"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -992,12 +992,12 @@
                   urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Attendants/LocationAttendant.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "77"
-                  endingLineNumber = "77"
+                  startingLineNumber = "78"
+                  endingLineNumber = "78"
                   offsetFromSymbolStart = "764">
                </Location>
                <Location
-                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 986a4ebfc6a73c0c"
+                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 986a4ebfc6a73beb"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1007,8 +1007,23 @@
                   urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Attendants/LocationAttendant.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "77"
-                  endingLineNumber = "77"
+                  startingLineNumber = "78"
+                  endingLineNumber = "78"
+                  offsetFromSymbolStart = "512">
+               </Location>
+               <Location
+                  uuid = "01EA30EF-5E89-4EB6-AE47-40230F77081C - 5f1ad3dcf2e81c87"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Array&lt;__C.CLPlacemark&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ClosestBathroomWidgetExtension.LocationAttendant.getLocation(from: Swift.String, completion: (Swift.Optional&lt;__C.CLLocation&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "ClosestBathroomWidgetExtension"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/pauldippold/Developer/RestRadar/RestRadar/Attendants/LocationAttendant.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "78"
+                  endingLineNumber = "78"
                   offsetFromSymbolStart = "512">
                </Location>
             </Locations>
@@ -1024,8 +1039,8 @@
             filePath = "RestRadar/Attendants/LocationAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
             landmarkName = "getLocation(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1040,8 +1055,8 @@
             filePath = "RestRadar/Attendants/LocationAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
             landmarkName = "getLocation(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1248,8 +1263,8 @@
             filePath = "RestRadar/Views/BathroomView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "129"
-            endingLineNumber = "129"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -1360,8 +1375,8 @@
             filePath = "RestRadar/Attendants/LocationAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "175"
-            endingLineNumber = "175"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "locationManager(_:didUpdateHeading:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1376,8 +1391,8 @@
             filePath = "RestRadar/Attendants/LocationAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
             landmarkName = "locationManager(_:didUpdateLocations:)"
             landmarkType = "7">
             <Locations>
@@ -1439,8 +1454,8 @@
             filePath = "RestRadar/Attendants/LocationAttendant.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "170"
-            endingLineNumber = "170"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
             landmarkName = "locationManager(_:didUpdateLocations:)"
             landmarkType = "7">
             <Locations>

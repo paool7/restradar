@@ -27,6 +27,7 @@ struct HomeView: View {
     @State private var showNewBathroom = false
 
     var body: some View {
+        GeometryReader { geometry in
         VStack(spacing: 2) {
             if let current = Binding<CLLocation>($locationAttendant.current), let currentHeading = Binding<Double>($locationAttendant.currentHeading), let walkingDistance = Binding<Double>($bathroomAttendant.walkingDistance), let walkingTime = bathroomAttendant.walkingTime {
                 HStack {
@@ -82,7 +83,6 @@ struct HomeView: View {
                     }
                 }
             }
-//            Banner(bannerID: "ca-app-pub-7487306403748963/2790855579", width: 300)
             ScrollView(showsIndicators: false) {
                 LazyVStack {
                     ForEach(bathroomAttendant.filteredBathrooms) { bathroom in
@@ -104,95 +104,104 @@ struct HomeView: View {
                     }
                 }
             }
+            if !PurchaseAttendant.shared.hasTipped {
+                BannerVC(size: CGSize(width: geometry.size.width, height: 75), adUnitId: "ca-app-pub-3940256099942544/2934735716")
+                    .background {
+                        Color(uiColor: .secondarySystemBackground)
+                    }
+                    .cornerRadius(16)
+                    .frame(height: 75)
             }
-            .padding(4)
-            .toolbar {
-                ToolbarItemGroup(placement: .bottomBar) {
-                    HStack(spacing: -2) {
+        }
+        .padding(4)
+        .toolbar {
+            ToolbarItemGroup(placement: .bottomBar) {
+                HStack(spacing: -2) {
+                    Button {
+                        self.showNewBathroom.toggle()
+                    } label: {
+                        Group {
+                            HStack(spacing: 4) {
+                                Image(systemName: "square.and.pencil")
+                                    .foregroundColor(.primary)
+                                    .font(.headline)
+                            }.padding(6)
+                        }.background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .shiny(Gradient.forCurrentTime() ?? .iridescent2)
+                        }
+                    }
+                    Spacer()
+                    if !bathroomAttendant.favoriteBathrooms.isEmpty {
                         Button {
-                            self.showNewBathroom.toggle()
+                            bathroomAttendant.onlyFavorites = !bathroomAttendant.onlyFavorites
                         } label: {
                             Group {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "square.and.pencil")
+                                HStack {
+                                    Image(systemName: bathroomAttendant.onlyFavorites ? "bookmark.fill" : "bookmark")
                                         .foregroundColor(.primary)
-                                        .font(.headline)
-                                }.padding(6)
-                            }.background {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .shiny(Gradient.forCurrentTime() ?? .iridescent2)
-                            }
-                        }
-                        Spacer()
-                        if !bathroomAttendant.favoriteBathrooms.isEmpty {
-                            Button {
-                                bathroomAttendant.onlyFavorites = !bathroomAttendant.onlyFavorites
-                            } label: {
-                                Group {
-                                    HStack {
-                                        Image(systemName: bathroomAttendant.onlyFavorites ? "bookmark.fill" : "bookmark")
+                                        .clipped()
+                                        .id("\(bathroomAttendant.onlyFavorites)")
+                                        .transition(AnyTransition.identity)
+                                    if bathroomAttendant.onlyFavorites {
+                                        Text("Only Favorites")
                                             .foregroundColor(.primary)
+                                            .font(.headline)
                                             .clipped()
                                             .id("\(bathroomAttendant.onlyFavorites)")
-                                            .transition(AnyTransition.identity)
-                                        if bathroomAttendant.onlyFavorites {
-                                            Text("Only Favorites")
-                                                .foregroundColor(.primary)
-                                                .font(.headline)
-                                                .clipped()
-                                                .id("\(bathroomAttendant.onlyFavorites)")
-                                                .transition(AnyTransition.opacity)
-                                        }
-                                    }.padding(6)
-                                        .clipped()
-                                }.background {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .shiny(Gradient.forCurrentTime() ?? .iridescent2)
-                                }
-                            }
-                            .animation(.default, value: bathroomAttendant.onlyFavorites)
-                        }
-                        
-                        Button {
-                            self.showSettings.toggle()
-                        } label: {
-                            Group {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "gear")
+                                            .transition(AnyTransition.opacity)
+                                    }
                                 }.padding(6)
+                                    .clipped()
                             }.background {
                                 RoundedRectangle(cornerRadius: 12)
                                     .shiny(Gradient.forCurrentTime() ?? .iridescent2)
                             }
+                        }
+                        .animation(.default, value: bathroomAttendant.onlyFavorites)
+                    }
+                    
+                    Button {
+                        self.showSettings.toggle()
+                    } label: {
+                        Group {
+                            HStack(spacing: 4) {
+                                Image(systemName: "gear")
+                            }.padding(6)
+                        }.background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .shiny(Gradient.forCurrentTime() ?? .iridescent2)
                         }
                     }
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("RestRadar")
-            .onChange(of: scenePhase) { newPhase in
-                if newPhase == .active {
-                    locationAttendant.requestAuthorization()
-                } else if newPhase == .background {
-                    locationAttendant.stopUpdating()
-                }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("RestRadar")
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                locationAttendant.requestAuthorization()
+            } else if newPhase == .background {
+                locationAttendant.stopUpdating()
             }
-            .navigationDestination(isPresented: $showNewBathroom) {
-                NewBathroomView(isPresented: $showNewBathroom)
+        }
+        .navigationDestination(isPresented: $showNewBathroom) {
+            NewBathroomView(isPresented: $showNewBathroom)
+        }
+        .navigationDestination(isPresented: $showSettings) {
+            SettingsView()
+        }
+        .navigationDestination(isPresented: $showBathroom) {
+            if let bathroom = bathroomAttendant.filteredBathrooms.first(where: { $0.id == self.selectedBathroom }) {
+                BathroomView(bathroom: bathroom)
             }
-            .navigationDestination(isPresented: $showSettings) {
-                SettingsView()
+        }.onOpenURL { url in
+            if let host = url.host(), bathroomAttendant.filteredBathrooms.contains(where: {$0.id == host}) {
+                self.selectedBathroom = host
+                self.showBathroom.toggle()
             }
-            .navigationDestination(isPresented: $showBathroom) {
-                if let bathroom = bathroomAttendant.filteredBathrooms.first(where: { $0.id == self.selectedBathroom }) {
-                    BathroomView(bathroom: bathroom)
-                }
-            }.onOpenURL { url in
-                if let host = url.host(), bathroomAttendant.filteredBathrooms.contains(where: {$0.id == host}) {
-                    self.selectedBathroom = host
-                    self.showBathroom.toggle()
-                }
-            }
+        }
+    }
     }
 }
 

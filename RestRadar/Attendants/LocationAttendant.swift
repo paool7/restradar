@@ -41,7 +41,8 @@ class LocationAttendant: NSObject, ObservableObject {
         self.startUpdating()
 
     #if targetEnvironment(simulator)
-        self.current = CLLocation(latitude: 40.69274, longitude: -73.99030)
+        self.current = CLLocation(latitude: 40.71519, longitude: -74.00281)
+//        self.current = CLLocation(latitude: 37.3319, longitude: -122.0302)
         self.currentHeading = 0.0 //6.162876129150391
     #endif
     }
